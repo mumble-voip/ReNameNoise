@@ -79,32 +79,49 @@ static RENAMENOISE_INLINE float renamenoise_relu(float x) {
 	return x < 0 ? 0 : x;
 }
 
+static void renamenoise_faxpy(float *restrict a, const renamenoise_rnn_weight *restrict b, const int k, const float u) {
+	if (u == 0.0) {
+		return;
+	}
+	for (int idx = 0; idx < k; idx++) {
+		a[idx] += b[idx] * u;
+	}
+}
+
+static void renamenoise_faxpy2(float *restrict a, const renamenoise_rnn_weight *restrict b, const int k, const float u, const float u2) {
+	if (u == 0.0 || u2 == 0.0) {
+		return;
+	}
+	for (int idx = 0; idx < k; idx++) {
+		a[idx] += (b[idx] * u) * u2;
+	}
+}
+
 void renamenoise_compute_dense(const ReNameNoiseDenseLayer *layer, float *output, const float *input) {
 	int i, j;
 	int N, M;
-	int stride;
 	M = layer->nb_inputs;
 	N = layer->nb_neurons;
-	stride = N;
+	const renamenoise_rnn_weight *ip = layer->input_weights;
+
+	// Compute update gate.
 	for (i = 0; i < N; i++) {
-		// Compute update gate.
-		float sum = layer->bias[i];
-		for (j = 0; j < M; j++) {
-			sum += layer->input_weights[j * stride + i] * input[j];
-		}
-		output[i] = RENAMENOISE_WEIGHTS_SCALE * sum;
+		output[i] = layer->bias[i];
+	}
+	for (j = 0; j < M; j++, ip += N) {
+		renamenoise_faxpy(output, ip, N, input[j]);
 	}
 	if (layer->activation == RENAMENOISE_ACTIVATION_SIGMOID) {
 		for (i = 0; i < N; i++) {
-			output[i] = renamenoise_sigmoid_approx(output[i]);
+			output[i] = renamenoise_sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE * output[i]);
 		}
 	} else if (layer->activation == RENAMENOISE_ACTIVATION_TANH) {
 		for (i = 0; i < N; i++) {
-			output[i] = renamenoise_tansig_approx(output[i]);
+			output[i] = renamenoise_tansig_approx(RENAMENOISE_WEIGHTS_SCALE * output[i]);
 		}
 	} else if (layer->activation == RENAMENOISE_ACTIVATION_RELU) {
 		for (i = 0; i < N; i++) {
-			output[i] = renamenoise_relu(output[i]);
+			output[i] = renamenoise_relu(RENAMENOISE_WEIGHTS_SCALE * output[i]);
 		}
 	} else {
 		renamenoise_unreachable();
@@ -121,48 +138,68 @@ void renamenoise_compute_gru(const ReNameNoiseGRULayer *gru, float *state, const
 	M = gru->nb_inputs;
 	N = gru->nb_neurons;
 	stride = 3 * N;
+	const renamenoise_rnn_weight *ip = gru->input_weights;
+	const renamenoise_rnn_weight *rp = gru->recurrent_weights;
+
+	// Compute update gate.
 	for (i = 0; i < N; i++) {
-		// Compute update gate.
-		float sum = gru->bias[i];
-		for (j = 0; j < M; j++) {
-			sum += gru->input_weights[j * stride + i] * input[j];
-		}
-		for (j = 0; j < N; j++) {
-			sum += gru->recurrent_weights[j * stride + i] * state[j];
-		}
-		z[i] = renamenoise_sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE * sum);
+		z[i] = gru->bias[i];
+	}
+	for (j = 0; j < M; j++, ip += stride) {
+		renamenoise_faxpy(z, ip, N, input[j]);
+	}
+	for (j = 0; j < N; j++, rp += stride) {
+		renamenoise_faxpy(z, rp, N, state[j]);
 	}
 	for (i = 0; i < N; i++) {
-		// Compute reset gate.
-		float sum = gru->bias[N + i];
-		for (j = 0; j < M; j++) {
-			sum += gru->input_weights[N + j * stride + i] * input[j];
-		}
-		for (j = 0; j < N; j++) {
-			sum += gru->recurrent_weights[N + j * stride + i] * state[j];
-		}
-		r[i] = renamenoise_sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE * sum);
+		z[i] = renamenoise_sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE * z[i]);
+	}
+
+	// Compute reset gate.
+	for (i = 0; i < N; i++) {
+		r[i] = gru->bias[N + i];
+	}
+	ip = gru->input_weights + N;
+	rp = gru->recurrent_weights + N;
+	for (j = 0; j < M; j++, ip += stride) {
+		renamenoise_faxpy(r, ip, N, input[j]);
+	}
+	for (j = 0; j < N; j++, rp += stride) {
+		renamenoise_faxpy(r, rp, N, state[j]);
 	}
 	for (i = 0; i < N; i++) {
-		// Compute output.
-		float sum = gru->bias[2 * N + i];
-		for (j = 0; j < M; j++) {
-			sum += gru->input_weights[2 * N + j * stride + i] * input[j];
-		}
-		for (j = 0; j < N; j++) {
-			sum += gru->recurrent_weights[2 * N + j * stride + i] * state[j] * r[j];
-		}
+		r[i] = renamenoise_sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE * r[i]);
+	}
+
+	// Compute output.
+	for (i = 0; i < N; i++) {
+		h[i] = gru->bias[2 * N + i];
+	}
+
+	ip = gru->input_weights + 2 * N;
+	rp = gru->recurrent_weights + 2 * N;
+
+	for (j = 0; j < M; j++, ip += stride) {
+		renamenoise_faxpy(h, ip, N, input[j]);
+	}
+
+	for (j = 0; j < N; j++, rp += stride) {
+		renamenoise_faxpy2(h, rp, N, state[j], r[j]);
+	}
+
+	for (i = 0; i < N; i++) {
 		if (gru->activation == RENAMENOISE_ACTIVATION_SIGMOID) {
-			sum = renamenoise_sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE * sum);
+			h[i] = renamenoise_sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE * h[i]);
 		} else if (gru->activation == RENAMENOISE_ACTIVATION_TANH) {
-			sum = renamenoise_tansig_approx(RENAMENOISE_WEIGHTS_SCALE * sum);
+			h[i] = renamenoise_tansig_approx(RENAMENOISE_WEIGHTS_SCALE * h[i]);
 		} else if (gru->activation == RENAMENOISE_ACTIVATION_RELU) {
-			sum = renamenoise_relu(RENAMENOISE_WEIGHTS_SCALE * sum);
+			h[i] = renamenoise_relu(RENAMENOISE_WEIGHTS_SCALE * h[i]);
 		} else {
 			renamenoise_unreachable();
 		}
-		h[i] = z[i] * state[i] + (1 - z[i]) * sum;
+		h[i] = z[i] * state[i] + (1 - z[i]) * h[i];
 	}
+
 	memcpy((void *) state, (void *) h, N * sizeof(float));
 }
 
