@@ -163,9 +163,7 @@ void renamenoise_compute_gru(const ReNameNoiseGRULayer *gru, float *state, const
 		}
 		h[i] = z[i] * state[i] + (1 - z[i]) * sum;
 	}
-	for (i = 0; i < N; i++) {
-		state[i] = h[i];
-	}
+	memcpy((void *) state, (void *) h, N * sizeof(float));
 }
 
 #define RENAMENOISE_INPUT_SIZE 42
