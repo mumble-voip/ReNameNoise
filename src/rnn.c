@@ -100,7 +100,7 @@ void renamenoise_compute_dense(const ReNameNoiseDenseLayer *layer, float *output
       for (i=0;i<N;i++)
          output[i] = renamenoise_relu(output[i]);
    } else {
-     *(int*)0=0;
+      renamenoise_unreachable();
    }
 }
 
@@ -146,7 +146,7 @@ void renamenoise_compute_gru(const ReNameNoiseGRULayer *gru, float *state, const
       if (gru->activation == RENAMENOISE_ACTIVATION_SIGMOID) sum = renamenoise_sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
       else if (gru->activation == RENAMENOISE_ACTIVATION_TANH) sum = renamenoise_tansig_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
       else if (gru->activation == RENAMENOISE_ACTIVATION_RELU) sum = renamenoise_relu(RENAMENOISE_WEIGHTS_SCALE*sum);
-      else *(int*)0=0;
+      else renamenoise_unreachable();
       h[i] = z[i]*state[i] + (1-z[i])*sum;
    }
    for (i=0;i<N;i++)

@@ -203,4 +203,23 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
     #define renamenoise_stackalloc(type, id, len) type id[len]
 #endif
 
+/*
+ * Portable macros for denoting unreachable code.
+ * In such a scenario, perform an early exit ('panic').
+ */
+
+#if _MSC_VER // MSVC
+   #define renamenoise_unreachable() __assume(0)
+#elif __GNUC__ || __clang__ || __MINGW32__
+   #define renamenoise_unreachable() __builtin_unreachable()
+/*
+ * Borland case is unknown.
+ * More investigation needed.
+ */
+//--#elif __BORLANDC__
+//--#define renamenoise_unreachable() __builtin_unreachable()
+#else
+   #define renamenoise_unreachable()
+#endif
+
 #endif /* ARCH_H */
