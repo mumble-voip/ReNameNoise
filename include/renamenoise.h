@@ -54,12 +54,12 @@ typedef struct ReNameNoiseModel ReNameNoiseModel;
 /**
  * Return the size of ReNameNoiseDenoiseState
  */
-RENAMENOISE_EXPORT int renamenoise_get_size();
+RENAMENOISE_EXPORT int renamenoise_get_size(void);
 
 /**
  * Return the number of samples processed by renamenoise_process_frame at a time
  */
-RENAMENOISE_EXPORT int renamenoise_get_frame_size();
+RENAMENOISE_EXPORT int renamenoise_get_frame_size(void);
 
 /**
  * Initializes a pre-allocated ReNameNoiseDenoiseState

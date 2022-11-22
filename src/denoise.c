@@ -165,7 +165,7 @@ void renamenoise_interp_band_gain(float *g, const float *bandE) {
 
 ReNameNoiseCommonState renamenoise_common;
 
-static void renamenoise_check_init() {
+static void renamenoise_check_init(void) {
   int i;
   if (renamenoise_common.init) return;
   renamenoise_common.kfft = renamenoise_fft_alloc_twiddles(2*RENAMENOISE_FRAME_SIZE, NULL, NULL, NULL, 0);
@@ -253,11 +253,11 @@ static void renamenoise_apply_window(float *x) {
   }
 }
 
-int renamenoise_get_size() {
+int renamenoise_get_size(void) {
   return sizeof(ReNameNoiseDenoiseState);
 }
 
-int renamenoise_get_frame_size() {
+int renamenoise_get_frame_size(void) {
   return RENAMENOISE_FRAME_SIZE;
 }
 
