@@ -83,7 +83,7 @@ void renamenoise_fir(
          int ord)
 {
    int i,j;
-   renamenoise_val16 rnum[ord];
+   renamenoise_stackalloc(renamenoise_val16, rnum, ord);
    for(i=0;i<ord;i++)
       rnum[i] = num[ord-i-1];
    for (i=0;i<N-3;i+=4)
@@ -134,8 +134,8 @@ void renamenoise_iir(const renamenoise_val32 *_x,
 #else
    int i,j;
    renamenoise_assert((ord&3)==0);
-   renamenoise_val16 rden[ord];
-   renamenoise_val16 y[N+ord];
+   renamenoise_stackalloc(renamenoise_val16, rden, ord);
+   renamenoise_stackalloc(renamenoise_val16, y, N+ord);
    for(i=0;i<ord;i++)
       rden[i] = den[ord-i-1];
    for(i=0;i<ord;i++)
@@ -195,7 +195,7 @@ int _renamenoise_autocorr(
    int fastN=n-lag;
    int shift;
    const renamenoise_val16 *xptr;
-   renamenoise_val16 xx[n];
+   renamenoise_stackalloc(renamenoise_val16, xx, n);
    renamenoise_assert(n>0);
    renamenoise_assert(overlap>=0);
    if (overlap == 0)

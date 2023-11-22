@@ -235,9 +235,9 @@ void renamenoise_pitch_search(const renamenoise_val16 *x_lp, renamenoise_val16 *
    renamenoise_assert(max_pitch>0);
    lag = len+max_pitch;
 
-   renamenoise_val16 x_lp4[len>>2];
-   renamenoise_val16 y_lp4[lag>>2];
-   renamenoise_val32 xcorr[max_pitch>>1];
+   renamenoise_stackalloc(renamenoise_val16, x_lp4, len>>2);
+   renamenoise_stackalloc(renamenoise_val16, y_lp4, lag>>2);
+   renamenoise_stackalloc(renamenoise_val32, xcorr, max_pitch>>1);
 
    /* Downsample by 2 again */
    for (j=0;j<len>>2;j++)
@@ -313,7 +313,7 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
       *T0_=maxperiod-1;
 
    T = T0 = *T0_;
-   renamenoise_val32 yy_lookup[maxperiod+1];
+   renamenoise_stackalloc(renamenoise_val32, yy_lookup, maxperiod+1);
    renamenoise_dual_inner_prod(x, x, x-T0, N, &xx, &xy);
    yy_lookup[0] = xx;
    yy=xx;

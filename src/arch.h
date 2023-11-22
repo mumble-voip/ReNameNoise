@@ -192,4 +192,15 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 #define RENAMENOISE_GLOBAL_STACK_SIZE 120000
 #endif
 
+#if __STDC_VERSION__ < 199901L || (__STDC_VERSION__ > 201000L && __STDC_NO_VLA__ == 1)
+   #define RENAMENOISE_NO_VLA
+#endif
+
+#ifdef RENAMENOISE_NO_VLA
+    #include <malloc.h>
+    #define renamenoise_stackalloc(type, id, len) type *id = alloca((len) * sizeof(type))
+#else
+    #define renamenoise_stackalloc(type, id, len) type id[len]
+#endif
+
 #endif /* ARCH_H */
