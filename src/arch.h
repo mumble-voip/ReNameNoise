@@ -78,7 +78,7 @@ static OPUS_INLINE void _celt_fatal(const char *str, const char *file, int line)
 #define UADD32(a,b) ((a)+(b))
 #define USUB32(a,b) ((a)-(b))
 
-/* Set this if opus_int64 is a native type of the CPU. */
+/* Set this if renamenoise_int64 is a native type of the CPU. */
 /* Assume that all LP64 architectures have fast 64-bit types; also x86_64
    (which can be ILP32 for x32) and Win64 (which is LLP64). */
 #if defined(__x86_64__) || defined(__LP64__) || defined(_WIN64)
@@ -93,7 +93,7 @@ static OPUS_INLINE void _celt_fatal(const char *str, const char *file, int line)
 
 typedef renamenoise_int16 opus_val16;
 typedef renamenoise_int32 opus_val32;
-typedef opus_int64 opus_val64;
+typedef renamenoise_int64 opus_val64;
 
 typedef opus_val32 celt_sig;
 typedef opus_val16 celt_norm;
