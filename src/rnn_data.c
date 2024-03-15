@@ -11030,7 +11030,7 @@ static const DenseLayer vad_output = {
    24, 1, ACTIVATION_SIGMOID
 };
 
-const struct RNNModel rnnoise_model_orig = {
+const struct ReNameNoiseModel rnnoise_model_orig = {
     24,
     &input_dense,
 

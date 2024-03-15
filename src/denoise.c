@@ -67,7 +67,7 @@
 
 
 /* The built-in model, used if no file is given as input */
-extern const struct RNNModel rnnoise_model_orig;
+extern const struct ReNameNoiseModel rnnoise_model_orig;
 
 
 static const opus_int16 eband5ms[] = {
@@ -261,7 +261,7 @@ int rnnoise_get_frame_size() {
   return FRAME_SIZE;
 }
 
-int rnnoise_init(ReNameNoiseDenoiseState *st, RNNModel *model) {
+int rnnoise_init(ReNameNoiseDenoiseState *st, ReNameNoiseModel *model) {
   memset(st, 0, sizeof(*st));
   if (model)
     st->rnn.model = model;
@@ -273,7 +273,7 @@ int rnnoise_init(ReNameNoiseDenoiseState *st, RNNModel *model) {
   return 0;
 }
 
-ReNameNoiseDenoiseState *rnnoise_create(RNNModel *model) {
+ReNameNoiseDenoiseState *rnnoise_create(ReNameNoiseModel *model) {
   ReNameNoiseDenoiseState *st;
   st = malloc(rnnoise_get_size());
   rnnoise_init(st, model);

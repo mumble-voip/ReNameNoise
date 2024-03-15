@@ -42,14 +42,14 @@
 #define F_ACTIVATION_SIGMOID    1
 #define F_ACTIVATION_RELU       2
 
-RNNModel *rnnoise_model_from_file(FILE *f)
+ReNameNoiseModel *rnnoise_model_from_file(FILE *f)
 {
     int i, in;
 
     if (fscanf(f, "renamenoise-nu model file version %d\n", &in) != 1 || in != 1)
         return NULL;
 
-    RNNModel *ret = calloc(1, sizeof(RNNModel));
+    ReNameNoiseModel *ret = calloc(1, sizeof(ReNameNoiseModel));
     if (!ret)
         return NULL;
 
@@ -137,7 +137,7 @@ RNNModel *rnnoise_model_from_file(FILE *f)
     return ret;
 }
 
-void rnnoise_model_free(RNNModel *model)
+void rnnoise_model_free(ReNameNoiseModel *model)
 {
 #define FREE_MAYBE(ptr) do { if (ptr) free(ptr); } while (0)
 #define FREE_DENSE(name) do { \

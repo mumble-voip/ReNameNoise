@@ -49,7 +49,7 @@ extern "C" {
 #endif
 
 typedef struct ReNameNoiseDenoiseState ReNameNoiseDenoiseState;
-typedef struct RNNModel RNNModel;
+typedef struct ReNameNoiseModel ReNameNoiseModel;
 
 /**
  * Return the size of ReNameNoiseDenoiseState
@@ -68,7 +68,7 @@ RENAMENOISE_EXPORT int rnnoise_get_frame_size();
  *
  * See: rnnoise_create() and rnnoise_model_from_file()
  */
-RENAMENOISE_EXPORT int rnnoise_init(ReNameNoiseDenoiseState *st, RNNModel *model);
+RENAMENOISE_EXPORT int rnnoise_init(ReNameNoiseDenoiseState *st, ReNameNoiseModel *model);
 
 /**
  * Allocate and initialize a ReNameNoiseDenoiseState
@@ -77,7 +77,7 @@ RENAMENOISE_EXPORT int rnnoise_init(ReNameNoiseDenoiseState *st, RNNModel *model
  *
  * The returned pointer MUST be freed with rnnoise_destroy().
  */
-RENAMENOISE_EXPORT ReNameNoiseDenoiseState *rnnoise_create(RNNModel *model);
+RENAMENOISE_EXPORT ReNameNoiseDenoiseState *rnnoise_create(ReNameNoiseModel *model);
 
 /**
  * Free a ReNameNoiseDenoiseState produced by rnnoise_create.
@@ -98,14 +98,14 @@ RENAMENOISE_EXPORT float rnnoise_process_frame(ReNameNoiseDenoiseState *st, floa
  *
  * It must be deallocated with rnnoise_model_free()
  */
-RENAMENOISE_EXPORT RNNModel *rnnoise_model_from_file(FILE *f);
+RENAMENOISE_EXPORT ReNameNoiseModel *rnnoise_model_from_file(FILE *f);
 
 /**
  * Free a custom model
  *
  * It must be called after all the ReNameNoiseDenoiseStates referring to it are freed.
  */
-RENAMENOISE_EXPORT void rnnoise_model_free(RNNModel *model);
+RENAMENOISE_EXPORT void rnnoise_model_free(ReNameNoiseModel *model);
 
 #ifdef __cplusplus
 }

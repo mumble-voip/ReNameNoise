@@ -3,7 +3,7 @@
 
 #include "rnn.h"
 
-struct RNNModel {
+struct ReNameNoiseModel {
   int input_dense_size;
   const DenseLayer *input_dense;
 
@@ -24,7 +24,7 @@ struct RNNModel {
 };
 
 struct RNNState {
-  const RNNModel *model;
+  const ReNameNoiseModel *model;
   float *vad_gru_state;
   float *noise_gru_state;
   float *denoise_gru_state;

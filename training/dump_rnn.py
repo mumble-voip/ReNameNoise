@@ -93,7 +93,7 @@ for i, layer in enumerate(model.layers):
     if len(layer.get_weights()) > 2:
         layer_list.append(layer.name)
 
-f.write('const struct RNNModel renamenoise_model_{} = {{\n'.format(sys.argv[4]))
+f.write('const struct ReNameNoiseModel renamenoise_model_{} = {{\n'.format(sys.argv[4]))
 for i, layer in enumerate(model.layers):
     if len(layer.get_weights()) > 0:
         structLayer(f, layer)
