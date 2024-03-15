@@ -154,6 +154,6 @@
 
 #define renamenoise_uint        unsigned int            /* used for counters etc; at least 16 bits */
 #define renamenoise_uint64      unsigned long long
-#define opus_uint8       unsigned char
+#define renamenoise_uint8       unsigned char
 
 #endif  /* OPUS_TYPES_H */
