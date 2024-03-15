@@ -145,7 +145,7 @@ static const rnn_weight input_dense_bias[24] = {
 static const DenseLayer input_dense = {
    input_dense_bias,
    input_dense_weights,
-   42, 24, ACTIVATION_TANH
+   42, 24, RENAMENOISE_ACTIVATION_TANH
 };
 
 static const rnn_weight vad_gru_weights[1728] = {

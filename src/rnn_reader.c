@@ -88,7 +88,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
             name = ACTIVATION_RELU; \
             break; \
         default: \
-            name = ACTIVATION_TANH; \
+            name = RENAMENOISE_ACTIVATION_TANH; \
     } \
     } while (0)
 
