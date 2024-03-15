@@ -52,7 +52,7 @@ extern "C" {
 #ifdef FIXED_POINT
 #include "arch.h"
 
-#  define kiss_fft_scalar opus_int32
+#  define kiss_fft_scalar renamenoise_int32
 #  define kiss_twiddle_scalar renamenoise_int16
 
 

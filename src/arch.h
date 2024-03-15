@@ -92,7 +92,7 @@ static OPUS_INLINE void _celt_fatal(const char *str, const char *file, int line)
 #ifdef FIXED_POINT
 
 typedef renamenoise_int16 opus_val16;
-typedef opus_int32 opus_val32;
+typedef renamenoise_int32 opus_val32;
 typedef opus_int64 opus_val64;
 
 typedef opus_val32 celt_sig;
@@ -121,7 +121,7 @@ typedef opus_val32 celt_ener;
 #define ABS16(x) ((x) < 0 ? (-(x)) : (x))
 #define ABS32(x) ((x) < 0 ? (-(x)) : (x))
 
-static OPUS_INLINE renamenoise_int16 SAT16(opus_int32 x) {
+static OPUS_INLINE renamenoise_int16 SAT16(renamenoise_int32 x) {
    return x > 32767 ? 32767 : x < -32768 ? -32768 : (renamenoise_int16)x;
 }
 
