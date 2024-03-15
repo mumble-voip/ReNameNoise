@@ -53,7 +53,7 @@ extern "C" {
 #include "arch.h"
 
 #  define kiss_fft_scalar opus_int32
-#  define kiss_twiddle_scalar opus_int16
+#  define kiss_twiddle_scalar renamenoise_int16
 
 
 #else
@@ -93,8 +93,8 @@ typedef struct kiss_fft_state{
     int scale_shift;
 #endif
     int shift;
-    opus_int16 factors[2*MAXFACTORS];
-    const opus_int16 *bitrev;
+    renamenoise_int16 factors[2*MAXFACTORS];
+    const renamenoise_int16 *bitrev;
     const kiss_twiddle_cpx *twiddles;
     arch_fft_state *arch_fft;
 } kiss_fft_state;

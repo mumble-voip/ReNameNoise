@@ -314,10 +314,10 @@ static void kf_bfly5(
 static
 void compute_bitrev_table(
          int Fout,
-         opus_int16 *f,
+         renamenoise_int16 *f,
          const size_t fstride,
          int in_stride,
-         opus_int16 * factors,
+         renamenoise_int16 * factors,
          const kiss_fft_state *st
             )
 {
@@ -349,7 +349,7 @@ void compute_bitrev_table(
     p[i] * m[i] = m[i-1]
     m0 = n                  */
 static
-int kf_factor(int n,opus_int16 * facbuf)
+int kf_factor(int n,renamenoise_int16 * facbuf)
 {
     int p=4;
     int i;
@@ -445,7 +445,7 @@ kiss_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem,
         *lenmem = memneeded;
     }
     if (st) {
-        opus_int16 *bitrev;
+        renamenoise_int16 *bitrev;
         kiss_twiddle_cpx *twiddles;
 
         st->nfft=nfft;
@@ -477,7 +477,7 @@ kiss_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem,
         }
 
         /* bitrev */
-        st->bitrev = bitrev = (opus_int16*)KISS_FFT_MALLOC(sizeof(opus_int16)*nfft);
+        st->bitrev = bitrev = (renamenoise_int16*)KISS_FFT_MALLOC(sizeof(renamenoise_int16)*nfft);
         if (st->bitrev==NULL)
             goto fail;
         compute_bitrev_table(0, bitrev, 1,1, st->factors,st);
@@ -506,7 +506,7 @@ void opus_fft_free(const kiss_fft_state *cfg, int arch)
    if (cfg)
    {
       opus_fft_free_arch((kiss_fft_state *)cfg, arch);
-      opus_free((opus_int16*)cfg->bitrev);
+      opus_free((renamenoise_int16*)cfg->bitrev);
       if (cfg->shift < 0)
          opus_free((kiss_twiddle_cpx*)cfg->twiddles);
       opus_free((kiss_fft_state*)cfg);
