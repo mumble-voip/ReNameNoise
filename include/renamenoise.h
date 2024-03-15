@@ -54,7 +54,7 @@ typedef struct ReNameNoiseModel ReNameNoiseModel;
 /**
  * Return the size of ReNameNoiseDenoiseState
  */
-RENAMENOISE_EXPORT int rnnoise_get_size();
+RENAMENOISE_EXPORT int renamenoise_get_size();
 
 /**
  * Return the number of samples processed by rnnoise_process_frame at a time

@@ -253,7 +253,7 @@ static void apply_window(float *x) {
   }
 }
 
-int rnnoise_get_size() {
+int renamenoise_get_size() {
   return sizeof(ReNameNoiseDenoiseState);
 }
 
@@ -275,7 +275,7 @@ int rnnoise_init(ReNameNoiseDenoiseState *st, ReNameNoiseModel *model) {
 
 ReNameNoiseDenoiseState *rnnoise_create(ReNameNoiseModel *model) {
   ReNameNoiseDenoiseState *st;
-  st = malloc(rnnoise_get_size());
+  st = malloc(renamenoise_get_size());
   rnnoise_init(st, model);
   return st;
 }
