@@ -57,7 +57,7 @@ typedef struct ReNameNoiseModel ReNameNoiseModel;
 RENAMENOISE_EXPORT int renamenoise_get_size();
 
 /**
- * Return the number of samples processed by rnnoise_process_frame at a time
+ * Return the number of samples processed by renamenoise_process_frame at a time
  */
 RENAMENOISE_EXPORT int renamenoise_get_frame_size();
 
@@ -91,7 +91,7 @@ RENAMENOISE_EXPORT void renamenoise_destroy(ReNameNoiseDenoiseState *st);
  *
  * in and out must be at least renamenoise_get_frame_size() large.
  */
-RENAMENOISE_EXPORT float rnnoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const float *in);
+RENAMENOISE_EXPORT float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const float *in);
 
 /**
  * Load a model from a file
