@@ -31,7 +31,7 @@
 
 #include "renamenoise_types.h"
 
-#define WEIGHTS_SCALE (1.f/256)
+#define RENAMENOISE_WEIGHTS_SCALE (1.f/256)
 
 #define MAX_NEURONS 128
 

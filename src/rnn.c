@@ -90,7 +90,7 @@ void compute_dense(const DenseLayer *layer, float *output, const float *input)
       float sum = layer->bias[i];
       for (j=0;j<M;j++)
          sum += layer->input_weights[j*stride + i]*input[j];
-      output[i] = WEIGHTS_SCALE*sum;
+      output[i] = RENAMENOISE_WEIGHTS_SCALE*sum;
    }
    if (layer->activation == ACTIVATION_SIGMOID) {
       for (i=0;i<N;i++)
@@ -125,7 +125,7 @@ void compute_gru(const GRULayer *gru, float *state, const float *input)
          sum += gru->input_weights[j*stride + i]*input[j];
       for (j=0;j<N;j++)
          sum += gru->recurrent_weights[j*stride + i]*state[j];
-      z[i] = sigmoid_approx(WEIGHTS_SCALE*sum);
+      z[i] = sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
    }
    for (i=0;i<N;i++)
    {
@@ -135,7 +135,7 @@ void compute_gru(const GRULayer *gru, float *state, const float *input)
          sum += gru->input_weights[N + j*stride + i]*input[j];
       for (j=0;j<N;j++)
          sum += gru->recurrent_weights[N + j*stride + i]*state[j];
-      r[i] = sigmoid_approx(WEIGHTS_SCALE*sum);
+      r[i] = sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
    }
    for (i=0;i<N;i++)
    {
@@ -145,9 +145,9 @@ void compute_gru(const GRULayer *gru, float *state, const float *input)
          sum += gru->input_weights[2*N + j*stride + i]*input[j];
       for (j=0;j<N;j++)
          sum += gru->recurrent_weights[2*N + j*stride + i]*state[j]*r[j];
-      if (gru->activation == ACTIVATION_SIGMOID) sum = sigmoid_approx(WEIGHTS_SCALE*sum);
-      else if (gru->activation == ACTIVATION_TANH) sum = tansig_approx(WEIGHTS_SCALE*sum);
-      else if (gru->activation == ACTIVATION_RELU) sum = relu(WEIGHTS_SCALE*sum);
+      if (gru->activation == ACTIVATION_SIGMOID) sum = sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
+      else if (gru->activation == ACTIVATION_TANH) sum = tansig_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
+      else if (gru->activation == ACTIVATION_RELU) sum = relu(RENAMENOISE_WEIGHTS_SCALE*sum);
       else *(int*)0=0;
       h[i] = z[i]*state[i] + (1-z[i])*sum;
    }
