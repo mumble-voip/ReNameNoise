@@ -150,7 +150,7 @@
 
 #define renamenoise_int         int                     /* used for counters etc; at least 16 bits */
 #define renamenoise_int64       long long
-#define opus_int8        signed char
+#define renamenoise_int8        signed char
 
 #define opus_uint        unsigned int            /* used for counters etc; at least 16 bits */
 #define opus_uint64      unsigned long long
