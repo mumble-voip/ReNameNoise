@@ -162,7 +162,7 @@ typedef float celt_ener;
    Assumes IEEE 754 format. */
 static OPUS_INLINE int celt_isnan(float x)
 {
-   union {float f; opus_uint32 i;} in;
+   union {float f; renamenoise_uint32 i;} in;
    in.f = x;
    return ((in.i>>23)&0xFF)==0xFF && (in.i&0x007FFFFF)!=0;
 }

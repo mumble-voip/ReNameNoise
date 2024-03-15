@@ -40,29 +40,29 @@
    typedef int16_t renamenoise_int16;
    typedef uint16_t renamenoise_uint16;
    typedef int32_t renamenoise_int32;
-   typedef uint32_t opus_uint32;
+   typedef uint32_t renamenoise_uint32;
 #elif defined(_WIN32)
 
 #  if defined(__CYGWIN__)
 #    include <_G_config.h>
      typedef _G_int32_t renamenoise_int32;
-     typedef _G_uint32_t opus_uint32;
+     typedef _G_uint32_t renamenoise_uint32;
      typedef _G_int16 renamenoise_int16;
      typedef _G_uint16 renamenoise_uint16;
 #  elif defined(__MINGW32__)
      typedef short renamenoise_int16;
      typedef unsigned short renamenoise_uint16;
      typedef int renamenoise_int32;
-     typedef unsigned int opus_uint32;
+     typedef unsigned int renamenoise_uint32;
 #  elif defined(__MWERKS__)
      typedef int renamenoise_int32;
-     typedef unsigned int opus_uint32;
+     typedef unsigned int renamenoise_uint32;
      typedef short renamenoise_int16;
      typedef unsigned short renamenoise_uint16;
 #  else
      /* MSVC/Borland */
      typedef __int32 renamenoise_int32;
-     typedef unsigned __int32 opus_uint32;
+     typedef unsigned __int32 renamenoise_uint32;
      typedef __int16 renamenoise_int16;
      typedef unsigned __int16 renamenoise_uint16;
 #  endif
@@ -73,7 +73,7 @@
    typedef SInt16 renamenoise_int16;
    typedef UInt16 renamenoise_uint16;
    typedef SInt32 renamenoise_int32;
-   typedef UInt32 opus_uint32;
+   typedef UInt32 renamenoise_uint32;
 
 #elif (defined(__APPLE__) && defined(__MACH__)) /* MacOS X Framework build */
 
@@ -81,7 +81,7 @@
    typedef int16_t renamenoise_int16;
    typedef u_int16_t renamenoise_uint16;
    typedef int32_t renamenoise_int32;
-   typedef u_int32_t opus_uint32;
+   typedef u_int32_t renamenoise_uint32;
 
 #elif defined(__BEOS__)
 
@@ -90,7 +90,7 @@
    typedef int16 renamenoise_int16;
    typedef u_int16 renamenoise_uint16;
    typedef int32_t renamenoise_int32;
-   typedef u_int32_t opus_uint32;
+   typedef u_int32_t renamenoise_uint32;
 
 #elif defined (__EMX__)
 
@@ -98,7 +98,7 @@
    typedef short renamenoise_int16;
    typedef unsigned short renamenoise_uint16;
    typedef int renamenoise_int32;
-   typedef unsigned int opus_uint32;
+   typedef unsigned int renamenoise_uint32;
 
 #elif defined (DJGPP)
 
@@ -106,13 +106,13 @@
    typedef short renamenoise_int16;
    typedef unsigned short renamenoise_uint16;
    typedef int renamenoise_int32;
-   typedef unsigned int opus_uint32;
+   typedef unsigned int renamenoise_uint32;
 
 #elif defined(R5900)
 
    /* PS2 EE */
    typedef int renamenoise_int32;
-   typedef unsigned opus_uint32;
+   typedef unsigned renamenoise_uint32;
    typedef short renamenoise_int16;
    typedef unsigned short renamenoise_uint16;
 
@@ -122,21 +122,21 @@
    typedef signed short renamenoise_int16;
    typedef unsigned short renamenoise_uint16;
    typedef signed int renamenoise_int32;
-   typedef unsigned int opus_uint32;
+   typedef unsigned int renamenoise_uint32;
 
 #elif defined(CONFIG_TI_C54X) || defined (CONFIG_TI_C55X)
 
    typedef short renamenoise_int16;
    typedef unsigned short renamenoise_uint16;
    typedef long renamenoise_int32;
-   typedef unsigned long opus_uint32;
+   typedef unsigned long renamenoise_uint32;
 
 #elif defined(CONFIG_TI_C6X)
 
    typedef short renamenoise_int16;
    typedef unsigned short renamenoise_uint16;
    typedef int renamenoise_int32;
-   typedef unsigned int opus_uint32;
+   typedef unsigned int renamenoise_uint32;
 
 #else
 
@@ -144,7 +144,7 @@
    typedef short renamenoise_int16;
    typedef unsigned short renamenoise_uint16;
    typedef int renamenoise_int32;
-   typedef unsigned int opus_uint32;
+   typedef unsigned int renamenoise_uint32;
 
 #endif
 
