@@ -261,7 +261,7 @@ int renamenoise_get_frame_size() {
   return FRAME_SIZE;
 }
 
-int rnnoise_init(ReNameNoiseDenoiseState *st, ReNameNoiseModel *model) {
+int renamenoise_init(ReNameNoiseDenoiseState *st, ReNameNoiseModel *model) {
   memset(st, 0, sizeof(*st));
   if (model)
     st->rnn.model = model;
@@ -276,7 +276,7 @@ int rnnoise_init(ReNameNoiseDenoiseState *st, ReNameNoiseModel *model) {
 ReNameNoiseDenoiseState *rnnoise_create(ReNameNoiseModel *model) {
   ReNameNoiseDenoiseState *st;
   st = malloc(renamenoise_get_size());
-  rnnoise_init(st, model);
+  renamenoise_init(st, model);
   return st;
 }
 

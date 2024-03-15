@@ -68,7 +68,7 @@ RENAMENOISE_EXPORT int renamenoise_get_frame_size();
  *
  * See: rnnoise_create() and rnnoise_model_from_file()
  */
-RENAMENOISE_EXPORT int rnnoise_init(ReNameNoiseDenoiseState *st, ReNameNoiseModel *model);
+RENAMENOISE_EXPORT int renamenoise_init(ReNameNoiseDenoiseState *st, ReNameNoiseModel *model);
 
 /**
  * Allocate and initialize a ReNameNoiseDenoiseState
