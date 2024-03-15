@@ -42,7 +42,7 @@
 #define F_ACTIVATION_SIGMOID    1
 #define F_ACTIVATION_RELU       2
 
-ReNameNoiseModel *rnnoise_model_from_file(FILE *f)
+ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
 {
     int i, in;
 

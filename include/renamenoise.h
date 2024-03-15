@@ -66,7 +66,7 @@ RENAMENOISE_EXPORT int renamenoise_get_frame_size();
  *
  * If model is NULL the default model is used.
  *
- * See: renamenoise_create() and rnnoise_model_from_file()
+ * See: renamenoise_create() and renamenoise_model_from_file()
  */
 RENAMENOISE_EXPORT int renamenoise_init(ReNameNoiseDenoiseState *st, ReNameNoiseModel *model);
 
@@ -98,7 +98,7 @@ RENAMENOISE_EXPORT float renamenoise_process_frame(ReNameNoiseDenoiseState *st, 
  *
  * It must be deallocated with rnnoise_model_free()
  */
-RENAMENOISE_EXPORT ReNameNoiseModel *rnnoise_model_from_file(FILE *f);
+RENAMENOISE_EXPORT ReNameNoiseModel *renamenoise_model_from_file(FILE *f);
 
 /**
  * Free a custom model
