@@ -82,7 +82,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     INPUT_VAL(activation); \
     switch (activation) { \
         case F_ACTIVATION_SIGMOID: \
-            name = ACTIVATION_SIGMOID; \
+            name = RENAMENOISE_ACTIVATION_SIGMOID; \
             break; \
         case F_ACTIVATION_RELU: \
             name = ACTIVATION_RELU; \

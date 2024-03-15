@@ -11011,7 +11011,7 @@ static const rnn_weight denoise_output_bias[22] = {
 static const DenseLayer denoise_output = {
    denoise_output_bias,
    denoise_output_weights,
-   96, 22, ACTIVATION_SIGMOID
+   96, 22, RENAMENOISE_ACTIVATION_SIGMOID
 };
 
 static const rnn_weight vad_output_weights[24] = {
@@ -11027,7 +11027,7 @@ static const rnn_weight vad_output_bias[1] = {
 static const DenseLayer vad_output = {
    vad_output_bias,
    vad_output_weights,
-   24, 1, ACTIVATION_SIGMOID
+   24, 1, RENAMENOISE_ACTIVATION_SIGMOID
 };
 
 const struct ReNameNoiseModel rnnoise_model_orig = {

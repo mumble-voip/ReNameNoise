@@ -36,7 +36,7 @@
 #define RENAMENOISE_MAX_NEURONS 128
 
 #define RENAMENOISE_ACTIVATION_TANH    0
-#define ACTIVATION_SIGMOID 1
+#define RENAMENOISE_ACTIVATION_SIGMOID 1
 #define ACTIVATION_RELU    2
 
 typedef signed char rnn_weight;
