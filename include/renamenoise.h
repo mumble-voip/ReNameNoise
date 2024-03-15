@@ -82,7 +82,7 @@ RENAMENOISE_EXPORT ReNameNoiseDenoiseState *renamenoise_create(ReNameNoiseModel 
 /**
  * Free a ReNameNoiseDenoiseState produced by renamenoise_create.
  *
- * The optional custom model must be freed by rnnoise_model_free() after.
+ * The optional custom model must be freed by renamenoise_model_free() after.
  */
 RENAMENOISE_EXPORT void renamenoise_destroy(ReNameNoiseDenoiseState *st);
 
@@ -96,7 +96,7 @@ RENAMENOISE_EXPORT float renamenoise_process_frame(ReNameNoiseDenoiseState *st, 
 /**
  * Load a model from a file
  *
- * It must be deallocated with rnnoise_model_free()
+ * It must be deallocated with renamenoise_model_free()
  */
 RENAMENOISE_EXPORT ReNameNoiseModel *renamenoise_model_from_file(FILE *f);
 
@@ -105,7 +105,7 @@ RENAMENOISE_EXPORT ReNameNoiseModel *renamenoise_model_from_file(FILE *f);
  *
  * It must be called after all the ReNameNoiseDenoiseStates referring to it are freed.
  */
-RENAMENOISE_EXPORT void rnnoise_model_free(ReNameNoiseModel *model);
+RENAMENOISE_EXPORT void renamenoise_model_free(ReNameNoiseModel *model);
 
 #ifdef __cplusplus
 }

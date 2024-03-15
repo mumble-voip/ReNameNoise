@@ -57,7 +57,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     type *name; \
     name = calloc(1, sizeof(type)); \
     if (!name) { \
-        rnnoise_model_free(ret); \
+        renamenoise_model_free(ret); \
         return NULL; \
     } \
     ret->name = name
@@ -71,7 +71,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
 
 #define INPUT_VAL(name) do { \
     if (fscanf(f, "%d", &in) != 1 || in < 0 || in > 128) { \
-        rnnoise_model_free(ret); \
+        renamenoise_model_free(ret); \
         return NULL; \
     } \
     name = in; \
@@ -95,13 +95,13 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
 #define INPUT_ARRAY(name, len) do { \
     rnn_weight *values = malloc((len) * sizeof(rnn_weight)); \
     if (!values) { \
-        rnnoise_model_free(ret); \
+        renamenoise_model_free(ret); \
         return NULL; \
     } \
     name = values; \
     for (i = 0; i < (len); i++) { \
         if (fscanf(f, "%d", &in) != 1) { \
-            rnnoise_model_free(ret); \
+            renamenoise_model_free(ret); \
             return NULL; \
         } \
         values[i] = in; \
@@ -137,7 +137,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     return ret;
 }
 
-void rnnoise_model_free(ReNameNoiseModel *model)
+void renamenoise_model_free(ReNameNoiseModel *model)
 {
 #define FREE_MAYBE(ptr) do { if (ptr) free(ptr); } while (0)
 #define FREE_DENSE(name) do { \
