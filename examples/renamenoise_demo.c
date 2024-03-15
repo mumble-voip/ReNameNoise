@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
     if (!first) fwrite(tmp, sizeof(short), FRAME_SIZE, fout);
     first = 0;
   }
-  rnnoise_destroy(st);
+  renamenoise_destroy(st);
   fclose(f1);
   fclose(fout);
   return 0;

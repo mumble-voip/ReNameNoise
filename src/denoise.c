@@ -280,7 +280,7 @@ ReNameNoiseDenoiseState *renamenoise_create(ReNameNoiseModel *model) {
   return st;
 }
 
-void rnnoise_destroy(ReNameNoiseDenoiseState *st) {
+void renamenoise_destroy(ReNameNoiseDenoiseState *st) {
   free(st->rnn.vad_gru_state);
   free(st->rnn.noise_gru_state);
   free(st->rnn.denoise_gru_state);
