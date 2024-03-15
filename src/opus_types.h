@@ -148,7 +148,7 @@
 
 #endif
 
-#define opus_int         int                     /* used for counters etc; at least 16 bits */
+#define renamenoise_int         int                     /* used for counters etc; at least 16 bits */
 #define opus_int64       long long
 #define opus_int8        signed char
 
