@@ -257,7 +257,7 @@ int renamenoise_get_size() {
   return sizeof(ReNameNoiseDenoiseState);
 }
 
-int rnnoise_get_frame_size() {
+int renamenoise_get_frame_size() {
   return FRAME_SIZE;
 }
 

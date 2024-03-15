@@ -59,7 +59,7 @@ RENAMENOISE_EXPORT int renamenoise_get_size();
 /**
  * Return the number of samples processed by rnnoise_process_frame at a time
  */
-RENAMENOISE_EXPORT int rnnoise_get_frame_size();
+RENAMENOISE_EXPORT int renamenoise_get_frame_size();
 
 /**
  * Initializes a pre-allocated ReNameNoiseDenoiseState
@@ -89,7 +89,7 @@ RENAMENOISE_EXPORT void rnnoise_destroy(ReNameNoiseDenoiseState *st);
 /**
  * Denoise a frame of samples
  *
- * in and out must be at least rnnoise_get_frame_size() large.
+ * in and out must be at least renamenoise_get_frame_size() large.
  */
 RENAMENOISE_EXPORT float rnnoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const float *in);
 
