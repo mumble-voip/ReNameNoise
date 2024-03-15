@@ -26,7 +26,7 @@
 */
 
 #include <stdio.h>
-#include "rnnoise.h"
+#include "renamenoise.h"
 
 #define FRAME_SIZE 480
 

@@ -5,6 +5,6 @@ set -e
 srcdir=`dirname $0`
 test -n "$srcdir" && cd "$srcdir"
 
-echo "Updating build configuration files for rnnoise, please wait...."
+echo "Updating build configuration files for renamenoise, please wait...."
 
 autoreconf -isf

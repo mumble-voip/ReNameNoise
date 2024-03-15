@@ -34,7 +34,7 @@
 
 #include "rnn.h"
 #include "rnn_data.h"
-#include "rnnoise.h"
+#include "renamenoise.h"
 
 /* Although these values are the same as in rnn.h, we make them separate to
  * avoid accidentally burning internal values into a file format */
@@ -46,7 +46,7 @@ RNNModel *rnnoise_model_from_file(FILE *f)
 {
     int i, in;
 
-    if (fscanf(f, "rnnoise-nu model file version %d\n", &in) != 1 || in != 1)
+    if (fscanf(f, "renamenoise-nu model file version %d\n", &in) != 1 || in != 1)
         return NULL;
 
     RNNModel *ret = calloc(1, sizeof(RNNModel));

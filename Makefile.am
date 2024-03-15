@@ -2,11 +2,11 @@ ACLOCAL_AMFLAGS = -I m4
 
 AM_CFLAGS = -I$(top_srcdir)/include $(DEPS_CFLAGS)
 
-dist_doc_DATA = COPYING AUTHORS README
+dist_doc_DATA = COPYING AUTHORS README.md
 
-include_HEADERS = include/rnnoise.h
+include_HEADERS = include/renamenoise.h
 
-lib_LTLIBRARIES = librnnoise.la
+lib_LTLIBRARIES = librenamenoise.la
 noinst_HEADERS = src/arch.h  \
 		 src/celt_lpc.h  \
 		 src/common.h  \
@@ -18,7 +18,7 @@ noinst_HEADERS = src/arch.h  \
 		 src/rnn.h  \
 		 src/tansig_table.h
 
-librnnoise_la_SOURCES = \
+librenamenoise_la_SOURCES = \
 	src/denoise.c \
 	src/rnn.c \
 	src/rnn_data.c \
@@ -27,34 +27,34 @@ librnnoise_la_SOURCES = \
 	src/kiss_fft.c \
 	src/celt_lpc.c
 
-librnnoise_la_LIBADD = $(DEPS_LIBS) $(lrintf_lib) $(LIBM)
-librnnoise_la_LDFLAGS = -no-undefined \
+librenamenoise_la_LIBADD = $(DEPS_LIBS) $(lrintf_lib) $(LIBM)
+librenamenoise_la_LDFLAGS = -no-undefined \
  -version-info @OP_LT_CURRENT@:@OP_LT_REVISION@:@OP_LT_AGE@
 
 if OP_ENABLE_EXAMPLES
-noinst_PROGRAMS = examples/rnnoise_demo
+noinst_PROGRAMS = examples/renamenoise_demo
 endif
 
-examples_rnnoise_demo_SOURCES = examples/rnnoise_demo.c
-examples_rnnoise_demo_LDADD = librnnoise.la
+examples_renamenoise_demo_SOURCES = examples/renamenoise_demo.c
+examples_renamenoise_demo_LDADD = librenamenoise.la
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = rnnoise.pc
+pkgconfig_DATA = renamenoise.pc
 
 debug:
 	$(MAKE) CFLAGS="${CFLAGS} -O0 -ggdb -DOP_ENABLE_ASSERTIONS" all
 
 EXTRA_DIST = \
- rnnoise.pc.in \
- rnnoise-uninstalled.pc.in \
+ renamenoise.pc.in \
+ renamenoise-uninstalled.pc.in \
  doc/Doxyfile.in \
  doc/Makefile
 
 # Targets to build and install just the library without the docs
-librnnoise install-librnnoise: NO_DOXYGEN = 1
+librenamenoise install-librenamenoise: NO_DOXYGEN = 1
 
-rnnoise: all
-install-rnnoise: install
+renamenoise: all
+install-renamenoise: install
 
 # Or just the docs
 docs: doc/doxygen-build.stamp
@@ -127,4 +127,4 @@ dist-hook:
 	echo 'PACKAGE_VERSION="$(PACKAGE_VERSION)"' > $(top_distdir)/package_version
 
 
-.PHONY: rnnoise install-rnnoise docs install-docs
+.PHONY: renamenoise install-renamenoise docs install-docs

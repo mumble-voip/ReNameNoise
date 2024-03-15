@@ -10,7 +10,7 @@
 #define OPUS_INLINE inline
 
 
-/** RNNoise wrapper for malloc(). To do your own dynamic allocation, all you need t
+/** ReNameNoise wrapper for malloc(). To do your own dynamic allocation, all you need t
 o do is replace this function and rnnoise_free */
 #ifndef OVERRIDE_RNNOISE_ALLOC
 static RNN_INLINE void *rnnoise_alloc (size_t size)
@@ -19,7 +19,7 @@ static RNN_INLINE void *rnnoise_alloc (size_t size)
 }
 #endif
 
-/** RNNoise wrapper for free(). To do your own dynamic allocation, all you need to do is replace this function and rnnoise_alloc */
+/** ReNameNoise wrapper for free(). To do your own dynamic allocation, all you need to do is replace this function and rnnoise_alloc */
 #ifndef OVERRIDE_RNNOISE_FREE
 static RNN_INLINE void rnnoise_free (void *ptr)
 {

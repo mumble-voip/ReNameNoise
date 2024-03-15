@@ -25,8 +25,8 @@
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef RNNOISE_H
-#define RNNOISE_H 1
+#ifndef RENAMENOISE_H
+#define RENAMENOISE_H 1
 
 #include <stdio.h>
 
@@ -36,12 +36,12 @@ extern "C" {
 
 #ifndef RNNOISE_EXPORT
 # if defined(WIN32)
-#  if defined(RNNOISE_BUILD) && defined(DLL_EXPORT)
+#  if defined(RENAMENOISE_BUILD) && defined(DLL_EXPORT)
 #   define RNNOISE_EXPORT __declspec(dllexport)
 #  else
 #   define RNNOISE_EXPORT
 #  endif
-# elif defined(__GNUC__) && defined(RNNOISE_BUILD)
+# elif defined(__GNUC__) && defined(RENAMENOISE_BUILD)
 #  define RNNOISE_EXPORT __attribute__ ((visibility ("default")))
 # else
 #  define RNNOISE_EXPORT

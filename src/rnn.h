@@ -27,7 +27,7 @@
 #ifndef RNN_H_
 #define RNN_H_
 
-#include "rnnoise.h"
+#include "renamenoise.h"
 
 #include "opus_types.h"
 
