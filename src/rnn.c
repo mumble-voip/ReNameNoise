@@ -111,9 +111,9 @@ void compute_gru(const GRULayer *gru, float *state, const float *input)
    int i, j;
    int N, M;
    int stride;
-   float z[MAX_NEURONS];
-   float r[MAX_NEURONS];
-   float h[MAX_NEURONS];
+   float z[RENAMENOISE_MAX_NEURONS];
+   float r[RENAMENOISE_MAX_NEURONS];
+   float h[RENAMENOISE_MAX_NEURONS];
    M = gru->nb_inputs;
    N = gru->nb_neurons;
    stride = 3*N;
@@ -159,9 +159,9 @@ void compute_gru(const GRULayer *gru, float *state, const float *input)
 
 void compute_rnn(RNNState *rnn, float *gains, float *vad, const float *input) {
   int i;
-  float dense_out[MAX_NEURONS];
-  float noise_input[MAX_NEURONS*3];
-  float denoise_input[MAX_NEURONS*3];
+  float dense_out[RENAMENOISE_MAX_NEURONS];
+  float noise_input[RENAMENOISE_MAX_NEURONS*3];
+  float denoise_input[RENAMENOISE_MAX_NEURONS*3];
   compute_dense(rnn->model->input_dense, dense_out, input);
   compute_gru(rnn->model->vad_gru, rnn->vad_gru_state, dense_out);
   compute_dense(rnn->model->vad_output, vad, rnn->vad_gru_state);
