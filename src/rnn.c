@@ -98,7 +98,7 @@ void compute_dense(const DenseLayer *layer, float *output, const float *input)
    } else if (layer->activation == RENAMENOISE_ACTIVATION_TANH) {
       for (i=0;i<N;i++)
          output[i] = tansig_approx(output[i]);
-   } else if (layer->activation == ACTIVATION_RELU) {
+   } else if (layer->activation == RENAMENOISE_ACTIVATION_RELU) {
       for (i=0;i<N;i++)
          output[i] = relu(output[i]);
    } else {
@@ -147,7 +147,7 @@ void compute_gru(const GRULayer *gru, float *state, const float *input)
          sum += gru->recurrent_weights[2*N + j*stride + i]*state[j]*r[j];
       if (gru->activation == RENAMENOISE_ACTIVATION_SIGMOID) sum = sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
       else if (gru->activation == RENAMENOISE_ACTIVATION_TANH) sum = tansig_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
-      else if (gru->activation == ACTIVATION_RELU) sum = relu(RENAMENOISE_WEIGHTS_SCALE*sum);
+      else if (gru->activation == RENAMENOISE_ACTIVATION_RELU) sum = relu(RENAMENOISE_WEIGHTS_SCALE*sum);
       else *(int*)0=0;
       h[i] = z[i]*state[i] + (1-z[i])*sum;
    }

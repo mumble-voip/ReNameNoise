@@ -602,7 +602,7 @@ static const GRULayer vad_gru = {
    vad_gru_bias,
    vad_gru_weights,
    vad_gru_recurrent_weights,
-   24, 24, ACTIVATION_RELU
+   24, 24, RENAMENOISE_ACTIVATION_RELU
 };
 
 static const rnn_weight noise_gru_weights[12960] = {
@@ -3120,7 +3120,7 @@ static const GRULayer noise_gru = {
    noise_gru_bias,
    noise_gru_weights,
    noise_gru_recurrent_weights,
-   90, 48, ACTIVATION_RELU
+   90, 48, RENAMENOISE_ACTIVATION_RELU
 };
 
 static const rnn_weight denoise_gru_weights[32832] = {
@@ -10732,7 +10732,7 @@ static const GRULayer denoise_gru = {
    denoise_gru_bias,
    denoise_gru_weights,
    denoise_gru_recurrent_weights,
-   114, 96, ACTIVATION_RELU
+   114, 96, RENAMENOISE_ACTIVATION_RELU
 };
 
 static const rnn_weight denoise_output_weights[2112] = {

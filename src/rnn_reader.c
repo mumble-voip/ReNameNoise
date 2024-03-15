@@ -85,7 +85,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
             name = RENAMENOISE_ACTIVATION_SIGMOID; \
             break; \
         case F_ACTIVATION_RELU: \
-            name = ACTIVATION_RELU; \
+            name = RENAMENOISE_ACTIVATION_RELU; \
             break; \
         default: \
             name = RENAMENOISE_ACTIVATION_TANH; \

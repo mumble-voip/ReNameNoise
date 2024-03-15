@@ -37,7 +37,7 @@
 
 #define RENAMENOISE_ACTIVATION_TANH    0
 #define RENAMENOISE_ACTIVATION_SIGMOID 1
-#define ACTIVATION_RELU    2
+#define RENAMENOISE_ACTIVATION_RELU    2
 
 typedef signed char rnn_weight;
 
