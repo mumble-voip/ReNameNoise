@@ -273,7 +273,7 @@ int renamenoise_init(ReNameNoiseDenoiseState *st, ReNameNoiseModel *model) {
   return 0;
 }
 
-ReNameNoiseDenoiseState *rnnoise_create(ReNameNoiseModel *model) {
+ReNameNoiseDenoiseState *renamenoise_create(ReNameNoiseModel *model) {
   ReNameNoiseDenoiseState *st;
   st = malloc(renamenoise_get_size());
   renamenoise_init(st, model);
@@ -530,9 +530,9 @@ int main(int argc, char **argv) {
   ReNameNoiseDenoiseState *st;
   ReNameNoiseDenoiseState *noise_state;
   ReNameNoiseDenoiseState *noisy;
-  st = rnnoise_create(NULL);
-  noise_state = rnnoise_create(NULL);
-  noisy = rnnoise_create(NULL);
+  st = renamenoise_create(NULL);
+  noise_state = renamenoise_create(NULL);
+  noisy = renamenoise_create(NULL);
   if (argc!=4) {
     fprintf(stderr, "usage: %s <speech> <noise> <count>\n", argv[0]);
     return 1;
