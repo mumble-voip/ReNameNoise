@@ -83,7 +83,7 @@ typedef struct {
   float dct_table[NB_BANDS*NB_BANDS];
 } CommonState;
 
-struct DenoiseState {
+struct ReNameNoiseDenoiseState {
   float analysis_mem[FRAME_SIZE];
   float cepstral_mem[CEPS_MEM][NB_BANDS];
   int memid;
@@ -254,14 +254,14 @@ static void apply_window(float *x) {
 }
 
 int rnnoise_get_size() {
-  return sizeof(DenoiseState);
+  return sizeof(ReNameNoiseDenoiseState);
 }
 
 int rnnoise_get_frame_size() {
   return FRAME_SIZE;
 }
 
-int rnnoise_init(DenoiseState *st, RNNModel *model) {
+int rnnoise_init(ReNameNoiseDenoiseState *st, RNNModel *model) {
   memset(st, 0, sizeof(*st));
   if (model)
     st->rnn.model = model;
@@ -273,14 +273,14 @@ int rnnoise_init(DenoiseState *st, RNNModel *model) {
   return 0;
 }
 
-DenoiseState *rnnoise_create(RNNModel *model) {
-  DenoiseState *st;
+ReNameNoiseDenoiseState *rnnoise_create(RNNModel *model) {
+  ReNameNoiseDenoiseState *st;
   st = malloc(rnnoise_get_size());
   rnnoise_init(st, model);
   return st;
 }
 
-void rnnoise_destroy(DenoiseState *st) {
+void rnnoise_destroy(ReNameNoiseDenoiseState *st) {
   free(st->rnn.vad_gru_state);
   free(st->rnn.noise_gru_state);
   free(st->rnn.denoise_gru_state);
@@ -292,7 +292,7 @@ int lowpass = FREQ_SIZE;
 int band_lp = NB_BANDS;
 #endif
 
-static void frame_analysis(DenoiseState *st, kiss_fft_cpx *X, float *Ex, const float *in) {
+static void frame_analysis(ReNameNoiseDenoiseState *st, kiss_fft_cpx *X, float *Ex, const float *in) {
   int i;
   float x[WINDOW_SIZE];
   RNN_COPY(x, st->analysis_mem, FRAME_SIZE);
@@ -307,7 +307,7 @@ static void frame_analysis(DenoiseState *st, kiss_fft_cpx *X, float *Ex, const f
   compute_band_energy(Ex, X);
 }
 
-static int compute_frame_features(DenoiseState *st, kiss_fft_cpx *X, kiss_fft_cpx *P,
+static int compute_frame_features(ReNameNoiseDenoiseState *st, kiss_fft_cpx *X, kiss_fft_cpx *P,
                                   float *Ex, float *Ep, float *Exp, float *features, const float *in) {
   int i;
   float E = 0;
@@ -398,7 +398,7 @@ static int compute_frame_features(DenoiseState *st, kiss_fft_cpx *X, kiss_fft_cp
   return TRAINING && E < 0.1;
 }
 
-static void frame_synthesis(DenoiseState *st, float *out, const kiss_fft_cpx *y) {
+static void frame_synthesis(ReNameNoiseDenoiseState *st, float *out, const kiss_fft_cpx *y) {
   float x[WINDOW_SIZE];
   int i;
   inverse_transform(x, y);
@@ -455,7 +455,7 @@ void pitch_filter(kiss_fft_cpx *X, const kiss_fft_cpx *P, const float *Ex, const
   }
 }
 
-float rnnoise_process_frame(DenoiseState *st, float *out, const float *in) {
+float rnnoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const float *in) {
   int i;
   kiss_fft_cpx X[FREQ_SIZE];
   kiss_fft_cpx P[WINDOW_SIZE];
@@ -527,9 +527,9 @@ int main(int argc, char **argv) {
   float speech_gain = 1, noise_gain = 1;
   FILE *f1, *f2;
   int maxCount;
-  DenoiseState *st;
-  DenoiseState *noise_state;
-  DenoiseState *noisy;
+  ReNameNoiseDenoiseState *st;
+  ReNameNoiseDenoiseState *noise_state;
+  ReNameNoiseDenoiseState *noisy;
   st = rnnoise_create(NULL);
   noise_state = rnnoise_create(NULL);
   noisy = rnnoise_create(NULL);

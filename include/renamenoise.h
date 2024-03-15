@@ -48,11 +48,11 @@ extern "C" {
 # endif
 #endif
 
-typedef struct DenoiseState DenoiseState;
+typedef struct ReNameNoiseDenoiseState ReNameNoiseDenoiseState;
 typedef struct RNNModel RNNModel;
 
 /**
- * Return the size of DenoiseState
+ * Return the size of ReNameNoiseDenoiseState
  */
 RENAMENOISE_EXPORT int rnnoise_get_size();
 
@@ -62,36 +62,36 @@ RENAMENOISE_EXPORT int rnnoise_get_size();
 RENAMENOISE_EXPORT int rnnoise_get_frame_size();
 
 /**
- * Initializes a pre-allocated DenoiseState
+ * Initializes a pre-allocated ReNameNoiseDenoiseState
  *
  * If model is NULL the default model is used.
  *
  * See: rnnoise_create() and rnnoise_model_from_file()
  */
-RENAMENOISE_EXPORT int rnnoise_init(DenoiseState *st, RNNModel *model);
+RENAMENOISE_EXPORT int rnnoise_init(ReNameNoiseDenoiseState *st, RNNModel *model);
 
 /**
- * Allocate and initialize a DenoiseState
+ * Allocate and initialize a ReNameNoiseDenoiseState
  *
  * If model is NULL the default model is used.
  *
  * The returned pointer MUST be freed with rnnoise_destroy().
  */
-RENAMENOISE_EXPORT DenoiseState *rnnoise_create(RNNModel *model);
+RENAMENOISE_EXPORT ReNameNoiseDenoiseState *rnnoise_create(RNNModel *model);
 
 /**
- * Free a DenoiseState produced by rnnoise_create.
+ * Free a ReNameNoiseDenoiseState produced by rnnoise_create.
  *
  * The optional custom model must be freed by rnnoise_model_free() after.
  */
-RENAMENOISE_EXPORT void rnnoise_destroy(DenoiseState *st);
+RENAMENOISE_EXPORT void rnnoise_destroy(ReNameNoiseDenoiseState *st);
 
 /**
  * Denoise a frame of samples
  *
  * in and out must be at least rnnoise_get_frame_size() large.
  */
-RENAMENOISE_EXPORT float rnnoise_process_frame(DenoiseState *st, float *out, const float *in);
+RENAMENOISE_EXPORT float rnnoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const float *in);
 
 /**
  * Load a model from a file
@@ -103,7 +103,7 @@ RENAMENOISE_EXPORT RNNModel *rnnoise_model_from_file(FILE *f);
 /**
  * Free a custom model
  *
- * It must be called after all the DenoiseStates referring to it are freed.
+ * It must be called after all the ReNameNoiseDenoiseStates referring to it are freed.
  */
 RENAMENOISE_EXPORT void rnnoise_model_free(RNNModel *model);
 
