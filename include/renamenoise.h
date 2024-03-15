@@ -34,17 +34,17 @@
 extern "C" {
 #endif
 
-#ifndef RNNOISE_EXPORT
+#ifndef RENAMENOISE_EXPORT
 # if defined(WIN32)
 #  if defined(RENAMENOISE_BUILD) && defined(DLL_EXPORT)
-#   define RNNOISE_EXPORT __declspec(dllexport)
+#   define RENAMENOISE_EXPORT __declspec(dllexport)
 #  else
-#   define RNNOISE_EXPORT
+#   define RENAMENOISE_EXPORT
 #  endif
 # elif defined(__GNUC__) && defined(RENAMENOISE_BUILD)
-#  define RNNOISE_EXPORT __attribute__ ((visibility ("default")))
+#  define RENAMENOISE_EXPORT __attribute__ ((visibility ("default")))
 # else
-#  define RNNOISE_EXPORT
+#  define RENAMENOISE_EXPORT
 # endif
 #endif
 
@@ -54,12 +54,12 @@ typedef struct RNNModel RNNModel;
 /**
  * Return the size of DenoiseState
  */
-RNNOISE_EXPORT int rnnoise_get_size();
+RENAMENOISE_EXPORT int rnnoise_get_size();
 
 /**
  * Return the number of samples processed by rnnoise_process_frame at a time
  */
-RNNOISE_EXPORT int rnnoise_get_frame_size();
+RENAMENOISE_EXPORT int rnnoise_get_frame_size();
 
 /**
  * Initializes a pre-allocated DenoiseState
@@ -68,7 +68,7 @@ RNNOISE_EXPORT int rnnoise_get_frame_size();
  *
  * See: rnnoise_create() and rnnoise_model_from_file()
  */
-RNNOISE_EXPORT int rnnoise_init(DenoiseState *st, RNNModel *model);
+RENAMENOISE_EXPORT int rnnoise_init(DenoiseState *st, RNNModel *model);
 
 /**
  * Allocate and initialize a DenoiseState
@@ -77,35 +77,35 @@ RNNOISE_EXPORT int rnnoise_init(DenoiseState *st, RNNModel *model);
  *
  * The returned pointer MUST be freed with rnnoise_destroy().
  */
-RNNOISE_EXPORT DenoiseState *rnnoise_create(RNNModel *model);
+RENAMENOISE_EXPORT DenoiseState *rnnoise_create(RNNModel *model);
 
 /**
  * Free a DenoiseState produced by rnnoise_create.
  *
  * The optional custom model must be freed by rnnoise_model_free() after.
  */
-RNNOISE_EXPORT void rnnoise_destroy(DenoiseState *st);
+RENAMENOISE_EXPORT void rnnoise_destroy(DenoiseState *st);
 
 /**
  * Denoise a frame of samples
  *
  * in and out must be at least rnnoise_get_frame_size() large.
  */
-RNNOISE_EXPORT float rnnoise_process_frame(DenoiseState *st, float *out, const float *in);
+RENAMENOISE_EXPORT float rnnoise_process_frame(DenoiseState *st, float *out, const float *in);
 
 /**
  * Load a model from a file
  *
  * It must be deallocated with rnnoise_model_free()
  */
-RNNOISE_EXPORT RNNModel *rnnoise_model_from_file(FILE *f);
+RENAMENOISE_EXPORT RNNModel *rnnoise_model_from_file(FILE *f);
 
 /**
  * Free a custom model
  *
  * It must be called after all the DenoiseStates referring to it are freed.
  */
-RNNOISE_EXPORT void rnnoise_model_free(RNNModel *model);
+RENAMENOISE_EXPORT void rnnoise_model_free(RNNModel *model);
 
 #ifdef __cplusplus
 }
