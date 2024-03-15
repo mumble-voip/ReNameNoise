@@ -34,7 +34,7 @@
 #ifndef ARCH_H
 #define ARCH_H
 
-#include "opus_types.h"
+#include "renamenoise_types.h"
 #include "common.h"
 
 # if !defined(__GNUC_PREREQ)

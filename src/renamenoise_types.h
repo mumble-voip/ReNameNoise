@@ -24,14 +24,14 @@
    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-/* opus_types.h based on ogg_types.h from libogg */
+/* renamenoise_types.h based on opus_types.h based on ogg_types.h from libogg */
 
 /**
-   @file opus_types.h
-   @brief Opus reference implementation types
+   @file renamenoise_types.h
+   @brief Reference implementation types
 */
-#ifndef OPUS_TYPES_H
-#define OPUS_TYPES_H
+#ifndef RENAMENOISE_TYPES_H
+#define RENAMENOISE_TYPES_H
 
 /* Use the real stdint.h if it's there (taken from Paul Hsieh's pstdint.h) */
 #if (defined(__STDC__) && __STDC__ && defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || (defined(__GNUC__) && (defined(_STDINT_H) || defined(_STDINT_H_)) || defined (HAVE_STDINT_H))
@@ -156,4 +156,4 @@
 #define renamenoise_uint64      unsigned long long
 #define renamenoise_uint8       unsigned char
 
-#endif  /* OPUS_TYPES_H */
+#endif  /* RENAMENOISE_TYPES_H */

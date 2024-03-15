@@ -30,7 +30,7 @@
 #endif
 
 #include <math.h>
-#include "opus_types.h"
+#include "renamenoise_types.h"
 #include "common.h"
 #include "arch.h"
 #include "tansig_table.h"

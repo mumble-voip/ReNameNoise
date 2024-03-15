@@ -29,7 +29,7 @@
 
 #include "renamenoise.h"
 
-#include "opus_types.h"
+#include "renamenoise_types.h"
 
 #define WEIGHTS_SCALE (1.f/256)
 

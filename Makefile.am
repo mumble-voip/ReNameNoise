@@ -12,7 +12,7 @@ noinst_HEADERS = src/arch.h  \
 		 src/common.h  \
 		 src/_kiss_fft_guts.h  \
 		 src/kiss_fft.h  \
-		 src/opus_types.h  \
+		 src/renamenoise_types.h  \
 		 src/pitch.h  \
 		 src/rnn_data.h  \
 		 src/rnn.h  \
