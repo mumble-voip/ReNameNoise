@@ -39,20 +39,20 @@
 #define RENAMENOISE_ACTIVATION_SIGMOID 1
 #define RENAMENOISE_ACTIVATION_RELU    2
 
-typedef signed char rnn_weight;
+typedef signed char renamenoise_rnn_weight;
 
 typedef struct {
-  const rnn_weight *bias;
-  const rnn_weight *input_weights;
+  const renamenoise_rnn_weight *bias;
+  const renamenoise_rnn_weight *input_weights;
   int nb_inputs;
   int nb_neurons;
   int activation;
 } DenseLayer;
 
 typedef struct {
-  const rnn_weight *bias;
-  const rnn_weight *input_weights;
-  const rnn_weight *recurrent_weights;
+  const renamenoise_rnn_weight *bias;
+  const renamenoise_rnn_weight *input_weights;
+  const renamenoise_rnn_weight *recurrent_weights;
   int nb_inputs;
   int nb_neurons;
   int activation;

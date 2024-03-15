@@ -7,7 +7,7 @@
 #include "rnn.h"
 #include "rnn_data.h"
 
-static const rnn_weight input_dense_weights[1008] = {
+static const renamenoise_rnn_weight input_dense_weights[1008] = {
    -10, 0, -3, 1, -8, -6, 3, -13,
    1, 0, -3, -7, -5, -3, 6, -1,
    -6, 0, -6, -4, -1, -2, 1, 1,
@@ -136,7 +136,7 @@ static const rnn_weight input_dense_weights[1008] = {
    14, 6, 9, 26, 25, -25, -25, -18
 };
 
-static const rnn_weight input_dense_bias[24] = {
+static const renamenoise_rnn_weight input_dense_bias[24] = {
    38, -6, 127, 127, 127, -43, -127, 78,
    127, 5, 127, 123, 127, 127, -128, -76,
    -126, 28, 127, 125, -30, 127, -89, -20
@@ -148,7 +148,7 @@ static const DenseLayer input_dense = {
    42, 24, RENAMENOISE_ACTIVATION_TANH
 };
 
-static const rnn_weight vad_gru_weights[1728] = {
+static const renamenoise_rnn_weight vad_gru_weights[1728] = {
    -124, 23, -123, -33, -95, -4, 8, -84,
    4, 101, -119, 116, -4, 123, 103, -51,
    29, -124, -114, -49, 31, 9, 75, -128,
@@ -367,7 +367,7 @@ static const rnn_weight vad_gru_weights[1728] = {
    -6, -17, 4, -111, -52, 27, 65, 0
 };
 
-static const rnn_weight vad_gru_recurrent_weights[1728] = {
+static const renamenoise_rnn_weight vad_gru_recurrent_weights[1728] = {
    65, 83, 35, 56, 24, -34, -28, -2,
    125, 19, 42, -9, 124, -53, 24, -87,
    11, 35, -81, -35, -125, -31, 123, -21,
@@ -586,7 +586,7 @@ static const rnn_weight vad_gru_recurrent_weights[1728] = {
    -73, 127, -8, -80, 46, -48, 4, -54
 };
 
-static const rnn_weight vad_gru_bias[72] = {
+static const renamenoise_rnn_weight vad_gru_bias[72] = {
    124, 125, -57, -126, 53, 123, 127, -75,
    68, 102, -2, 116, 124, 127, 124, 125,
    126, 123, -16, 48, 125, 126, 78, 85,
@@ -605,7 +605,7 @@ static const GRULayer vad_gru = {
    24, 24, RENAMENOISE_ACTIVATION_RELU
 };
 
-static const rnn_weight noise_gru_weights[12960] = {
+static const renamenoise_rnn_weight noise_gru_weights[12960] = {
    -10, -8, 5, -72, 7, 55, -38, 3,
    10, 4, 21, 60, 73, 0, -3, 34,
    49, -36, 17, 8, 18, 41, -51, -42,
@@ -2228,7 +2228,7 @@ static const rnn_weight noise_gru_weights[12960] = {
    -70, -4, -15, -30, 35, 48, -119, -63
 };
 
-static const rnn_weight noise_gru_recurrent_weights[6912] = {
+static const renamenoise_rnn_weight noise_gru_recurrent_weights[6912] = {
    20, -47, 122, 31, 41, -36, 18, -22,
    0, 87, -28, -26, -68, 8, -54, 104,
    112, 19, 31, -118, -31, -31, 9, 17,
@@ -3095,7 +3095,7 @@ static const rnn_weight noise_gru_recurrent_weights[6912] = {
    -98, 124, -115, -18, -116, 35, 10, -125
 };
 
-static const rnn_weight noise_gru_bias[144] = {
+static const renamenoise_rnn_weight noise_gru_bias[144] = {
    51, 32, 88, 60, -64, 92, 5, -36,
    -49, 95, 102, -20, -1, 14, 8, 21,
    -36, -68, 62, 46, 10, -60, -103, -16,
@@ -3123,7 +3123,7 @@ static const GRULayer noise_gru = {
    90, 48, RENAMENOISE_ACTIVATION_RELU
 };
 
-static const rnn_weight denoise_gru_weights[32832] = {
+static const renamenoise_rnn_weight denoise_gru_weights[32832] = {
    -53, 26, -20, 28, -57, -30, -79, 58,
    -68, 103, 70, 4, 92, 14, -71, -3,
    26, 54, -9, -86, -8, 49, -60, 121,
@@ -7230,7 +7230,7 @@ static const rnn_weight denoise_gru_weights[32832] = {
    22, 11, 0, 1, -1, 16, 6, -9
 };
 
-static const rnn_weight denoise_gru_recurrent_weights[27648] = {
+static const renamenoise_rnn_weight denoise_gru_recurrent_weights[27648] = {
    -76, -99, -23, -18, 12, -119, -3, -53,
    6, 9, -8, -124, 91, -33, 50, 0,
    -52, 95, 19, 54, 43, 29, -17, -122,
@@ -10689,7 +10689,7 @@ static const rnn_weight denoise_gru_recurrent_weights[27648] = {
    22, -35, 69, -50, 7, -17, 64, -58
 };
 
-static const rnn_weight denoise_gru_bias[288] = {
+static const renamenoise_rnn_weight denoise_gru_bias[288] = {
    -41, -76, -24, -96, 25, 117, -55, 54,
    -73, -28, 53, -79, 20, -8, -87, 28,
    44, 38, -66, -19, -45, 25, 119, 78,
@@ -10735,7 +10735,7 @@ static const GRULayer denoise_gru = {
    114, 96, RENAMENOISE_ACTIVATION_RELU
 };
 
-static const rnn_weight denoise_output_weights[2112] = {
+static const renamenoise_rnn_weight denoise_output_weights[2112] = {
    24, 90, 127, 108, 73, 38, 24, 13,
    4, 16, 41, 51, 46, 35, 24, 14,
    19, 23, 27, 23, 11, 10, 14, -1,
@@ -11002,7 +11002,7 @@ static const rnn_weight denoise_output_weights[2112] = {
    7, 12, 18, 20, 26, 33, 27, 30
 };
 
-static const rnn_weight denoise_output_bias[22] = {
+static const renamenoise_rnn_weight denoise_output_bias[22] = {
    -82, -66, -125, -95, -127, -127, -127, -127,
    -127, -94, -113, -127, -80, -65, -109, -127,
    -126, -105, -53, -49, -18, -9
@@ -11014,13 +11014,13 @@ static const DenseLayer denoise_output = {
    96, 22, RENAMENOISE_ACTIVATION_SIGMOID
 };
 
-static const rnn_weight vad_output_weights[24] = {
+static const renamenoise_rnn_weight vad_output_weights[24] = {
    127, 127, 127, 127, 127, 20, 127, -126,
    -126, -54, 14, 125, -126, -126, 127, -125,
    -126, 127, -127, -127, -57, -30, 127, 80
 };
 
-static const rnn_weight vad_output_bias[1] = {
+static const renamenoise_rnn_weight vad_output_bias[1] = {
    -50
 };
 

@@ -93,7 +93,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     } while (0)
 
 #define INPUT_ARRAY(name, len) do { \
-    rnn_weight *values = malloc((len) * sizeof(rnn_weight)); \
+    renamenoise_rnn_weight *values = malloc((len) * sizeof(renamenoise_rnn_weight)); \
     if (!values) { \
         renamenoise_model_free(ret); \
         return NULL; \

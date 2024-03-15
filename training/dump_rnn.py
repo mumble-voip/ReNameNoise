@@ -15,7 +15,7 @@ import numpy as np
 def printVector(f, ft, vector, name):
     v = np.reshape(vector, (-1));
     #print('static const float ', name, '[', len(v), '] = \n', file=f)
-    f.write('static const rnn_weight {}[{}] = {{\n   '.format(name, len(v)))
+    f.write('static const renamenoise_rnn_weight {}[{}] = {{\n   '.format(name, len(v)))
     for i in range(0, len(v)):
         f.write('{}'.format(min(127, int(round(256*v[i])))))
         ft.write('{}'.format(min(127, int(round(256*v[i])))))
