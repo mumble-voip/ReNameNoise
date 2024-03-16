@@ -76,7 +76,7 @@ static OPUS_INLINE float relu(float x)
    return x < 0 ? 0 : x;
 }
 
-void compute_dense(const DenseLayer *layer, float *output, const float *input)
+void compute_dense(const ReNameNoiseDenseLayer *layer, float *output, const float *input)
 {
    int i, j;
    int N, M;

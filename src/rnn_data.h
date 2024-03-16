@@ -5,7 +5,7 @@
 
 struct ReNameNoiseModel {
   int input_dense_size;
-  const DenseLayer *input_dense;
+  const ReNameNoiseDenseLayer *input_dense;
 
   int vad_gru_size;
   const GRULayer *vad_gru;
@@ -17,10 +17,10 @@ struct ReNameNoiseModel {
   const GRULayer *denoise_gru;
 
   int denoise_output_size;
-  const DenseLayer *denoise_output;
+  const ReNameNoiseDenseLayer *denoise_output;
 
   int vad_output_size;
-  const DenseLayer *vad_output;
+  const ReNameNoiseDenseLayer *vad_output;
 };
 
 struct RNNState {

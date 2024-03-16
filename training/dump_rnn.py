@@ -55,7 +55,7 @@ def printLayer(f, ft, layer):
         f.write('static const GRULayer {} = {{\n   {}_bias,\n   {}_weights,\n   {}_recurrent_weights,\n   {}, {}, ACTIVATION_{}\n}};\n\n'
                 .format(name, name, name, name, weights[0].shape[0], weights[0].shape[1]/3, activation))
     else:
-        f.write('static const DenseLayer {} = {{\n   {}_bias,\n   {}_weights,\n   {}, {}, ACTIVATION_{}\n}};\n\n'
+        f.write('static const ReNameNoiseDenseLayer {} = {{\n   {}_bias,\n   {}_weights,\n   {}, {}, ACTIVATION_{}\n}};\n\n'
                 .format(name, name, name, weights[0].shape[0], weights[0].shape[1], activation))
 
 def structLayer(f, layer):

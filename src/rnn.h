@@ -47,7 +47,7 @@ typedef struct {
   int nb_inputs;
   int nb_neurons;
   int activation;
-} DenseLayer;
+} ReNameNoiseDenseLayer;
 
 typedef struct {
   const renamenoise_rnn_weight *bias;
@@ -60,7 +60,7 @@ typedef struct {
 
 typedef struct RNNState RNNState;
 
-void compute_dense(const DenseLayer *layer, float *output, const float *input);
+void compute_dense(const ReNameNoiseDenseLayer *layer, float *output, const float *input);
 
 void compute_gru(const GRULayer *gru, float *state, const float *input);
 
