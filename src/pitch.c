@@ -444,7 +444,7 @@ opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperi
 
    T = T0 = *T0_;
    opus_val32 yy_lookup[maxperiod+1];
-   dual_inner_prod(x, x, x-T0, N, &xx, &xy);
+   renamenoise_dual_inner_prod(x, x, x-T0, N, &xx, &xy);
    yy_lookup[0] = xx;
    yy=xx;
    for (i=1;i<=maxperiod;i++)
@@ -477,7 +477,7 @@ opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperi
       {
          T1b = (2*second_check[k]*T0+k)/(2*k);
       }
-      dual_inner_prod(x, &x[-T1], &x[-T1b], N, &xy, &xy2);
+      renamenoise_dual_inner_prod(x, &x[-T1], &x[-T1b], N, &xy, &xy2);
       xy = HALF32(xy + xy2);
       yy = HALF32(yy_lookup[T1] + yy_lookup[T1b]);
       g1 = compute_pitch_gain(xy, xx, yy);

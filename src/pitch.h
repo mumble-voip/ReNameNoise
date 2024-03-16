@@ -116,7 +116,7 @@ static OPUS_INLINE void renamenoise_xcorr_kernel(const opus_val16 * x, const opu
    }
 }
 
-static OPUS_INLINE void dual_inner_prod(const opus_val16 *x, const opus_val16 *y01, const opus_val16 *y02,
+static OPUS_INLINE void renamenoise_dual_inner_prod(const opus_val16 *x, const opus_val16 *y01, const opus_val16 *y02,
       int N, opus_val32 *xy1, opus_val32 *xy2)
 {
    int i;
