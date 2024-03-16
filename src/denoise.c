@@ -295,9 +295,9 @@ int band_lp = NB_BANDS;
 static void frame_analysis(ReNameNoiseDenoiseState *st, kiss_fft_cpx *X, float *Ex, const float *in) {
   int i;
   float x[WINDOW_SIZE];
-  RNN_COPY(x, st->analysis_mem, FRAME_SIZE);
+  RENAMENOISE_COPY(x, st->analysis_mem, FRAME_SIZE);
   for (i=0;i<FRAME_SIZE;i++) x[FRAME_SIZE + i] = in[i];
-  RNN_COPY(st->analysis_mem, in, FRAME_SIZE);
+  RENAMENOISE_COPY(st->analysis_mem, in, FRAME_SIZE);
   apply_window(x);
   forward_transform(X, x);
 #if TRAINING
@@ -323,7 +323,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, kiss_fft_cpx *X, 
   float follow, logMax;
   frame_analysis(st, X, Ex, in);
   RNN_MOVE(st->pitch_buf, &st->pitch_buf[FRAME_SIZE], PITCH_BUF_SIZE-FRAME_SIZE);
-  RNN_COPY(&st->pitch_buf[PITCH_BUF_SIZE-FRAME_SIZE], in, FRAME_SIZE);
+  RENAMENOISE_COPY(&st->pitch_buf[PITCH_BUF_SIZE-FRAME_SIZE], in, FRAME_SIZE);
   pre[0] = &st->pitch_buf[0];
   renamenoise_pitch_downsample(pre, pitch_buf, PITCH_BUF_SIZE, 1);
   renamenoise_pitch_search(pitch_buf+(PITCH_MAX_PERIOD>>1), pitch_buf, PITCH_FRAME_SIZE,
@@ -404,7 +404,7 @@ static void frame_synthesis(ReNameNoiseDenoiseState *st, float *out, const kiss_
   inverse_transform(x, y);
   apply_window(x);
   for (i=0;i<FRAME_SIZE;i++) out[i] = x[i] + st->synthesis_mem[i];
-  RNN_COPY(st->synthesis_mem, &x[FRAME_SIZE], FRAME_SIZE);
+  RENAMENOISE_COPY(st->synthesis_mem, &x[FRAME_SIZE], FRAME_SIZE);
 }
 
 static void biquad(float *y, float mem[2], const float *x, const float *b, const float *a, int N) {
