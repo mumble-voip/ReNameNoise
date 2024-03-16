@@ -71,7 +71,7 @@ static RENAMENOISE_INLINE void _renamenoise_fatal(const char *str, const char *f
 
 #define RENAMENOISE_MIN16(a,b) ((a) < (b) ? (a) : (b))   /**< Minimum 16-bit value.   */
 #define RENAMENOISE_MAX16(a,b) ((a) > (b) ? (a) : (b))   /**< Maximum 16-bit value.   */
-#define MIN32(a,b) ((a) < (b) ? (a) : (b))   /**< Minimum 32-bit value.   */
+#define RENAMENOISE_MIN32(a,b) ((a) < (b) ? (a) : (b))   /**< Minimum 32-bit value.   */
 #define MAX32(a,b) ((a) > (b) ? (a) : (b))   /**< Maximum 32-bit value.   */
 #define IMIN(a,b) ((a) < (b) ? (a) : (b))   /**< Minimum int value.   */
 #define IMAX(a,b) ((a) > (b) ? (a) : (b))   /**< Maximum int value.   */

@@ -410,7 +410,7 @@ static opus_val16 renamenoise_compute_pitch_gain(opus_val32 xy, opus_val32 xx, o
    den = celt_rsqrt_norm(x2y2);
    g = MULT16_32_Q15(den, xy);
    g = VSHR32(g, (shift>>1)-1);
-   return EXTRACT16(MIN32(g, Q15ONE));
+   return EXTRACT16(RENAMENOISE_MIN32(g, Q15ONE));
 }
 #else
 static opus_val16 renamenoise_compute_pitch_gain(opus_val32 xy, opus_val32 xx, opus_val32 yy)

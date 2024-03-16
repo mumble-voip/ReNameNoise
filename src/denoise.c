@@ -390,7 +390,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, kiss_fft_cpx *X, 
         dist += tmp*tmp;
       }
       if (j!=i)
-        mindist = MIN32(mindist, dist);
+        mindist = RENAMENOISE_MIN32(mindist, dist);
     }
     spec_variability += mindist;
   }
