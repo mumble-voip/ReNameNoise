@@ -10689,7 +10689,7 @@ static const renamenoise_rnn_weight renamenoise_denoise_gru_recurrent_weights[27
    22, -35, 69, -50, 7, -17, 64, -58
 };
 
-static const renamenoise_rnn_weight denoise_gru_bias[288] = {
+static const renamenoise_rnn_weight renamenoise_denoise_gru_bias[288] = {
    -41, -76, -24, -96, 25, 117, -55, 54,
    -73, -28, 53, -79, 20, -8, -87, 28,
    44, 38, -66, -19, -45, 25, 119, 78,
@@ -10729,7 +10729,7 @@ static const renamenoise_rnn_weight denoise_gru_bias[288] = {
 };
 
 static const ReNameNoiseGRULayer denoise_gru = {
-   denoise_gru_bias,
+   renamenoise_denoise_gru_bias,
    renamenoise_denoise_gru_weights,
    renamenoise_denoise_gru_recurrent_weights,
    114, 96, RENAMENOISE_ACTIVATION_RELU
