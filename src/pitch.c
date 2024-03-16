@@ -420,7 +420,7 @@ static opus_val16 compute_pitch_gain(opus_val32 xy, opus_val32 xx, opus_val32 yy
 #endif
 
 static const int second_check[16] = {0, 0, 3, 2, 3, 2, 5, 2, 3, 2, 3, 2, 5, 2, 3, 2};
-opus_val16 remove_doubling(opus_val16 *x, int maxperiod, int minperiod,
+opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperiod,
       int N, int *T0_, int prev_period, opus_val16 prev_gain)
 {
    int k, i, T, T0;

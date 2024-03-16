@@ -330,7 +330,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, kiss_fft_cpx *X, 
                PITCH_MAX_PERIOD-3*PITCH_MIN_PERIOD, &pitch_index);
   pitch_index = PITCH_MAX_PERIOD-pitch_index;
 
-  gain = remove_doubling(pitch_buf, PITCH_MAX_PERIOD, PITCH_MIN_PERIOD,
+  gain = renamenoise_remove_doubling(pitch_buf, PITCH_MAX_PERIOD, PITCH_MIN_PERIOD,
           PITCH_FRAME_SIZE, &pitch_index, st->last_period, st->last_gain);
   st->last_period = pitch_index;
   st->last_gain = gain;
