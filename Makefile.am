@@ -8,7 +8,7 @@ include_HEADERS = include/renamenoise.h
 
 lib_LTLIBRARIES = librenamenoise.la
 noinst_HEADERS = src/arch.h  \
-		 src/celt_lpc.h  \
+		 src/renamenoise_lpc.h  \
 		 src/common.h  \
 		 src/_kiss_fft_guts.h  \
 		 src/kiss_fft.h  \
@@ -25,7 +25,7 @@ librenamenoise_la_SOURCES = \
 	src/rnn_reader.c \
 	src/pitch.c \
 	src/kiss_fft.c \
-	src/celt_lpc.c
+	src/renamenoise_lpc.c
 
 librenamenoise_la_LIBADD = $(DEPS_LIBS) $(lrintf_lib) $(LIBM)
 librenamenoise_la_LDFLAGS = -no-undefined \

@@ -29,7 +29,7 @@
 #include "config.h"
 #endif
 
-#include "celt_lpc.h"
+#include "renamenoise_lpc.h"
 #include "arch.h"
 #include "common.h"
 #include "pitch.h"
