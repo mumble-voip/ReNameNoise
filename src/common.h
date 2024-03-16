@@ -12,13 +12,13 @@
 /** ReNameNoise wrapper for malloc(). To do your own dynamic allocation, all you need t
 o do is replace this function and rnnoise_free */
 #ifndef OVERRIDE_RENAMENOISE_ALLOC
-static RENAMENOISE_INLINE void *rnnoise_alloc (size_t size)
+static RENAMENOISE_INLINE void *renamenoise_alloc (size_t size)
 {
    return malloc(size);
 }
 #endif
 
-/** ReNameNoise wrapper for free(). To do your own dynamic allocation, all you need to do is replace this function and rnnoise_alloc */
+/** ReNameNoise wrapper for free(). To do your own dynamic allocation, all you need to do is replace this function and renamenoise_alloc */
 #ifndef OVERRIDE_RENAMENOISE_FREE
 static RENAMENOISE_INLINE void rnnoise_free (void *ptr)
 {
