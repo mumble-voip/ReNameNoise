@@ -140,7 +140,7 @@ void renamenoise_pitch_downsample(renamenoise_sig *x[], renamenoise_val16 *x_lp,
 {
    int i;
    renamenoise_val32 ac[5];
-   renamenoise_val16 tmp=Q15ONE;
+   renamenoise_val16 tmp=RENAMENOISE_Q15ONE;
    renamenoise_val16 lpc[4], mem[5]={0,0,0,0,0};
    renamenoise_val16 lpc2[5];
    renamenoise_val16 c1 = QCONST16(.8f,15);
@@ -374,7 +374,7 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
    }
    best_xy = RENAMENOISE_MAX32(0, best_xy);
    if (best_yy <= best_xy)
-      pg = Q15ONE;
+      pg = RENAMENOISE_Q15ONE;
    else
       pg = best_xy/(best_yy+1);
 
