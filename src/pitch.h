@@ -50,7 +50,7 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
 
 /* OPT: This is the kernel you really want to optimize. It gets used a lot
    by the prefilter and by the PLC. */
-static RENAMENOISE_INLINE void renamenoise_xcorr_kernel(const renamenoise_val16 * x, const renamenoise_val16 * y, opus_val32 sum[4], int len)
+static RENAMENOISE_INLINE void renamenoise_xcorr_kernel(const renamenoise_val16 * x, const renamenoise_val16 * y, renamenoise_val32 sum[4], int len)
 {
    int j;
    renamenoise_val16 y_0, y_1, y_2, y_3;
@@ -117,11 +117,11 @@ static RENAMENOISE_INLINE void renamenoise_xcorr_kernel(const renamenoise_val16 
 }
 
 static RENAMENOISE_INLINE void renamenoise_dual_inner_prod(const renamenoise_val16 *x, const renamenoise_val16 *y01, const renamenoise_val16 *y02,
-      int N, opus_val32 *xy1, opus_val32 *xy2)
+      int N, renamenoise_val32 *xy1, renamenoise_val32 *xy2)
 {
    int i;
-   opus_val32 xy01=0;
-   opus_val32 xy02=0;
+   renamenoise_val32 xy01=0;
+   renamenoise_val32 xy02=0;
    for (i=0;i<N;i++)
    {
       xy01 = MAC16_16(xy01, x[i], y01[i]);
@@ -133,17 +133,17 @@ static RENAMENOISE_INLINE void renamenoise_dual_inner_prod(const renamenoise_val
 
 /*We make sure a C version is always available for cases where the overhead of
   vectorization and passing around an arch flag aren't worth it.*/
-static RENAMENOISE_INLINE opus_val32 renamenoise_inner_prod(const renamenoise_val16 *x,
+static RENAMENOISE_INLINE renamenoise_val32 renamenoise_inner_prod(const renamenoise_val16 *x,
       const renamenoise_val16 *y, int N)
 {
    int i;
-   opus_val32 xy=0;
+   renamenoise_val32 xy=0;
    for (i=0;i<N;i++)
       xy = MAC16_16(xy, x[i], y[i]);
    return xy;
 }
 
 void renamenoise_pitch_xcorr(const renamenoise_val16 *_x, const renamenoise_val16 *_y,
-      opus_val32 *xcorr, int len, int max_pitch);
+      renamenoise_val32 *xcorr, int len, int max_pitch);
 
 #endif

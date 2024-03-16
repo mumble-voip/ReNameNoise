@@ -36,13 +36,13 @@
 
 void _renamenoise_lpc(
       renamenoise_val16       *_lpc, /* out: [0...p-1] LPC coefficients      */
-const opus_val32 *ac,  /* in:  [0...p] autocorrelation values  */
+const renamenoise_val32 *ac,  /* in:  [0...p] autocorrelation values  */
 int          p
 )
 {
    int i, j;
-   opus_val32 r;
-   opus_val32 error = ac[0];
+   renamenoise_val32 r;
+   renamenoise_val32 error = ac[0];
    float *lpc = _lpc;
 
    RENAMENOISE_CLEAR(lpc, p);
@@ -50,7 +50,7 @@ int          p
    {
       for (i = 0; i < p; i++) {
          /* Sum up this iteration's reflection coefficient */
-         opus_val32 rr = 0;
+         renamenoise_val32 rr = 0;
          for (j = 0; j < i; j++)
             rr += MULT32_32_Q31(lpc[j],ac[i - j]);
          rr += SHR32(ac[i + 1],3);
@@ -59,7 +59,7 @@ int          p
          lpc[i] = SHR32(r,3);
          for (j = 0; j < (i+1)>>1; j++)
          {
-            opus_val32 tmp1, tmp2;
+            renamenoise_val32 tmp1, tmp2;
             tmp1 = lpc[j];
             tmp2 = lpc[i-1-j];
             lpc[j]     = tmp1 + MULT32_32_Q31(r,tmp2);
@@ -88,7 +88,7 @@ void renamenoise_fir(
       rnum[i] = num[ord-i-1];
    for (i=0;i<N-3;i+=4)
    {
-      opus_val32 sum[4];
+      renamenoise_val32 sum[4];
       sum[0] = SHL32(EXTEND32(x[i  ]), SIG_SHIFT);
       sum[1] = SHL32(EXTEND32(x[i+1]), SIG_SHIFT);
       sum[2] = SHL32(EXTEND32(x[i+2]), SIG_SHIFT);
@@ -101,16 +101,16 @@ void renamenoise_fir(
    }
    for (;i<N;i++)
    {
-      opus_val32 sum = SHL32(EXTEND32(x[i]), SIG_SHIFT);
+      renamenoise_val32 sum = SHL32(EXTEND32(x[i]), SIG_SHIFT);
       for (j=0;j<ord;j++)
          sum = MAC16_16(sum,rnum[j],x[i+j-ord]);
       y[i] = ROUND16(sum, SIG_SHIFT);
    }
 }
 
-void renamenoise_iir(const opus_val32 *_x,
+void renamenoise_iir(const renamenoise_val32 *_x,
          const renamenoise_val16 *den,
-         opus_val32 *_y,
+         renamenoise_val32 *_y,
          int N,
          int ord,
          renamenoise_val16 *mem)
@@ -119,7 +119,7 @@ void renamenoise_iir(const opus_val32 *_x,
    int i,j;
    for (i=0;i<N;i++)
    {
-      opus_val32 sum = _x[i];
+      renamenoise_val32 sum = _x[i];
       for (j=0;j<ord;j++)
       {
          sum -= MULT16_16(den[j],mem[j]);
@@ -145,7 +145,7 @@ void renamenoise_iir(const opus_val32 *_x,
    for (i=0;i<N-3;i+=4)
    {
       /* Unroll by 4 as if it were an FIR filter */
-      opus_val32 sum[4];
+      renamenoise_val32 sum[4];
       sum[0]=_x[i];
       sum[1]=_x[i+1];
       sum[2]=_x[i+2];
@@ -171,7 +171,7 @@ void renamenoise_iir(const opus_val32 *_x,
    }
    for (;i<N;i++)
    {
-      opus_val32 sum = _x[i];
+      renamenoise_val32 sum = _x[i];
       for (j=0;j<ord;j++)
          sum -= MULT16_16(rden[j],y[i+j]);
       y[i+ord] = SROUND16(sum,SIG_SHIFT);
@@ -184,13 +184,13 @@ void renamenoise_iir(const opus_val32 *_x,
 
 int _renamenoise_autocorr(
                    const renamenoise_val16 *x,   /*  in: [0...n-1] samples x   */
-                   opus_val32       *ac,  /* out: [0...lag-1] ac values */
+                   renamenoise_val32       *ac,  /* out: [0...lag-1] ac values */
                    const renamenoise_val16       *window,
                    int          overlap,
                    int          lag,
                    int          n)
 {
-   opus_val32 d;
+   renamenoise_val32 d;
    int i, k;
    int fastN=n-lag;
    int shift;

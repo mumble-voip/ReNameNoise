@@ -90,7 +90,7 @@ static RENAMENOISE_INLINE void _renamenoise_fatal(const char *str, const char *f
 #define PRINT_MIPS(file)
 
 typedef float renamenoise_val16;
-typedef float opus_val32;
+typedef float renamenoise_val32;
 typedef float opus_val64;
 
 typedef float celt_sig;
@@ -159,8 +159,8 @@ static RENAMENOISE_INLINE int celt_isnan(float x)
 #define ADD32_ovflw(a,b) ((a)+(b))
 #define SUB32_ovflw(a,b) ((a)-(b))
 #define MULT16_16_16(a,b)     ((a)*(b))
-#define MULT16_16(a,b)     ((opus_val32)(a)*(opus_val32)(b))
-#define MAC16_16(c,a,b)     ((c)+(opus_val32)(a)*(opus_val32)(b))
+#define MULT16_16(a,b)     ((renamenoise_val32)(a)*(renamenoise_val32)(b))
+#define MAC16_16(c,a,b)     ((c)+(renamenoise_val32)(a)*(renamenoise_val32)(b))
 
 #define MULT16_32_Q15(a,b)     ((a)*(b))
 #define MULT16_32_Q16(a,b)     ((a)*(b))
@@ -180,8 +180,8 @@ static RENAMENOISE_INLINE int celt_isnan(float x)
 #define MULT16_16_P14(a,b)     ((a)*(b))
 #define MULT16_32_P16(a,b)     ((a)*(b))
 
-#define DIV32_16(a,b)     (((opus_val32)(a))/(renamenoise_val16)(b))
-#define DIV32(a,b)     (((opus_val32)(a))/(opus_val32)(b))
+#define DIV32_16(a,b)     (((renamenoise_val32)(a))/(renamenoise_val16)(b))
+#define DIV32(a,b)     (((renamenoise_val32)(a))/(renamenoise_val32)(b))
 
 #define SCALEIN(a)      ((a)*RENAMENOISE_SIG_SCALE)
 #define SCALEOUT(a)     ((a)*(1/RENAMENOISE_SIG_SCALE))

@@ -43,14 +43,14 @@
 #include "renamenoise_lpc.h"
 #include "math.h"
 
-static void renamenoise_find_best_pitch(opus_val32 *xcorr, renamenoise_val16 *y, int len,
+static void renamenoise_find_best_pitch(renamenoise_val32 *xcorr, renamenoise_val16 *y, int len,
                             int max_pitch, int *best_pitch
                             )
 {
    int i, j;
-   opus_val32 Syy=1;
+   renamenoise_val32 Syy=1;
    renamenoise_val16 best_num[2];
-   opus_val32 best_den[2];
+   renamenoise_val32 best_den[2];
 
    best_num[0] = -1;
    best_num[1] = -1;
@@ -65,7 +65,7 @@ static void renamenoise_find_best_pitch(opus_val32 *xcorr, renamenoise_val16 *y,
       if (xcorr[i]>0)
       {
          renamenoise_val16 num;
-         opus_val32 xcorr16;
+         renamenoise_val32 xcorr16;
          xcorr16 = EXTRACT16(VSHR32(xcorr[i], xshift));
          /* Considering the range of xcorr16, this should avoid both underflows
             and overflows (inf) when squaring xcorr16 */
@@ -101,7 +101,7 @@ static void renamenoise_fir5(const renamenoise_val16 *x,
 {
    int i;
    renamenoise_val16 num0, num1, num2, num3, num4;
-   opus_val32 mem0, mem1, mem2, mem3, mem4;
+   renamenoise_val32 mem0, mem1, mem2, mem3, mem4;
    num0=num[0];
    num1=num[1];
    num2=num[2];
@@ -114,7 +114,7 @@ static void renamenoise_fir5(const renamenoise_val16 *x,
    mem4=mem[4];
    for (i=0;i<N;i++)
    {
-      opus_val32 sum = SHL32(EXTEND32(x[i]), SIG_SHIFT);
+      renamenoise_val32 sum = SHL32(EXTEND32(x[i]), SIG_SHIFT);
       sum = MAC16_16(sum,num0,mem0);
       sum = MAC16_16(sum,num1,mem1);
       sum = MAC16_16(sum,num2,mem2);
@@ -139,7 +139,7 @@ void renamenoise_pitch_downsample(celt_sig *x[], renamenoise_val16 *x_lp,
       int len, int C)
 {
    int i;
-   opus_val32 ac[5];
+   renamenoise_val32 ac[5];
    renamenoise_val16 tmp=Q15ONE;
    renamenoise_val16 lpc[4], mem[5]={0,0,0,0,0};
    renamenoise_val16 lpc2[5];
@@ -182,7 +182,7 @@ void renamenoise_pitch_downsample(celt_sig *x[], renamenoise_val16 *x_lp,
 }
 
 void renamenoise_pitch_xcorr(const renamenoise_val16 *_x, const renamenoise_val16 *_y,
-      opus_val32 *xcorr, int len, int max_pitch)
+      renamenoise_val32 *xcorr, int len, int max_pitch)
 {
 
 #if 0 /* This is a simple version of the pitch correlation that should work
@@ -190,7 +190,7 @@ void renamenoise_pitch_xcorr(const renamenoise_val16 *_x, const renamenoise_val1
    int i, j;
    for (i=0;i<max_pitch;i++)
    {
-      opus_val32 sum = 0;
+      renamenoise_val32 sum = 0;
       for (j=0;j<len;j++)
          sum = MAC16_16(sum, _x[j], _y[i+j]);
       xcorr[i] = sum;
@@ -206,7 +206,7 @@ void renamenoise_pitch_xcorr(const renamenoise_val16 *_x, const renamenoise_val1
    renamenoise_assert((((unsigned char *)_x-(unsigned char *)NULL)&3)==0);
    for (i=0;i<max_pitch-3;i+=4)
    {
-      opus_val32 sum[4]={0,0,0,0};
+      renamenoise_val32 sum[4]={0,0,0,0};
       renamenoise_xcorr_kernel(_x, _y+i, sum, len);
       xcorr[i]=sum[0];
       xcorr[i+1]=sum[1];
@@ -216,7 +216,7 @@ void renamenoise_pitch_xcorr(const renamenoise_val16 *_x, const renamenoise_val1
    /* In case max_pitch isn't a multiple of 4, do non-unrolled version. */
    for (;i<max_pitch;i++)
    {
-      opus_val32 sum;
+      renamenoise_val32 sum;
       sum = renamenoise_inner_prod(_x, _y+i, len);
       xcorr[i] = sum;
    }
@@ -237,7 +237,7 @@ void renamenoise_pitch_search(const renamenoise_val16 *x_lp, renamenoise_val16 *
 
    renamenoise_val16 x_lp4[len>>2];
    renamenoise_val16 y_lp4[lag>>2];
-   opus_val32 xcorr[max_pitch>>1];
+   renamenoise_val32 xcorr[max_pitch>>1];
 
    /* Downsample by 2 again */
    for (j=0;j<len>>2;j++)
@@ -255,7 +255,7 @@ void renamenoise_pitch_search(const renamenoise_val16 *x_lp, renamenoise_val16 *
    /* Finer search with 2x decimation */
    for (i=0;i<max_pitch>>1;i++)
    {
-      opus_val32 sum;
+      renamenoise_val32 sum;
       xcorr[i] = 0;
       if (abs(i-2*best_pitch[0])>2 && abs(i-2*best_pitch[1])>2)
          continue;
@@ -268,7 +268,7 @@ void renamenoise_pitch_search(const renamenoise_val16 *x_lp, renamenoise_val16 *
    /* Refine by pseudo-interpolation */
    if (best_pitch[0]>0 && best_pitch[0]<(max_pitch>>1)-1)
    {
-      opus_val32 a, b, c;
+      renamenoise_val32 a, b, c;
       a = xcorr[best_pitch[0]-1];
       b = xcorr[best_pitch[0]];
       c = xcorr[best_pitch[0]+1];
@@ -284,7 +284,7 @@ void renamenoise_pitch_search(const renamenoise_val16 *x_lp, renamenoise_val16 *
    *pitch = 2*best_pitch[0]-offset;
 }
 
-static renamenoise_val16 renamenoise_compute_pitch_gain(opus_val32 xy, opus_val32 xx, opus_val32 yy)
+static renamenoise_val16 renamenoise_compute_pitch_gain(renamenoise_val32 xy, renamenoise_val32 xx, renamenoise_val32 yy)
 {
    return xy/sqrt(1+xx*yy);
 }
@@ -296,9 +296,9 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
    int k, i, T, T0;
    renamenoise_val16 g, g0;
    renamenoise_val16 pg;
-   opus_val32 xy,xx,yy,xy2;
-   opus_val32 xcorr[3];
-   opus_val32 best_xy, best_yy;
+   renamenoise_val32 xy,xx,yy,xy2;
+   renamenoise_val32 xcorr[3];
+   renamenoise_val32 best_xy, best_yy;
    int offset;
    int minperiod0;
 
@@ -313,7 +313,7 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
       *T0_=maxperiod-1;
 
    T = T0 = *T0_;
-   opus_val32 yy_lookup[maxperiod+1];
+   renamenoise_val32 yy_lookup[maxperiod+1];
    renamenoise_dual_inner_prod(x, x, x-T0, N, &xx, &xy);
    yy_lookup[0] = xx;
    yy=xx;
