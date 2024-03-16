@@ -27,7 +27,7 @@ static RENAMENOISE_INLINE void rnnoise_free (void *ptr)
 #endif
 
 /** Copy n elements from src to dst. The 0* term provides compile-time type checking  */
-#ifndef OVERRIDE_RNN_COPY
+#ifndef OVERRIDE_RENAMENOISE_COPY
 #define RNN_COPY(dst, src, n) (memcpy((dst), (src), (n)*sizeof(*(dst)) + 0*((dst)-(src)) ))
 #endif
 
