@@ -11002,14 +11002,14 @@ static const renamenoise_rnn_weight renamenoise_denoise_output_weights[2112] = {
    7, 12, 18, 20, 26, 33, 27, 30
 };
 
-static const renamenoise_rnn_weight denoise_output_bias[22] = {
+static const renamenoise_rnn_weight renamenoise_denoise_output_bias[22] = {
    -82, -66, -125, -95, -127, -127, -127, -127,
    -127, -94, -113, -127, -80, -65, -109, -127,
    -126, -105, -53, -49, -18, -9
 };
 
 static const ReNameNoiseDenseLayer denoise_output = {
-   denoise_output_bias,
+   renamenoise_denoise_output_bias,
    renamenoise_denoise_output_weights,
    96, 22, RENAMENOISE_ACTIVATION_SIGMOID
 };
