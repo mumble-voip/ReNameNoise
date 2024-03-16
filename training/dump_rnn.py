@@ -46,11 +46,11 @@ def printLayer(f, ft, layer):
         ft.write('2\n')
     else:
         ft.write('0\n')
-    printVector(f, ft, weights[0], layer.name + '_weights')
+    name = "renamenoise_" + layer.name
+    printVector(f, ft, weights[0], name + '_weights')
     if len(weights) > 2:
-        printVector(f, ft, weights[1], layer.name + '_recurrent_weights')
-    printVector(f, ft, weights[-1], layer.name + '_bias')
-    name = layer.name
+        printVector(f, ft, weights[1], name + '_recurrent_weights')
+    printVector(f, ft, weights[-1], name + '_bias')
     if len(weights) > 2:
         f.write('static const ReNameNoiseGRULayer {} = {{\n   {}_bias,\n   {}_weights,\n   {}_recurrent_weights,\n   {}, {}, ACTIVATION_{}\n}};\n\n'
                 .format(name, name, name, name, weights[0].shape[0], weights[0].shape[1]/3, activation))
@@ -60,7 +60,7 @@ def printLayer(f, ft, layer):
 
 def structLayer(f, layer):
     weights = layer.get_weights()
-    name = layer.name
+    name = "renamenoise_" + layer.name
     if len(weights) > 2:
         f.write('    {},\n'.format(weights[0].shape[1]/3))
     else:
@@ -91,7 +91,7 @@ for i, layer in enumerate(model.layers):
     if len(layer.get_weights()) > 0:
         printLayer(f, ft, layer)
     if len(layer.get_weights()) > 2:
-        layer_list.append(layer.name)
+        layer_list.append("renamenoise_" + layer.name)
 
 f.write('const struct ReNameNoiseModel renamenoise_model_{} = {{\n'.format(sys.argv[4]))
 for i, layer in enumerate(model.layers):
