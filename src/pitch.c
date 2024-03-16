@@ -385,7 +385,7 @@ void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
 }
 
 #ifdef FIXED_POINT
-static opus_val16 compute_pitch_gain(opus_val32 xy, opus_val32 xx, opus_val32 yy)
+static opus_val16 renamenoise_compute_pitch_gain(opus_val32 xy, opus_val32 xx, opus_val32 yy)
 {
    opus_val32 x2y2;
    int sx, sy, shift;
@@ -413,7 +413,7 @@ static opus_val16 compute_pitch_gain(opus_val32 xy, opus_val32 xx, opus_val32 yy
    return EXTRACT16(MIN32(g, Q15ONE));
 }
 #else
-static opus_val16 compute_pitch_gain(opus_val32 xy, opus_val32 xx, opus_val32 yy)
+static opus_val16 renamenoise_compute_pitch_gain(opus_val32 xy, opus_val32 xx, opus_val32 yy)
 {
    return xy/sqrt(1+xx*yy);
 }
@@ -455,7 +455,7 @@ opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperi
    yy = yy_lookup[T0];
    best_xy = xy;
    best_yy = yy;
-   g = g0 = compute_pitch_gain(xy, xx, yy);
+   g = g0 = renamenoise_compute_pitch_gain(xy, xx, yy);
    /* Look for any pitch at T/k */
    for (k=2;k<=15;k++)
    {
@@ -480,7 +480,7 @@ opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperi
       renamenoise_dual_inner_prod(x, &x[-T1], &x[-T1b], N, &xy, &xy2);
       xy = HALF32(xy + xy2);
       yy = HALF32(yy_lookup[T1] + yy_lookup[T1b]);
-      g1 = compute_pitch_gain(xy, xx, yy);
+      g1 = renamenoise_compute_pitch_gain(xy, xx, yy);
       if (abs(T1-prev_period)<=1)
          cont = prev_gain;
       else if (abs(T1-prev_period)<=2 && 5*k*k < T0)
