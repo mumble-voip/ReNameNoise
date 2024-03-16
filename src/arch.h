@@ -94,7 +94,7 @@ typedef float renamenoise_val32;
 typedef float renamenoise_val64;
 
 typedef float renamenoise_sig;
-typedef float celt_norm;
+typedef float renamenoise_norm;
 typedef float celt_ener;
 
 #ifdef FLOAT_APPROX
