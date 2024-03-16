@@ -367,7 +367,7 @@ static const renamenoise_rnn_weight renamenoise_vad_gru_weights[1728] = {
    -6, -17, 4, -111, -52, 27, 65, 0
 };
 
-static const renamenoise_rnn_weight vad_gru_recurrent_weights[1728] = {
+static const renamenoise_rnn_weight renamenoise_vad_gru_recurrent_weights[1728] = {
    65, 83, 35, 56, 24, -34, -28, -2,
    125, 19, 42, -9, 124, -53, 24, -87,
    11, 35, -81, -35, -125, -31, 123, -21,
@@ -601,7 +601,7 @@ static const renamenoise_rnn_weight vad_gru_bias[72] = {
 static const ReNameNoiseGRULayer vad_gru = {
    vad_gru_bias,
    renamenoise_vad_gru_weights,
-   vad_gru_recurrent_weights,
+   renamenoise_vad_gru_recurrent_weights,
    24, 24, RENAMENOISE_ACTIVATION_RELU
 };
 
