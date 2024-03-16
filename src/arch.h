@@ -75,7 +75,7 @@ static RENAMENOISE_INLINE void _renamenoise_fatal(const char *str, const char *f
 #define RENAMENOISE_MAX32(a,b) ((a) > (b) ? (a) : (b))   /**< Maximum 32-bit value.   */
 #define RENAMENOISE_IMIN(a,b) ((a) < (b) ? (a) : (b))   /**< Minimum int value.   */
 #define RENAMENOISE_IMAX(a,b) ((a) > (b) ? (a) : (b))   /**< Maximum int value.   */
-#define UADD32(a,b) ((a)+(b))
+#define RENAMENOISE_UADD32(a,b) ((a)+(b))
 #define USUB32(a,b) ((a)-(b))
 
 /* Set this if renamenoise_int64 is a native type of the CPU. */
