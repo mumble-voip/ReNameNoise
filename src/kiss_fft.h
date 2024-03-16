@@ -79,7 +79,7 @@ typedef struct arch_fft_state{
 
 typedef struct kiss_fft_state{
     int nfft;
-    opus_val16 scale;
+    renamenoise_val16 scale;
     int shift;
     renamenoise_int16 factors[2*MAXFACTORS];
     const renamenoise_int16 *bitrev;

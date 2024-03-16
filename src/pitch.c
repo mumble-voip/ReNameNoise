@@ -43,13 +43,13 @@
 #include "renamenoise_lpc.h"
 #include "math.h"
 
-static void renamenoise_find_best_pitch(opus_val32 *xcorr, opus_val16 *y, int len,
+static void renamenoise_find_best_pitch(opus_val32 *xcorr, renamenoise_val16 *y, int len,
                             int max_pitch, int *best_pitch
                             )
 {
    int i, j;
    opus_val32 Syy=1;
-   opus_val16 best_num[2];
+   renamenoise_val16 best_num[2];
    opus_val32 best_den[2];
 
    best_num[0] = -1;
@@ -64,7 +64,7 @@ static void renamenoise_find_best_pitch(opus_val32 *xcorr, opus_val16 *y, int le
    {
       if (xcorr[i]>0)
       {
-         opus_val16 num;
+         renamenoise_val16 num;
          opus_val32 xcorr16;
          xcorr16 = EXTRACT16(VSHR32(xcorr[i], xshift));
          /* Considering the range of xcorr16, this should avoid both underflows
@@ -93,14 +93,14 @@ static void renamenoise_find_best_pitch(opus_val32 *xcorr, opus_val16 *y, int le
    }
 }
 
-static void renamenoise_fir5(const opus_val16 *x,
-         const opus_val16 *num,
-         opus_val16 *y,
+static void renamenoise_fir5(const renamenoise_val16 *x,
+         const renamenoise_val16 *num,
+         renamenoise_val16 *y,
          int N,
-         opus_val16 *mem)
+         renamenoise_val16 *mem)
 {
    int i;
-   opus_val16 num0, num1, num2, num3, num4;
+   renamenoise_val16 num0, num1, num2, num3, num4;
    opus_val32 mem0, mem1, mem2, mem3, mem4;
    num0=num[0];
    num1=num[1];
@@ -135,15 +135,15 @@ static void renamenoise_fir5(const opus_val16 *x,
 }
 
 
-void renamenoise_pitch_downsample(celt_sig *x[], opus_val16 *x_lp,
+void renamenoise_pitch_downsample(celt_sig *x[], renamenoise_val16 *x_lp,
       int len, int C)
 {
    int i;
    opus_val32 ac[5];
-   opus_val16 tmp=Q15ONE;
-   opus_val16 lpc[4], mem[5]={0,0,0,0,0};
-   opus_val16 lpc2[5];
-   opus_val16 c1 = QCONST16(.8f,15);
+   renamenoise_val16 tmp=Q15ONE;
+   renamenoise_val16 lpc[4], mem[5]={0,0,0,0,0};
+   renamenoise_val16 lpc2[5];
+   renamenoise_val16 c1 = QCONST16(.8f,15);
    for (i=1;i<len>>1;i++)
       x_lp[i] = SHR32(HALF32(HALF32(x[0][(2*i-1)]+x[0][(2*i+1)])+x[0][2*i]), shift);
    x_lp[0] = SHR32(HALF32(HALF32(x[0][1])+x[0][0]), shift);
@@ -181,7 +181,7 @@ void renamenoise_pitch_downsample(celt_sig *x[], opus_val16 *x_lp,
    renamenoise_fir5(x_lp, lpc2, x_lp, len>>1, mem);
 }
 
-void renamenoise_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
+void renamenoise_pitch_xcorr(const renamenoise_val16 *_x, const renamenoise_val16 *_y,
       opus_val32 *xcorr, int len, int max_pitch)
 {
 
@@ -223,7 +223,7 @@ void renamenoise_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
 #endif
 }
 
-void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
+void renamenoise_pitch_search(const renamenoise_val16 *x_lp, renamenoise_val16 *y,
                   int len, int max_pitch, int *pitch)
 {
    int i, j;
@@ -235,8 +235,8 @@ void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
    renamenoise_assert(max_pitch>0);
    lag = len+max_pitch;
 
-   opus_val16 x_lp4[len>>2];
-   opus_val16 y_lp4[lag>>2];
+   renamenoise_val16 x_lp4[len>>2];
+   renamenoise_val16 y_lp4[lag>>2];
    opus_val32 xcorr[max_pitch>>1];
 
    /* Downsample by 2 again */
@@ -284,18 +284,18 @@ void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
    *pitch = 2*best_pitch[0]-offset;
 }
 
-static opus_val16 renamenoise_compute_pitch_gain(opus_val32 xy, opus_val32 xx, opus_val32 yy)
+static renamenoise_val16 renamenoise_compute_pitch_gain(opus_val32 xy, opus_val32 xx, opus_val32 yy)
 {
    return xy/sqrt(1+xx*yy);
 }
 
 static const int renamenoise_second_check[16] = {0, 0, 3, 2, 3, 2, 5, 2, 3, 2, 3, 2, 5, 2, 3, 2};
-opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperiod,
-      int N, int *T0_, int prev_period, opus_val16 prev_gain)
+renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperiod, int minperiod,
+      int N, int *T0_, int prev_period, renamenoise_val16 prev_gain)
 {
    int k, i, T, T0;
-   opus_val16 g, g0;
-   opus_val16 pg;
+   renamenoise_val16 g, g0;
+   renamenoise_val16 pg;
    opus_val32 xy,xx,yy,xy2;
    opus_val32 xcorr[3];
    opus_val32 best_xy, best_yy;
@@ -330,9 +330,9 @@ opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperi
    for (k=2;k<=15;k++)
    {
       int T1, T1b;
-      opus_val16 g1;
-      opus_val16 cont=0;
-      opus_val16 thresh;
+      renamenoise_val16 g1;
+      renamenoise_val16 cont=0;
+      renamenoise_val16 thresh;
       T1 = (2*T0+k)/(2*k);
       if (T1 < minperiod)
          break;

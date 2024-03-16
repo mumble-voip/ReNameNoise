@@ -35,7 +35,7 @@
 #include "pitch.h"
 
 void _renamenoise_lpc(
-      opus_val16       *_lpc, /* out: [0...p-1] LPC coefficients      */
+      renamenoise_val16       *_lpc, /* out: [0...p-1] LPC coefficients      */
 const opus_val32 *ac,  /* in:  [0...p] autocorrelation values  */
 int          p
 )
@@ -76,14 +76,14 @@ int          p
 
 
 void renamenoise_fir(
-         const opus_val16 *x,
-         const opus_val16 *num,
-         opus_val16 *y,
+         const renamenoise_val16 *x,
+         const renamenoise_val16 *num,
+         renamenoise_val16 *y,
          int N,
          int ord)
 {
    int i,j;
-   opus_val16 rnum[ord];
+   renamenoise_val16 rnum[ord];
    for(i=0;i<ord;i++)
       rnum[i] = num[ord-i-1];
    for (i=0;i<N-3;i+=4)
@@ -109,11 +109,11 @@ void renamenoise_fir(
 }
 
 void renamenoise_iir(const opus_val32 *_x,
-         const opus_val16 *den,
+         const renamenoise_val16 *den,
          opus_val32 *_y,
          int N,
          int ord,
-         opus_val16 *mem)
+         renamenoise_val16 *mem)
 {
 #ifdef SMALL_FOOTPRINT
    int i,j;
@@ -134,8 +134,8 @@ void renamenoise_iir(const opus_val32 *_x,
 #else
    int i,j;
    renamenoise_assert((ord&3)==0);
-   opus_val16 rden[ord];
-   opus_val16 y[N+ord];
+   renamenoise_val16 rden[ord];
+   renamenoise_val16 y[N+ord];
    for(i=0;i<ord;i++)
       rden[i] = den[ord-i-1];
    for(i=0;i<ord;i++)
@@ -183,9 +183,9 @@ void renamenoise_iir(const opus_val32 *_x,
 }
 
 int _renamenoise_autocorr(
-                   const opus_val16 *x,   /*  in: [0...n-1] samples x   */
+                   const renamenoise_val16 *x,   /*  in: [0...n-1] samples x   */
                    opus_val32       *ac,  /* out: [0...lag-1] ac values */
-                   const opus_val16       *window,
+                   const renamenoise_val16       *window,
                    int          overlap,
                    int          lag,
                    int          n)
@@ -194,8 +194,8 @@ int _renamenoise_autocorr(
    int i, k;
    int fastN=n-lag;
    int shift;
-   const opus_val16 *xptr;
-   opus_val16 xx[n];
+   const renamenoise_val16 *xptr;
+   renamenoise_val16 xx[n];
    renamenoise_assert(n>0);
    renamenoise_assert(overlap>=0);
    if (overlap == 0)

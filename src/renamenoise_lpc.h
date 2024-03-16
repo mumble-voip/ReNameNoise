@@ -33,23 +33,23 @@
 
 #define RENAMENOISE_LPC_ORDER 24
 
-void _renamenoise_lpc(opus_val16 *_lpc, const opus_val32 *ac, int p);
+void _renamenoise_lpc(renamenoise_val16 *_lpc, const opus_val32 *ac, int p);
 
 void renamenoise_fir(
-         const opus_val16 *x,
-         const opus_val16 *num,
-         opus_val16 *y,
+         const renamenoise_val16 *x,
+         const renamenoise_val16 *num,
+         renamenoise_val16 *y,
          int N,
          int ord);
 
 void renamenoise_iir(const opus_val32 *x,
-         const opus_val16 *den,
+         const renamenoise_val16 *den,
          opus_val32 *y,
          int N,
          int ord,
-         opus_val16 *mem);
+         renamenoise_val16 *mem);
 
-int _renamenoise_autocorr(const opus_val16 *x, opus_val32 *ac,
-         const opus_val16 *window, int overlap, int lag, int n);
+int _renamenoise_autocorr(const renamenoise_val16 *x, opus_val32 *ac,
+         const renamenoise_val16 *window, int overlap, int lag, int n);
 
 #endif /* RENAMENOISE_LPC_H */

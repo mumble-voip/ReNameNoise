@@ -67,7 +67,7 @@ static void kf_bfly2(
    } else
 #endif
    {
-      opus_val16 tw;
+      renamenoise_val16 tw;
       tw = QCONST16(0.7071067812f, 15);
       /* We know that m==4 here because the radix-2 is just after a radix-4 */
       renamenoise_assert(m==4);
@@ -539,7 +539,7 @@ void opus_fft_impl(const kiss_fft_state *st,kiss_fft_cpx *fout)
 void opus_fft_c(const kiss_fft_state *st,const kiss_fft_cpx *fin,kiss_fft_cpx *fout)
 {
    int i;
-   opus_val16 scale;
+   renamenoise_val16 scale;
    scale = st->scale;
 
    renamenoise_assert2 (fin != fout, "In-place FFT not supported");

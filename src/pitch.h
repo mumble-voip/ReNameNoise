@@ -38,22 +38,22 @@
 //#include "cpu_support.h"
 #include "arch.h"
 
-void renamenoise_pitch_downsample(celt_sig *x[], opus_val16 *x_lp,
+void renamenoise_pitch_downsample(celt_sig *x[], renamenoise_val16 *x_lp,
       int len, int C);
 
-void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
+void renamenoise_pitch_search(const renamenoise_val16 *x_lp, renamenoise_val16 *y,
                   int len, int max_pitch, int *pitch);
 
-opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperiod,
-      int N, int *T0, int prev_period, opus_val16 prev_gain);
+renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperiod, int minperiod,
+      int N, int *T0, int prev_period, renamenoise_val16 prev_gain);
 
 
 /* OPT: This is the kernel you really want to optimize. It gets used a lot
    by the prefilter and by the PLC. */
-static RENAMENOISE_INLINE void renamenoise_xcorr_kernel(const opus_val16 * x, const opus_val16 * y, opus_val32 sum[4], int len)
+static RENAMENOISE_INLINE void renamenoise_xcorr_kernel(const renamenoise_val16 * x, const renamenoise_val16 * y, opus_val32 sum[4], int len)
 {
    int j;
-   opus_val16 y_0, y_1, y_2, y_3;
+   renamenoise_val16 y_0, y_1, y_2, y_3;
    renamenoise_assert(len>=3);
    y_3=0; /* gcc doesn't realize that y_3 can't be used uninitialized */
    y_0=*y++;
@@ -61,7 +61,7 @@ static RENAMENOISE_INLINE void renamenoise_xcorr_kernel(const opus_val16 * x, co
    y_2=*y++;
    for (j=0;j<len-3;j+=4)
    {
-      opus_val16 tmp;
+      renamenoise_val16 tmp;
       tmp = *x++;
       y_3=*y++;
       sum[0] = MAC16_16(sum[0],tmp,y_0);
@@ -89,7 +89,7 @@ static RENAMENOISE_INLINE void renamenoise_xcorr_kernel(const opus_val16 * x, co
    }
    if (j++<len)
    {
-      opus_val16 tmp = *x++;
+      renamenoise_val16 tmp = *x++;
       y_3=*y++;
       sum[0] = MAC16_16(sum[0],tmp,y_0);
       sum[1] = MAC16_16(sum[1],tmp,y_1);
@@ -98,7 +98,7 @@ static RENAMENOISE_INLINE void renamenoise_xcorr_kernel(const opus_val16 * x, co
    }
    if (j++<len)
    {
-      opus_val16 tmp=*x++;
+      renamenoise_val16 tmp=*x++;
       y_0=*y++;
       sum[0] = MAC16_16(sum[0],tmp,y_1);
       sum[1] = MAC16_16(sum[1],tmp,y_2);
@@ -107,7 +107,7 @@ static RENAMENOISE_INLINE void renamenoise_xcorr_kernel(const opus_val16 * x, co
    }
    if (j<len)
    {
-      opus_val16 tmp=*x++;
+      renamenoise_val16 tmp=*x++;
       y_1=*y++;
       sum[0] = MAC16_16(sum[0],tmp,y_2);
       sum[1] = MAC16_16(sum[1],tmp,y_3);
@@ -116,7 +116,7 @@ static RENAMENOISE_INLINE void renamenoise_xcorr_kernel(const opus_val16 * x, co
    }
 }
 
-static RENAMENOISE_INLINE void renamenoise_dual_inner_prod(const opus_val16 *x, const opus_val16 *y01, const opus_val16 *y02,
+static RENAMENOISE_INLINE void renamenoise_dual_inner_prod(const renamenoise_val16 *x, const renamenoise_val16 *y01, const renamenoise_val16 *y02,
       int N, opus_val32 *xy1, opus_val32 *xy2)
 {
    int i;
@@ -133,8 +133,8 @@ static RENAMENOISE_INLINE void renamenoise_dual_inner_prod(const opus_val16 *x, 
 
 /*We make sure a C version is always available for cases where the overhead of
   vectorization and passing around an arch flag aren't worth it.*/
-static RENAMENOISE_INLINE opus_val32 renamenoise_inner_prod(const opus_val16 *x,
-      const opus_val16 *y, int N)
+static RENAMENOISE_INLINE opus_val32 renamenoise_inner_prod(const renamenoise_val16 *x,
+      const renamenoise_val16 *y, int N)
 {
    int i;
    opus_val32 xy=0;
@@ -143,7 +143,7 @@ static RENAMENOISE_INLINE opus_val32 renamenoise_inner_prod(const opus_val16 *x,
    return xy;
 }
 
-void renamenoise_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
+void renamenoise_pitch_xcorr(const renamenoise_val16 *_x, const renamenoise_val16 *_y,
       opus_val32 *xcorr, int len, int max_pitch);
 
 #endif

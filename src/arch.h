@@ -89,7 +89,7 @@ static RENAMENOISE_INLINE void _renamenoise_fatal(const char *str, const char *f
 
 #define PRINT_MIPS(file)
 
-typedef float opus_val16;
+typedef float renamenoise_val16;
 typedef float opus_val32;
 typedef float opus_val64;
 
@@ -120,7 +120,7 @@ static RENAMENOISE_INLINE int celt_isnan(float x)
 #define EPSILON 1e-15f
 #define VERY_SMALL 1e-30f
 #define VERY_LARGE16 1e15f
-#define Q15_ONE ((opus_val16)1.f)
+#define Q15_ONE ((renamenoise_val16)1.f)
 
 /* This appears to be the same speed as C99's fabsf() but it's more portable. */
 #define ABS16(x) ((float)fabs(x))
@@ -180,7 +180,7 @@ static RENAMENOISE_INLINE int celt_isnan(float x)
 #define MULT16_16_P14(a,b)     ((a)*(b))
 #define MULT16_32_P16(a,b)     ((a)*(b))
 
-#define DIV32_16(a,b)     (((opus_val32)(a))/(opus_val16)(b))
+#define DIV32_16(a,b)     (((opus_val32)(a))/(renamenoise_val16)(b))
 #define DIV32(a,b)     (((opus_val32)(a))/(opus_val32)(b))
 
 #define SCALEIN(a)      ((a)*RENAMENOISE_SIG_SCALE)
