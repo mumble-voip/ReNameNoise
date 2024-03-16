@@ -148,7 +148,7 @@ static const ReNameNoiseDenseLayer renamenoise_input_dense = {
    42, 24, RENAMENOISE_ACTIVATION_TANH
 };
 
-static const renamenoise_rnn_weight vad_gru_weights[1728] = {
+static const renamenoise_rnn_weight renamenoise_vad_gru_weights[1728] = {
    -124, 23, -123, -33, -95, -4, 8, -84,
    4, 101, -119, 116, -4, 123, 103, -51,
    29, -124, -114, -49, 31, 9, 75, -128,
@@ -600,7 +600,7 @@ static const renamenoise_rnn_weight vad_gru_bias[72] = {
 
 static const ReNameNoiseGRULayer vad_gru = {
    vad_gru_bias,
-   vad_gru_weights,
+   renamenoise_vad_gru_weights,
    vad_gru_recurrent_weights,
    24, 24, RENAMENOISE_ACTIVATION_RELU
 };
