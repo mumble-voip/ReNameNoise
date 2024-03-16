@@ -33,7 +33,7 @@ static RENAMENOISE_INLINE void rnnoise_free (void *ptr)
 
 /** Copy n elements from src to dst, allowing overlapping regions. The 0* term
     provides compile-time type checking */
-#ifndef OVERRIDE_RNN_MOVE
+#ifndef OVERRIDE_RENAMENOISE_MOVE
 #define RNN_MOVE(dst, src, n) (memmove((dst), (src), (n)*sizeof(*(dst)) + 0*((dst)-(src)) ))
 #endif
 
