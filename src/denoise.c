@@ -322,7 +322,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, kiss_fft_cpx *X, 
   float tmp[NB_BANDS];
   float follow, logMax;
   frame_analysis(st, X, Ex, in);
-  RNN_MOVE(st->pitch_buf, &st->pitch_buf[FRAME_SIZE], PITCH_BUF_SIZE-FRAME_SIZE);
+  RENAMENOISE_MOVE(st->pitch_buf, &st->pitch_buf[FRAME_SIZE], PITCH_BUF_SIZE-FRAME_SIZE);
   RENAMENOISE_COPY(&st->pitch_buf[PITCH_BUF_SIZE-FRAME_SIZE], in, FRAME_SIZE);
   pre[0] = &st->pitch_buf[0];
   renamenoise_pitch_downsample(pre, pitch_buf, PITCH_BUF_SIZE, 1);
