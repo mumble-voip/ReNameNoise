@@ -11,7 +11,7 @@
 
 /** ReNameNoise wrapper for malloc(). To do your own dynamic allocation, all you need t
 o do is replace this function and rnnoise_free */
-#ifndef OVERRIDE_RNNOISE_ALLOC
+#ifndef OVERRIDE_RENAMENOISE_ALLOC
 static RENAMENOISE_INLINE void *rnnoise_alloc (size_t size)
 {
    return malloc(size);
