@@ -157,7 +157,7 @@ void renamenoise_compute_gru(const ReNameNoiseGRULayer *gru, float *state, const
 
 #define INPUT_SIZE 42
 
-void compute_rnn(ReNameNoiseRNNState *rnn, float *gains, float *vad, const float *input) {
+void renamenoise_compute_rnn(ReNameNoiseRNNState *rnn, float *gains, float *vad, const float *input) {
   int i;
   float dense_out[RENAMENOISE_MAX_NEURONS];
   float noise_input[RENAMENOISE_MAX_NEURONS*3];

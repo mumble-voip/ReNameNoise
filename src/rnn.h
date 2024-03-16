@@ -64,6 +64,6 @@ void renamenoise_compute_dense(const ReNameNoiseDenseLayer *layer, float *output
 
 void renamenoise_compute_gru(const ReNameNoiseGRULayer *gru, float *state, const float *input);
 
-void compute_rnn(ReNameNoiseRNNState *rnn, float *gains, float *vad, const float *input);
+void renamenoise_compute_rnn(ReNameNoiseRNNState *rnn, float *gains, float *vad, const float *input);
 
 #endif /* RNN_H_ */

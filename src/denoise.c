@@ -473,7 +473,7 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
   silence = compute_frame_features(st, X, P, Ex, Ep, Exp, features, x);
 
   if (!silence) {
-    compute_rnn(&st->rnn, g, &vad_prob, features);
+    renamenoise_compute_rnn(&st->rnn, g, &vad_prob, features);
     pitch_filter(X, P, Ex, Ep, Exp, g);
     for (i=0;i<NB_BANDS;i++) {
       float alpha = .6f;
