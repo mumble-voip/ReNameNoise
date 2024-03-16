@@ -39,7 +39,7 @@ static RENAMENOISE_INLINE void renamenoise_free (void *ptr)
 
 /** Set n elements of dst to zero */
 #ifndef OVERRIDE_RENAMENOISE_CLEAR
-#define RNN_CLEAR(dst, n) (memset((dst), 0, (n)*sizeof(*(dst))))
+#define RENAMENOISE_CLEAR(dst, n) (memset((dst), 0, (n)*sizeof(*(dst))))
 #endif
 
 

@@ -357,7 +357,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, kiss_fft_cpx *X, 
   }
   if (!TRAINING && E < 0.04) {
     /* If there's no audio, avoid messing up the state. */
-    RNN_CLEAR(features, NB_FEATURES);
+    RENAMENOISE_CLEAR(features, NB_FEATURES);
     return 1;
   }
   dct(features, Ly);

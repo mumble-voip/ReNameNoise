@@ -49,7 +49,7 @@ int          p
    float *lpc = _lpc;
 #endif
 
-   RNN_CLEAR(lpc, p);
+   RENAMENOISE_CLEAR(lpc, p);
    if (ac[0] != 0)
    {
       for (i = 0; i < p; i++) {
