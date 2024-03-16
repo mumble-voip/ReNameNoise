@@ -43,7 +43,7 @@
 #include "celt_lpc.h"
 #include "math.h"
 
-static void find_best_pitch(opus_val32 *xcorr, opus_val16 *y, int len,
+static void renamenoise_find_best_pitch(opus_val32 *xcorr, opus_val16 *y, int len,
                             int max_pitch, int *best_pitch
 #ifdef FIXED_POINT
                             , int yshift, opus_val32 maxcorr
@@ -331,7 +331,7 @@ void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
 #endif
    renamenoise_pitch_xcorr(x_lp4, y_lp4, xcorr, len>>2, max_pitch>>2);
 
-   find_best_pitch(xcorr, y_lp4, len>>2, max_pitch>>2, best_pitch
+   renamenoise_find_best_pitch(xcorr, y_lp4, len>>2, max_pitch>>2, best_pitch
 #ifdef FIXED_POINT
                    , 0, maxcorr
 #endif
@@ -359,7 +359,7 @@ void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
       maxcorr = MAX32(maxcorr, sum);
 #endif
    }
-   find_best_pitch(xcorr, y, len>>1, max_pitch>>1, best_pitch
+   renamenoise_find_best_pitch(xcorr, y, len>>1, max_pitch>>1, best_pitch
 #ifdef FIXED_POINT
                    , shift+1, maxcorr
 #endif
