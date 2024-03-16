@@ -40,7 +40,7 @@
  * avoid accidentally burning internal values into a file format */
 #define F_RENAMENOISE_ACTIVATION_TANH       0
 #define F_RENAMENOISE_ACTIVATION_SIGMOID    1
-#define F_ACTIVATION_RELU       2
+#define F_RENAMENOISE_ACTIVATION_RELU       2
 
 ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
 {
@@ -84,7 +84,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
         case F_RENAMENOISE_ACTIVATION_SIGMOID: \
             name = RENAMENOISE_ACTIVATION_SIGMOID; \
             break; \
-        case F_ACTIVATION_RELU: \
+        case F_RENAMENOISE_ACTIVATION_RELU: \
             name = RENAMENOISE_ACTIVATION_RELU; \
             break; \
         default: \
