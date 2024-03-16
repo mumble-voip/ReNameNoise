@@ -142,7 +142,7 @@ static const renamenoise_rnn_weight renamenoise_input_dense_bias[24] = {
    -126, 28, 127, 125, -30, 127, -89, -20
 };
 
-static const ReNameNoiseDenseLayer input_dense = {
+static const ReNameNoiseDenseLayer renamenoise_input_dense = {
    renamenoise_input_dense_bias,
    renamenoise_input_dense_weights,
    42, 24, RENAMENOISE_ACTIVATION_TANH
@@ -11032,7 +11032,7 @@ static const ReNameNoiseDenseLayer vad_output = {
 
 const struct ReNameNoiseModel rnnoise_model_orig = {
     24,
-    &input_dense,
+    &renamenoise_input_dense,
 
     24,
     &vad_gru,
