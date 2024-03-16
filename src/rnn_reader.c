@@ -92,7 +92,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     } \
     } while (0)
 
-#define INPUT_ARRAY(name, len) do { \
+#define RENAMENOISE_INPUT_ARRAY(name, len) do { \
     renamenoise_rnn_weight *values = malloc((len) * sizeof(renamenoise_rnn_weight)); \
     if (!values) { \
         renamenoise_model_free(ret); \
@@ -113,8 +113,8 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     RENAMENOISE_INPUT_VAL(name->nb_neurons); \
     ret->name ## _size = name->nb_neurons; \
     RENAMENOISE_INPUT_ACTIVATION(name->activation); \
-    INPUT_ARRAY(name->input_weights, name->nb_inputs * name->nb_neurons); \
-    INPUT_ARRAY(name->bias, name->nb_neurons); \
+    RENAMENOISE_INPUT_ARRAY(name->input_weights, name->nb_inputs * name->nb_neurons); \
+    RENAMENOISE_INPUT_ARRAY(name->bias, name->nb_neurons); \
     } while (0)
 
 #define INPUT_GRU(name) do { \
@@ -122,9 +122,9 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     RENAMENOISE_INPUT_VAL(name->nb_neurons); \
     ret->name ## _size = name->nb_neurons; \
     RENAMENOISE_INPUT_ACTIVATION(name->activation); \
-    INPUT_ARRAY(name->input_weights, name->nb_inputs * name->nb_neurons * 3); \
-    INPUT_ARRAY(name->recurrent_weights, name->nb_neurons * name->nb_neurons * 3); \
-    INPUT_ARRAY(name->bias, name->nb_neurons * 3); \
+    RENAMENOISE_INPUT_ARRAY(name->input_weights, name->nb_inputs * name->nb_neurons * 3); \
+    RENAMENOISE_INPUT_ARRAY(name->recurrent_weights, name->nb_neurons * name->nb_neurons * 3); \
+    RENAMENOISE_INPUT_ARRAY(name->bias, name->nb_neurons * 3); \
     } while (0)
 
     INPUT_DENSE(input_dense);
