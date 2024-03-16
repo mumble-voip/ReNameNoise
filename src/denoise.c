@@ -94,7 +94,7 @@ struct ReNameNoiseDenoiseState {
   int last_period;
   float mem_hp_x[2];
   float lastg[NB_BANDS];
-  RNNState rnn;
+  ReNameNoiseRNNState rnn;
 };
 
 void compute_band_energy(float *bandE, const kiss_fft_cpx *X) {

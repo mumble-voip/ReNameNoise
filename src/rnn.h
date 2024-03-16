@@ -58,12 +58,12 @@ typedef struct {
   int activation;
 } ReNameNoiseGRULayer;
 
-typedef struct RNNState RNNState;
+typedef struct ReNameNoiseRNNState ReNameNoiseRNNState;
 
 void compute_dense(const ReNameNoiseDenseLayer *layer, float *output, const float *input);
 
 void compute_gru(const ReNameNoiseGRULayer *gru, float *state, const float *input);
 
-void compute_rnn(RNNState *rnn, float *gains, float *vad, const float *input);
+void compute_rnn(ReNameNoiseRNNState *rnn, float *gains, float *vad, const float *input);
 
 #endif /* RNN_H_ */

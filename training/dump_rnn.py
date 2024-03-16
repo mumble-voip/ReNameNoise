@@ -99,7 +99,7 @@ for i, layer in enumerate(model.layers):
         structLayer(f, layer)
 f.write('};\n')
 
-#hf.write('struct RNNState {\n')
+#hf.write('struct ReNameNoiseRNNState {\n')
 #for i, name in enumerate(layer_list):
 #    hf.write('  float {}_state[{}_SIZE];\n'.format(name, name.upper())) 
 #hf.write('};\n')

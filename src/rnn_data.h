@@ -23,7 +23,7 @@ struct ReNameNoiseModel {
   const ReNameNoiseDenseLayer *vad_output;
 };
 
-struct RNNState {
+struct ReNameNoiseRNNState {
   const ReNameNoiseModel *model;
   float *vad_gru_state;
   float *noise_gru_state;
