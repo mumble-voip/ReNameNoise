@@ -419,7 +419,7 @@ static opus_val16 renamenoise_compute_pitch_gain(opus_val32 xy, opus_val32 xx, o
 }
 #endif
 
-static const int second_check[16] = {0, 0, 3, 2, 3, 2, 5, 2, 3, 2, 3, 2, 5, 2, 3, 2};
+static const int renamenoise_second_check[16] = {0, 0, 3, 2, 3, 2, 5, 2, 3, 2, 3, 2, 5, 2, 3, 2};
 opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperiod,
       int N, int *T0_, int prev_period, opus_val16 prev_gain)
 {
@@ -475,7 +475,7 @@ opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperi
             T1b = T0+T1;
       } else
       {
-         T1b = (2*second_check[k]*T0+k)/(2*k);
+         T1b = (2*renamenoise_second_check[k]*T0+k)/(2*k);
       }
       renamenoise_dual_inner_prod(x, &x[-T1], &x[-T1b], N, &xy, &xy2);
       xy = HALF32(xy + xy2);
