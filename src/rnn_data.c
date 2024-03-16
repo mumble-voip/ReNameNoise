@@ -10728,7 +10728,7 @@ static const renamenoise_rnn_weight renamenoise_denoise_gru_bias[288] = {
    -21, 25, 18, -58, 25, 126, -84, 127
 };
 
-static const ReNameNoiseGRULayer denoise_gru = {
+static const ReNameNoiseGRULayer renamenoise_denoise_gru = {
    renamenoise_denoise_gru_bias,
    renamenoise_denoise_gru_weights,
    renamenoise_denoise_gru_recurrent_weights,
@@ -11041,7 +11041,7 @@ const struct ReNameNoiseModel rnnoise_model_orig = {
     &renamenoise_noise_gru,
 
     96,
-    &denoise_gru,
+    &renamenoise_denoise_gru,
 
     22,
     &denoise_output,
