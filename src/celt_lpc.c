@@ -106,7 +106,7 @@ void celt_fir(
       sum[1] = SHL32(EXTEND32(x[i+1]), SIG_SHIFT);
       sum[2] = SHL32(EXTEND32(x[i+2]), SIG_SHIFT);
       sum[3] = SHL32(EXTEND32(x[i+3]), SIG_SHIFT);
-      xcorr_kernel(rnum, x+i-ord, sum, ord);
+      renamenoise_xcorr_kernel(rnum, x+i-ord, sum, ord);
       y[i  ] = ROUND16(sum[0], SIG_SHIFT);
       y[i+1] = ROUND16(sum[1], SIG_SHIFT);
       y[i+2] = ROUND16(sum[2], SIG_SHIFT);
@@ -163,7 +163,7 @@ void celt_iir(const opus_val32 *_x,
       sum[1]=_x[i+1];
       sum[2]=_x[i+2];
       sum[3]=_x[i+3];
-      xcorr_kernel(rden, y+i, sum, ord);
+      renamenoise_xcorr_kernel(rden, y+i, sum, ord);
 
       /* Patch up the result to compensate for the fact that this is an IIR */
       y[i+ord  ] = -SROUND16(sum[0],SIG_SHIFT);

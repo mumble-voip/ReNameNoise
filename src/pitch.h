@@ -50,7 +50,7 @@ opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperi
 
 /* OPT: This is the kernel you really want to optimize. It gets used a lot
    by the prefilter and by the PLC. */
-static OPUS_INLINE void xcorr_kernel(const opus_val16 * x, const opus_val16 * y, opus_val32 sum[4], int len)
+static OPUS_INLINE void renamenoise_xcorr_kernel(const opus_val16 * x, const opus_val16 * y, opus_val32 sum[4], int len)
 {
    int j;
    opus_val16 y_0, y_1, y_2, y_3;

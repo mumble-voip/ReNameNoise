@@ -252,7 +252,7 @@ void celt_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
    for (i=0;i<max_pitch-3;i+=4)
    {
       opus_val32 sum[4]={0,0,0,0};
-      xcorr_kernel(_x, _y+i, sum, len);
+      renamenoise_xcorr_kernel(_x, _y+i, sum, len);
       xcorr[i]=sum[0];
       xcorr[i+1]=sum[1];
       xcorr[i+2]=sum[2];
