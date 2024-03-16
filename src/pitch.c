@@ -280,7 +280,7 @@ void celt_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
 #endif
 }
 
-void pitch_search(const opus_val16 *x_lp, opus_val16 *y,
+void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
                   int len, int max_pitch, int *pitch)
 {
    int i, j;

@@ -41,7 +41,7 @@
 void renamenoise_pitch_downsample(celt_sig *x[], opus_val16 *x_lp,
       int len, int C);
 
-void pitch_search(const opus_val16 *x_lp, opus_val16 *y,
+void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
                   int len, int max_pitch, int *pitch);
 
 opus_val16 remove_doubling(opus_val16 *x, int maxperiod, int minperiod,
