@@ -215,7 +215,7 @@ void renamenoise_pitch_downsample(celt_sig *x[], opus_val16 *x_lp,
    celt_fir5(x_lp, lpc2, x_lp, len>>1, mem);
 }
 
-void celt_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
+void renamenoise_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
       opus_val32 *xcorr, int len, int max_pitch)
 {
 
@@ -329,7 +329,7 @@ void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
 #ifdef FIXED_POINT
    maxcorr =
 #endif
-   celt_pitch_xcorr(x_lp4, y_lp4, xcorr, len>>2, max_pitch>>2);
+   renamenoise_pitch_xcorr(x_lp4, y_lp4, xcorr, len>>2, max_pitch>>2);
 
    find_best_pitch(xcorr, y_lp4, len>>2, max_pitch>>2, best_pitch
 #ifdef FIXED_POINT

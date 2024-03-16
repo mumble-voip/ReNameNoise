@@ -247,7 +247,7 @@ int _celt_autocorr(
          shift = 0;
    }
 #endif
-   celt_pitch_xcorr(xptr, xptr, ac, fastN, lag+1);
+   renamenoise_pitch_xcorr(xptr, xptr, ac, fastN, lag+1);
    for (k=0;k<=lag;k++)
    {
       for (i = k+fastN, d = 0; i < n; i++)
