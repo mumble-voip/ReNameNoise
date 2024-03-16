@@ -147,7 +147,7 @@ void renamenoise_model_free(ReNameNoiseModel *model)
         free((void *) model->name); \
     } \
     } while (0)
-#define FREE_GRU(name) do { \
+#define RENAMENOISE_FREE_GRU(name) do { \
     if (model->name) { \
         free((void *) model->name->input_weights); \
         free((void *) model->name->recurrent_weights); \
@@ -159,9 +159,9 @@ void renamenoise_model_free(ReNameNoiseModel *model)
     if (!model)
         return;
     RENAMENOISE_FREE_DENSE(input_dense);
-    FREE_GRU(vad_gru);
-    FREE_GRU(noise_gru);
-    FREE_GRU(denoise_gru);
+    RENAMENOISE_FREE_GRU(vad_gru);
+    RENAMENOISE_FREE_GRU(noise_gru);
+    RENAMENOISE_FREE_GRU(denoise_gru);
     RENAMENOISE_FREE_DENSE(denoise_output);
     RENAMENOISE_FREE_DENSE(vad_output);
     free(model);
