@@ -56,13 +56,13 @@ typedef struct {
   int nb_inputs;
   int nb_neurons;
   int activation;
-} GRULayer;
+} ReNameNoiseGRULayer;
 
 typedef struct RNNState RNNState;
 
 void compute_dense(const ReNameNoiseDenseLayer *layer, float *output, const float *input);
 
-void compute_gru(const GRULayer *gru, float *state, const float *input);
+void compute_gru(const ReNameNoiseGRULayer *gru, float *state, const float *input);
 
 void compute_rnn(RNNState *rnn, float *gains, float *vad, const float *input);
 

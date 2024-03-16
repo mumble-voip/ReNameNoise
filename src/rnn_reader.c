@@ -63,9 +63,9 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     ret->name = name
 
     ALLOC_LAYER(ReNameNoiseDenseLayer, input_dense);
-    ALLOC_LAYER(GRULayer, vad_gru);
-    ALLOC_LAYER(GRULayer, noise_gru);
-    ALLOC_LAYER(GRULayer, denoise_gru);
+    ALLOC_LAYER(ReNameNoiseGRULayer, vad_gru);
+    ALLOC_LAYER(ReNameNoiseGRULayer, noise_gru);
+    ALLOC_LAYER(ReNameNoiseGRULayer, denoise_gru);
     ALLOC_LAYER(ReNameNoiseDenseLayer, denoise_output);
     ALLOC_LAYER(ReNameNoiseDenseLayer, vad_output);
 

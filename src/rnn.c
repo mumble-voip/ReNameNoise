@@ -106,7 +106,7 @@ void compute_dense(const ReNameNoiseDenseLayer *layer, float *output, const floa
    }
 }
 
-void compute_gru(const GRULayer *gru, float *state, const float *input)
+void compute_gru(const ReNameNoiseGRULayer *gru, float *state, const float *input)
 {
    int i, j;
    int N, M;
