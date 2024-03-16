@@ -62,7 +62,7 @@ typedef struct ReNameNoiseRNNState ReNameNoiseRNNState;
 
 void renamenoise_compute_dense(const ReNameNoiseDenseLayer *layer, float *output, const float *input);
 
-void compute_gru(const ReNameNoiseGRULayer *gru, float *state, const float *input);
+void renamenoise_compute_gru(const ReNameNoiseGRULayer *gru, float *state, const float *input);
 
 void compute_rnn(ReNameNoiseRNNState *rnn, float *gains, float *vad, const float *input);
 
