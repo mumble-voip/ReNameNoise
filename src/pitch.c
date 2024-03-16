@@ -99,7 +99,7 @@ static void renamenoise_find_best_pitch(opus_val32 *xcorr, opus_val16 *y, int le
          }
       }
       Syy += SHR32(MULT16_16(y[i+len],y[i+len]),yshift) - SHR32(MULT16_16(y[i],y[i]),yshift);
-      Syy = MAX32(1, Syy);
+      Syy = RENAMENOISE_MAX32(1, Syy);
    }
 }
 
@@ -160,7 +160,7 @@ void renamenoise_pitch_downsample(celt_sig *x[], opus_val16 *x_lp,
    if (C==2)
    {
       opus_val32 maxabs_1 = celt_maxabs32(x[1], len);
-      maxabs = MAX32(maxabs, maxabs_1);
+      maxabs = RENAMENOISE_MAX32(maxabs, maxabs_1);
    }
    if (maxabs<1)
       maxabs=1;
@@ -232,7 +232,7 @@ void renamenoise_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
          sum = MAC16_16(sum, _x[j], _y[i+j]);
       xcorr[i] = sum;
 #ifdef FIXED_POINT
-      maxcorr = MAX32(maxcorr, sum);
+      maxcorr = RENAMENOISE_MAX32(maxcorr, sum);
 #endif
    }
 #ifdef FIXED_POINT
@@ -258,10 +258,10 @@ void renamenoise_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
       xcorr[i+2]=sum[2];
       xcorr[i+3]=sum[3];
 #ifdef FIXED_POINT
-      sum[0] = MAX32(sum[0], sum[1]);
-      sum[2] = MAX32(sum[2], sum[3]);
-      sum[0] = MAX32(sum[0], sum[2]);
-      maxcorr = MAX32(maxcorr, sum[0]);
+      sum[0] = RENAMENOISE_MAX32(sum[0], sum[1]);
+      sum[2] = RENAMENOISE_MAX32(sum[2], sum[3]);
+      sum[0] = RENAMENOISE_MAX32(sum[0], sum[2]);
+      maxcorr = RENAMENOISE_MAX32(maxcorr, sum[0]);
 #endif
    }
    /* In case max_pitch isn't a multiple of 4, do non-unrolled version. */
@@ -271,7 +271,7 @@ void renamenoise_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
       sum = renamenoise_inner_prod(_x, _y+i, len);
       xcorr[i] = sum;
 #ifdef FIXED_POINT
-      maxcorr = MAX32(maxcorr, sum);
+      maxcorr = RENAMENOISE_MAX32(maxcorr, sum);
 #endif
    }
 #ifdef FIXED_POINT
@@ -310,7 +310,7 @@ void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
 #ifdef FIXED_POINT
    xmax = celt_maxabs16(x_lp4, len>>2);
    ymax = celt_maxabs16(y_lp4, lag>>2);
-   shift = celt_ilog2(MAX32(1, MAX32(xmax, ymax)))-11;
+   shift = celt_ilog2(RENAMENOISE_MAX32(1, RENAMENOISE_MAX32(xmax, ymax)))-11;
    if (shift>0)
    {
       for (j=0;j<len>>2;j++)
@@ -354,9 +354,9 @@ void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
 #else
       sum = renamenoise_inner_prod(x_lp, y+i, len>>1);
 #endif
-      xcorr[i] = MAX32(-1, sum);
+      xcorr[i] = RENAMENOISE_MAX32(-1, sum);
 #ifdef FIXED_POINT
-      maxcorr = MAX32(maxcorr, sum);
+      maxcorr = RENAMENOISE_MAX32(maxcorr, sum);
 #endif
    }
    renamenoise_find_best_pitch(xcorr, y, len>>1, max_pitch>>1, best_pitch
@@ -450,7 +450,7 @@ opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperi
    for (i=1;i<=maxperiod;i++)
    {
       yy = yy+MULT16_16(x[-i],x[-i])-MULT16_16(x[N-i],x[N-i]);
-      yy_lookup[i] = MAX32(0, yy);
+      yy_lookup[i] = RENAMENOISE_MAX32(0, yy);
    }
    yy = yy_lookup[T0];
    best_xy = xy;
@@ -502,7 +502,7 @@ opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperi
          g = g1;
       }
    }
-   best_xy = MAX32(0, best_xy);
+   best_xy = RENAMENOISE_MAX32(0, best_xy);
    if (best_yy <= best_xy)
       pg = Q15ONE;
    else
