@@ -268,7 +268,7 @@ void celt_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
    for (;i<max_pitch;i++)
    {
       opus_val32 sum;
-      sum = celt_inner_prod(_x, _y+i, len);
+      sum = renamenoise_inner_prod(_x, _y+i, len);
       xcorr[i] = sum;
 #ifdef FIXED_POINT
       maxcorr = MAX32(maxcorr, sum);
@@ -352,7 +352,7 @@ void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
       for (j=0;j<len>>1;j++)
          sum += SHR32(MULT16_16(x_lp[j],y[i+j]), shift);
 #else
-      sum = celt_inner_prod(x_lp, y+i, len>>1);
+      sum = renamenoise_inner_prod(x_lp, y+i, len>>1);
 #endif
       xcorr[i] = MAX32(-1, sum);
 #ifdef FIXED_POINT
@@ -509,7 +509,7 @@ opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperi
       pg = best_xy/(best_yy+1);
 
    for (k=0;k<3;k++)
-      xcorr[k] = celt_inner_prod(x, x-(T+k-1), N);
+      xcorr[k] = renamenoise_inner_prod(x, x-(T+k-1), N);
    if ((xcorr[2]-xcorr[0]) > MULT16_32_Q15(QCONST16(.7f,15),xcorr[1]-xcorr[0]))
       offset = 1;
    else if ((xcorr[0]-xcorr[2]) > MULT16_32_Q15(QCONST16(.7f,15),xcorr[1]-xcorr[2]))

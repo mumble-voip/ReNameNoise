@@ -133,7 +133,7 @@ static OPUS_INLINE void renamenoise_dual_inner_prod(const opus_val16 *x, const o
 
 /*We make sure a C version is always available for cases where the overhead of
   vectorization and passing around an arch flag aren't worth it.*/
-static OPUS_INLINE opus_val32 celt_inner_prod(const opus_val16 *x,
+static OPUS_INLINE opus_val32 renamenoise_inner_prod(const opus_val16 *x,
       const opus_val16 *y, int N)
 {
    int i;
