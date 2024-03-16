@@ -140,7 +140,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
 void renamenoise_model_free(ReNameNoiseModel *model)
 {
 #define RENAMENOISE_FREE_MAYBE(ptr) do { if (ptr) free(ptr); } while (0)
-#define FREE_DENSE(name) do { \
+#define RENAMENOISE_FREE_DENSE(name) do { \
     if (model->name) { \
         free((void *) model->name->input_weights); \
         free((void *) model->name->bias); \
@@ -158,11 +158,11 @@ void renamenoise_model_free(ReNameNoiseModel *model)
 
     if (!model)
         return;
-    FREE_DENSE(input_dense);
+    RENAMENOISE_FREE_DENSE(input_dense);
     FREE_GRU(vad_gru);
     FREE_GRU(noise_gru);
     FREE_GRU(denoise_gru);
-    FREE_DENSE(denoise_output);
-    FREE_DENSE(vad_output);
+    RENAMENOISE_FREE_DENSE(denoise_output);
+    RENAMENOISE_FREE_DENSE(vad_output);
     free(model);
 }
