@@ -95,7 +95,7 @@ typedef float renamenoise_val64;
 
 typedef float renamenoise_sig;
 typedef float renamenoise_norm;
-typedef float celt_ener;
+typedef float renamenoise_ener;
 
 #ifdef FLOAT_APPROX
 /* This code should reliably detect NaN/inf even when -ffast-math is used.
