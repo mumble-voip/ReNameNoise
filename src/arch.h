@@ -100,7 +100,7 @@ typedef float renamenoise_ener;
 #ifdef RENAMENOISE_FLOAT_APPROX
 /* This code should reliably detect NaN/inf even when -ffast-math is used.
    Assumes IEEE 754 format. */
-static RENAMENOISE_INLINE int celt_isnan(float x)
+static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 {
    union {float f; renamenoise_uint32 i;} in;
    in.f = x;
@@ -110,7 +110,7 @@ static RENAMENOISE_INLINE int celt_isnan(float x)
 #ifdef __FAST_MATH__
 #error Cannot build renamenoise with -ffast-math unless RENAMENOISE_FLOAT_APPROX is defined. This could result in crashes on extreme (e.g. NaN) input
 #endif
-#define celt_isnan(x) ((x)!=(x))
+#define renamenoise_isnan(x) ((x)!=(x))
 #endif
 
 #define Q15ONE 1.0f

@@ -49,7 +49,7 @@ static RENAMENOISE_INLINE float renamenoise_tansig_approx(float x)
     if (!(x>-8))
         return -1;
     /* Another check in case of -ffast-math */
-    if (celt_isnan(x))
+    if (renamenoise_isnan(x))
        return 0;
     if (x<0)
     {
