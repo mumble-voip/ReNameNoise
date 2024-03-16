@@ -88,7 +88,7 @@ int          p
 }
 
 
-void celt_fir(
+void renamenoise_fir(
          const opus_val16 *x,
          const opus_val16 *num,
          opus_val16 *y,
