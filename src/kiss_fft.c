@@ -574,7 +574,7 @@ void opus_fft_c(const kiss_fft_state *st,const kiss_fft_cpx *fin,kiss_fft_cpx *f
 #endif
    scale = st->scale;
 
-   celt_assert2 (fin != fout, "In-place FFT not supported");
+   renamenoise_assert2 (fin != fout, "In-place FFT not supported");
    /* Bit-reverse the input */
    for (i=0;i<st->nfft;i++)
    {
@@ -589,7 +589,7 @@ void opus_fft_c(const kiss_fft_state *st,const kiss_fft_cpx *fin,kiss_fft_cpx *f
 void opus_ifft_c(const kiss_fft_state *st,const kiss_fft_cpx *fin,kiss_fft_cpx *fout)
 {
    int i;
-   celt_assert2 (fin != fout, "In-place FFT not supported");
+   renamenoise_assert2 (fin != fout, "In-place FFT not supported");
    /* Bit-reverse the input */
    for (i=0;i<st->nfft;i++)
       fout[st->bitrev[i]] = fin[i];

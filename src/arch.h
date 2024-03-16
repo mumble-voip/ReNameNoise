@@ -61,10 +61,10 @@ static RENAMENOISE_INLINE void _renamenoise_fatal(const char *str, const char *f
    abort();
 }
 #define renamenoise_assert(cond) {if (!(cond)) {renamenoise_fatal("assertion failed: " #cond);}}
-#define celt_assert2(cond, message) {if (!(cond)) {renamenoise_fatal("assertion failed: " #cond "\n" message);}}
+#define renamenoise_assert2(cond, message) {if (!(cond)) {renamenoise_fatal("assertion failed: " #cond "\n" message);}}
 #else
 #define renamenoise_assert(cond)
-#define celt_assert2(cond, message)
+#define renamenoise_assert2(cond, message)
 #endif
 
 #define IMUL32(a,b) ((a)*(b))
