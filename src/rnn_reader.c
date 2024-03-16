@@ -38,7 +38,7 @@
 
 /* Although these values are the same as in rnn.h, we make them separate to
  * avoid accidentally burning internal values into a file format */
-#define F_ACTIVATION_TANH       0
+#define F_RENAMENOISE_ACTIVATION_TANH       0
 #define F_ACTIVATION_SIGMOID    1
 #define F_ACTIVATION_RELU       2
 
