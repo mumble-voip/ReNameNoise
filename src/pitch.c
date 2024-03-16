@@ -103,7 +103,7 @@ static void renamenoise_find_best_pitch(opus_val32 *xcorr, opus_val16 *y, int le
    }
 }
 
-static void celt_fir5(const opus_val16 *x,
+static void renamenoise_fir5(const opus_val16 *x,
          const opus_val16 *num,
          opus_val16 *y,
          int N,
@@ -212,7 +212,7 @@ void renamenoise_pitch_downsample(celt_sig *x[], opus_val16 *x_lp,
    lpc2[2] = lpc[2] + MULT16_16_Q15(c1,lpc[1]);
    lpc2[3] = lpc[3] + MULT16_16_Q15(c1,lpc[2]);
    lpc2[4] = MULT16_16_Q15(c1,lpc[3]);
-   celt_fir5(x_lp, lpc2, x_lp, len>>1, mem);
+   renamenoise_fir5(x_lp, lpc2, x_lp, len>>1, mem);
 }
 
 void renamenoise_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
