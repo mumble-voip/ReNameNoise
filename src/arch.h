@@ -48,7 +48,7 @@
 
 #define RENAMENOISE_SIG_SCALE 32768.f
 
-#define celt_fatal(str) _celt_fatal(str, __FILE__, __LINE__);
+#define renamenoise_fatal(str) _celt_fatal(str, __FILE__, __LINE__);
 #ifdef ENABLE_ASSERTIONS
 #include <stdio.h>
 #include <stdlib.h>
@@ -60,8 +60,8 @@ static RENAMENOISE_INLINE void _celt_fatal(const char *str, const char *file, in
    fprintf (stderr, "Fatal (internal) error in %s, line %d: %s\n", file, line, str);
    abort();
 }
-#define celt_assert(cond) {if (!(cond)) {celt_fatal("assertion failed: " #cond);}}
-#define celt_assert2(cond, message) {if (!(cond)) {celt_fatal("assertion failed: " #cond "\n" message);}}
+#define celt_assert(cond) {if (!(cond)) {renamenoise_fatal("assertion failed: " #cond);}}
+#define celt_assert2(cond, message) {if (!(cond)) {renamenoise_fatal("assertion failed: " #cond "\n" message);}}
 #else
 #define celt_assert(cond)
 #define celt_assert2(cond, message)
