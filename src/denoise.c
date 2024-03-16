@@ -428,11 +428,11 @@ void pitch_filter(kiss_fft_cpx *X, const kiss_fft_cpx *P, const float *Ex, const
 #if 0
     if (Exp[i]>g[i]) r[i] = 1;
     else r[i] = Exp[i]*(1-g[i])/(.001 + g[i]*(1-Exp[i]));
-    r[i] = MIN16(1, MAX16(0, r[i]));
+    r[i] = RENAMENOISE_MIN16(1, MAX16(0, r[i]));
 #else
     if (Exp[i]>g[i]) r[i] = 1;
     else r[i] = SQUARE(Exp[i])*(1-SQUARE(g[i]))/(.001 + SQUARE(g[i])*(1-SQUARE(Exp[i])));
-    r[i] = sqrt(MIN16(1, MAX16(0, r[i])));
+    r[i] = sqrt(RENAMENOISE_MIN16(1, MAX16(0, r[i])));
 #endif
     r[i] *= sqrt(Ex[i]/(1e-8+Ep[i]));
   }
