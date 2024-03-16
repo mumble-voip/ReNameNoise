@@ -121,7 +121,7 @@ void renamenoise_fir(
    }
 }
 
-void celt_iir(const opus_val32 *_x,
+void renamenoise_iir(const opus_val32 *_x,
          const opus_val16 *den,
          opus_val32 *_y,
          int N,

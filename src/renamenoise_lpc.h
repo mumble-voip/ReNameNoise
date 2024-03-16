@@ -42,7 +42,7 @@ void renamenoise_fir(
          int N,
          int ord);
 
-void celt_iir(const opus_val32 *x,
+void renamenoise_iir(const opus_val32 *x,
          const opus_val16 *den,
          opus_val32 *y,
          int N,
