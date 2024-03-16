@@ -7,7 +7,7 @@
 #include "rnn.h"
 #include "rnn_data.h"
 
-static const renamenoise_rnn_weight input_dense_weights[1008] = {
+static const renamenoise_rnn_weight renamenoise_input_dense_weights[1008] = {
    -10, 0, -3, 1, -8, -6, 3, -13,
    1, 0, -3, -7, -5, -3, 6, -1,
    -6, 0, -6, -4, -1, -2, 1, 1,
@@ -144,7 +144,7 @@ static const renamenoise_rnn_weight input_dense_bias[24] = {
 
 static const ReNameNoiseDenseLayer input_dense = {
    input_dense_bias,
-   input_dense_weights,
+   renamenoise_input_dense_weights,
    42, 24, RENAMENOISE_ACTIVATION_TANH
 };
 
