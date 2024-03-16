@@ -10735,7 +10735,7 @@ static const ReNameNoiseGRULayer renamenoise_denoise_gru = {
    114, 96, RENAMENOISE_ACTIVATION_RELU
 };
 
-static const renamenoise_rnn_weight denoise_output_weights[2112] = {
+static const renamenoise_rnn_weight renamenoise_denoise_output_weights[2112] = {
    24, 90, 127, 108, 73, 38, 24, 13,
    4, 16, 41, 51, 46, 35, 24, 14,
    19, 23, 27, 23, 11, 10, 14, -1,
@@ -11010,7 +11010,7 @@ static const renamenoise_rnn_weight denoise_output_bias[22] = {
 
 static const ReNameNoiseDenseLayer denoise_output = {
    denoise_output_bias,
-   denoise_output_weights,
+   renamenoise_denoise_output_weights,
    96, 22, RENAMENOISE_ACTIVATION_SIGMOID
 };
 
