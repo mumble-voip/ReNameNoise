@@ -66,7 +66,7 @@ static OPUS_INLINE float renamenoise_tansig_approx(float x)
     return sign*y;
 }
 
-static OPUS_INLINE float sigmoid_approx(float x)
+static OPUS_INLINE float renamenoise_sigmoid_approx(float x)
 {
    return .5 + .5*renamenoise_tansig_approx(.5*x);
 }
@@ -94,7 +94,7 @@ void renamenoise_compute_dense(const ReNameNoiseDenseLayer *layer, float *output
    }
    if (layer->activation == RENAMENOISE_ACTIVATION_SIGMOID) {
       for (i=0;i<N;i++)
-         output[i] = sigmoid_approx(output[i]);
+         output[i] = renamenoise_sigmoid_approx(output[i]);
    } else if (layer->activation == RENAMENOISE_ACTIVATION_TANH) {
       for (i=0;i<N;i++)
          output[i] = renamenoise_tansig_approx(output[i]);
@@ -125,7 +125,7 @@ void renamenoise_compute_gru(const ReNameNoiseGRULayer *gru, float *state, const
          sum += gru->input_weights[j*stride + i]*input[j];
       for (j=0;j<N;j++)
          sum += gru->recurrent_weights[j*stride + i]*state[j];
-      z[i] = sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
+      z[i] = renamenoise_sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
    }
    for (i=0;i<N;i++)
    {
@@ -135,7 +135,7 @@ void renamenoise_compute_gru(const ReNameNoiseGRULayer *gru, float *state, const
          sum += gru->input_weights[N + j*stride + i]*input[j];
       for (j=0;j<N;j++)
          sum += gru->recurrent_weights[N + j*stride + i]*state[j];
-      r[i] = sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
+      r[i] = renamenoise_sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
    }
    for (i=0;i<N;i++)
    {
@@ -145,7 +145,7 @@ void renamenoise_compute_gru(const ReNameNoiseGRULayer *gru, float *state, const
          sum += gru->input_weights[2*N + j*stride + i]*input[j];
       for (j=0;j<N;j++)
          sum += gru->recurrent_weights[2*N + j*stride + i]*state[j]*r[j];
-      if (gru->activation == RENAMENOISE_ACTIVATION_SIGMOID) sum = sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
+      if (gru->activation == RENAMENOISE_ACTIVATION_SIGMOID) sum = renamenoise_sigmoid_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
       else if (gru->activation == RENAMENOISE_ACTIVATION_TANH) sum = renamenoise_tansig_approx(RENAMENOISE_WEIGHTS_SCALE*sum);
       else if (gru->activation == RENAMENOISE_ACTIVATION_RELU) sum = relu(RENAMENOISE_WEIGHTS_SCALE*sum);
       else *(int*)0=0;
