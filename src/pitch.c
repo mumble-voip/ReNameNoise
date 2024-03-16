@@ -180,7 +180,7 @@ void renamenoise_pitch_downsample(celt_sig *x[], opus_val16 *x_lp,
       x_lp[0] += SHR32(HALF32(HALF32(x[1][1])+x[1][0]), shift);
    }
 
-   _celt_autocorr(x_lp, ac, NULL, 0,
+   _renamenoise_autocorr(x_lp, ac, NULL, 0,
                   4, len>>1);
 
    /* Noise floor -40 dB */

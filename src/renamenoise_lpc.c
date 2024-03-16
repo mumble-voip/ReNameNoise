@@ -195,7 +195,7 @@ void renamenoise_iir(const opus_val32 *_x,
 #endif
 }
 
-int _celt_autocorr(
+int _renamenoise_autocorr(
                    const opus_val16 *x,   /*  in: [0...n-1] samples x   */
                    opus_val32       *ac,  /* out: [0...lag-1] ac values */
                    const opus_val16       *window,
