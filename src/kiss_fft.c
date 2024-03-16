@@ -54,7 +54,7 @@ static void kf_bfly2(
 #ifdef CUSTOM_MODES
    if (m==1)
    {
-      celt_assert(m==1);
+      renamenoise_assert(m==1);
       for (i=0;i<N;i++)
       {
          kiss_fft_cpx t;
@@ -70,7 +70,7 @@ static void kf_bfly2(
       opus_val16 tw;
       tw = QCONST16(0.7071067812f, 15);
       /* We know that m==4 here because the radix-2 is just after a radix-4 */
-      celt_assert(m==4);
+      renamenoise_assert(m==4);
       for (i=0;i<N;i++)
       {
          kiss_fft_cpx t;

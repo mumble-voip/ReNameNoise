@@ -54,7 +54,7 @@ static RENAMENOISE_INLINE void renamenoise_xcorr_kernel(const opus_val16 * x, co
 {
    int j;
    opus_val16 y_0, y_1, y_2, y_3;
-   celt_assert(len>=3);
+   renamenoise_assert(len>=3);
    y_3=0; /* gcc doesn't realize that y_3 can't be used uninitialized */
    y_0=*y++;
    y_1=*y++;

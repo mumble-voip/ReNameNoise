@@ -247,8 +247,8 @@ void renamenoise_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
 #ifdef FIXED_POINT
    opus_val32 maxcorr=1;
 #endif
-   celt_assert(max_pitch>0);
-   celt_assert((((unsigned char *)_x-(unsigned char *)NULL)&3)==0);
+   renamenoise_assert(max_pitch>0);
+   renamenoise_assert((((unsigned char *)_x-(unsigned char *)NULL)&3)==0);
    for (i=0;i<max_pitch-3;i+=4)
    {
       opus_val32 sum[4]={0,0,0,0};
@@ -293,8 +293,8 @@ void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
 #endif
    int offset;
 
-   celt_assert(len>0);
-   celt_assert(max_pitch>0);
+   renamenoise_assert(len>0);
+   renamenoise_assert(max_pitch>0);
    lag = len+max_pitch;
 
    opus_val16 x_lp4[len>>2];

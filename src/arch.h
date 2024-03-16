@@ -60,10 +60,10 @@ static RENAMENOISE_INLINE void _renamenoise_fatal(const char *str, const char *f
    fprintf (stderr, "Fatal (internal) error in %s, line %d: %s\n", file, line, str);
    abort();
 }
-#define celt_assert(cond) {if (!(cond)) {renamenoise_fatal("assertion failed: " #cond);}}
+#define renamenoise_assert(cond) {if (!(cond)) {renamenoise_fatal("assertion failed: " #cond);}}
 #define celt_assert2(cond, message) {if (!(cond)) {renamenoise_fatal("assertion failed: " #cond "\n" message);}}
 #else
-#define celt_assert(cond)
+#define renamenoise_assert(cond)
 #define celt_assert2(cond, message)
 #endif
 

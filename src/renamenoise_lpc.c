@@ -146,7 +146,7 @@ void renamenoise_iir(const opus_val32 *_x,
    }
 #else
    int i,j;
-   celt_assert((ord&3)==0);
+   renamenoise_assert((ord&3)==0);
    opus_val16 rden[ord];
    opus_val16 y[N+ord];
    for(i=0;i<ord;i++)
@@ -209,8 +209,8 @@ int _renamenoise_autocorr(
    int shift;
    const opus_val16 *xptr;
    opus_val16 xx[n];
-   celt_assert(n>0);
-   celt_assert(overlap>=0);
+   renamenoise_assert(n>0);
+   renamenoise_assert(overlap>=0);
    if (overlap == 0)
    {
       xptr = x;
