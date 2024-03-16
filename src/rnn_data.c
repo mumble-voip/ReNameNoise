@@ -11030,7 +11030,7 @@ static const ReNameNoiseDenseLayer renamenoise_vad_output = {
    24, 1, RENAMENOISE_ACTIVATION_SIGMOID
 };
 
-const struct ReNameNoiseModel rnnoise_model_orig = {
+const struct ReNameNoiseModel renamenoise_model_orig = {
     24,
     &renamenoise_input_dense,
 

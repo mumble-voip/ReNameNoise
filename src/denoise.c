@@ -67,7 +67,7 @@
 
 
 /* The built-in model, used if no file is given as input */
-extern const struct ReNameNoiseModel rnnoise_model_orig;
+extern const struct ReNameNoiseModel renamenoise_model_orig;
 
 
 static const renamenoise_int16 eband5ms[] = {
@@ -266,7 +266,7 @@ int renamenoise_init(ReNameNoiseDenoiseState *st, ReNameNoiseModel *model) {
   if (model)
     st->rnn.model = model;
   else
-    st->rnn.model = &rnnoise_model_orig;
+    st->rnn.model = &renamenoise_model_orig;
   st->rnn.vad_gru_state = calloc(sizeof(float), st->rnn.model->vad_gru_size);
   st->rnn.noise_gru_state = calloc(sizeof(float), st->rnn.model->noise_gru_size);
   st->rnn.denoise_gru_state = calloc(sizeof(float), st->rnn.model->denoise_gru_size);
