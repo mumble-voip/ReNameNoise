@@ -77,7 +77,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     name = in; \
     } while (0)
 
-#define INPUT_ACTIVATION(name) do { \
+#define RENAMENOISE_INPUT_ACTIVATION(name) do { \
     int activation; \
     RENAMENOISE_INPUT_VAL(activation); \
     switch (activation) { \
@@ -112,7 +112,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     RENAMENOISE_INPUT_VAL(name->nb_inputs); \
     RENAMENOISE_INPUT_VAL(name->nb_neurons); \
     ret->name ## _size = name->nb_neurons; \
-    INPUT_ACTIVATION(name->activation); \
+    RENAMENOISE_INPUT_ACTIVATION(name->activation); \
     INPUT_ARRAY(name->input_weights, name->nb_inputs * name->nb_neurons); \
     INPUT_ARRAY(name->bias, name->nb_neurons); \
     } while (0)
@@ -121,7 +121,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     RENAMENOISE_INPUT_VAL(name->nb_inputs); \
     RENAMENOISE_INPUT_VAL(name->nb_neurons); \
     ret->name ## _size = name->nb_neurons; \
-    INPUT_ACTIVATION(name->activation); \
+    RENAMENOISE_INPUT_ACTIVATION(name->activation); \
     INPUT_ARRAY(name->input_weights, name->nb_inputs * name->nb_neurons * 3); \
     INPUT_ARRAY(name->recurrent_weights, name->nb_neurons * name->nb_neurons * 3); \
     INPUT_ARRAY(name->bias, name->nb_neurons * 3); \
