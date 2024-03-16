@@ -60,7 +60,7 @@ static OPUS_INLINE float tansig_approx(float x)
     }
     i = (int)floor(.5f+25*x);
     x -= .04f*i;
-    y = tansig_table[i];
+    y = renamenoise_tansig_table[i];
     dy = 1-y*y;
     y = y + x*dy*(1 - y*x);
     return sign*y;
