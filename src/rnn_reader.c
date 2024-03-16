@@ -69,7 +69,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     RENAMENOISE_ALLOC_LAYER(ReNameNoiseDenseLayer, denoise_output);
     RENAMENOISE_ALLOC_LAYER(ReNameNoiseDenseLayer, vad_output);
 
-#define INPUT_VAL(name) do { \
+#define RENAMENOISE_INPUT_VAL(name) do { \
     if (fscanf(f, "%d", &in) != 1 || in < 0 || in > 128) { \
         renamenoise_model_free(ret); \
         return NULL; \
@@ -79,7 +79,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
 
 #define INPUT_ACTIVATION(name) do { \
     int activation; \
-    INPUT_VAL(activation); \
+    RENAMENOISE_INPUT_VAL(activation); \
     switch (activation) { \
         case F_RENAMENOISE_ACTIVATION_SIGMOID: \
             name = RENAMENOISE_ACTIVATION_SIGMOID; \
@@ -109,8 +109,8 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     } while (0)
 
 #define INPUT_DENSE(name) do { \
-    INPUT_VAL(name->nb_inputs); \
-    INPUT_VAL(name->nb_neurons); \
+    RENAMENOISE_INPUT_VAL(name->nb_inputs); \
+    RENAMENOISE_INPUT_VAL(name->nb_neurons); \
     ret->name ## _size = name->nb_neurons; \
     INPUT_ACTIVATION(name->activation); \
     INPUT_ARRAY(name->input_weights, name->nb_inputs * name->nb_neurons); \
@@ -118,8 +118,8 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     } while (0)
 
 #define INPUT_GRU(name) do { \
-    INPUT_VAL(name->nb_inputs); \
-    INPUT_VAL(name->nb_neurons); \
+    RENAMENOISE_INPUT_VAL(name->nb_inputs); \
+    RENAMENOISE_INPUT_VAL(name->nb_neurons); \
     ret->name ## _size = name->nb_neurons; \
     INPUT_ACTIVATION(name->activation); \
     INPUT_ARRAY(name->input_weights, name->nb_inputs * name->nb_neurons * 3); \
