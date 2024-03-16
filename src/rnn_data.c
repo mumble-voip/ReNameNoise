@@ -11008,7 +11008,7 @@ static const renamenoise_rnn_weight renamenoise_denoise_output_bias[22] = {
    -126, -105, -53, -49, -18, -9
 };
 
-static const ReNameNoiseDenseLayer denoise_output = {
+static const ReNameNoiseDenseLayer renamenoise_denoise_output = {
    renamenoise_denoise_output_bias,
    renamenoise_denoise_output_weights,
    96, 22, RENAMENOISE_ACTIVATION_SIGMOID
@@ -11044,7 +11044,7 @@ const struct ReNameNoiseModel rnnoise_model_orig = {
     &renamenoise_denoise_gru,
 
     22,
-    &denoise_output,
+    &renamenoise_denoise_output,
 
     1,
     &vad_output
