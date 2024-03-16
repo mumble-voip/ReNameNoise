@@ -67,7 +67,7 @@ static RENAMENOISE_INLINE void _renamenoise_fatal(const char *str, const char *f
 #define renamenoise_assert2(cond, message)
 #endif
 
-#define IMUL32(a,b) ((a)*(b))
+#define RENAMENOISE_IMUL32(a,b) ((a)*(b))
 
 #define MIN16(a,b) ((a) < (b) ? (a) : (b))   /**< Minimum 16-bit value.   */
 #define MAX16(a,b) ((a) > (b) ? (a) : (b))   /**< Maximum 16-bit value.   */
