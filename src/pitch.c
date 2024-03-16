@@ -145,7 +145,7 @@ static void celt_fir5(const opus_val16 *x,
 }
 
 
-void pitch_downsample(celt_sig *x[], opus_val16 *x_lp,
+void renamenoise_pitch_downsample(celt_sig *x[], opus_val16 *x_lp,
       int len, int C)
 {
    int i;
