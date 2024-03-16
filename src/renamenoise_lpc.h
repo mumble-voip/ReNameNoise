@@ -33,7 +33,7 @@
 
 #define RENAMENOISE_LPC_ORDER 24
 
-void _celt_lpc(opus_val16 *_lpc, const opus_val32 *ac, int p);
+void _renamenoise_lpc(opus_val16 *_lpc, const opus_val32 *ac, int p);
 
 void celt_fir(
          const opus_val16 *x,

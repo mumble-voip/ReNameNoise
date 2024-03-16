@@ -200,7 +200,7 @@ void renamenoise_pitch_downsample(celt_sig *x[], opus_val16 *x_lp,
 #endif
    }
 
-   _celt_lpc(lpc, ac, 4);
+   _renamenoise_lpc(lpc, ac, 4);
    for (i=0;i<4;i++)
    {
       tmp = MULT16_16_Q15(QCONST16(.9f,15), tmp);
