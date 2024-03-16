@@ -53,7 +53,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     if (!ret)
         return NULL;
 
-#define ALLOC_LAYER(type, name) \
+#define RENAMENOISE_ALLOC_LAYER(type, name) \
     type *name; \
     name = calloc(1, sizeof(type)); \
     if (!name) { \
@@ -62,12 +62,12 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     } \
     ret->name = name
 
-    ALLOC_LAYER(ReNameNoiseDenseLayer, input_dense);
-    ALLOC_LAYER(ReNameNoiseGRULayer, vad_gru);
-    ALLOC_LAYER(ReNameNoiseGRULayer, noise_gru);
-    ALLOC_LAYER(ReNameNoiseGRULayer, denoise_gru);
-    ALLOC_LAYER(ReNameNoiseDenseLayer, denoise_output);
-    ALLOC_LAYER(ReNameNoiseDenseLayer, vad_output);
+    RENAMENOISE_ALLOC_LAYER(ReNameNoiseDenseLayer, input_dense);
+    RENAMENOISE_ALLOC_LAYER(ReNameNoiseGRULayer, vad_gru);
+    RENAMENOISE_ALLOC_LAYER(ReNameNoiseGRULayer, noise_gru);
+    RENAMENOISE_ALLOC_LAYER(ReNameNoiseGRULayer, denoise_gru);
+    RENAMENOISE_ALLOC_LAYER(ReNameNoiseDenseLayer, denoise_output);
+    RENAMENOISE_ALLOC_LAYER(ReNameNoiseDenseLayer, vad_output);
 
 #define INPUT_VAL(name) do { \
     if (fscanf(f, "%d", &in) != 1 || in < 0 || in > 128) { \
