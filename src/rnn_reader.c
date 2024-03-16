@@ -117,7 +117,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     RENAMENOISE_INPUT_ARRAY(name->bias, name->nb_neurons); \
     } while (0)
 
-#define INPUT_GRU(name) do { \
+#define RENAMENOISE_INPUT_GRU(name) do { \
     RENAMENOISE_INPUT_VAL(name->nb_inputs); \
     RENAMENOISE_INPUT_VAL(name->nb_neurons); \
     ret->name ## _size = name->nb_neurons; \
@@ -128,9 +128,9 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
     } while (0)
 
     RENAMENOISE_INPUT_DENSE(input_dense);
-    INPUT_GRU(vad_gru);
-    INPUT_GRU(noise_gru);
-    INPUT_GRU(denoise_gru);
+    RENAMENOISE_INPUT_GRU(vad_gru);
+    RENAMENOISE_INPUT_GRU(noise_gru);
+    RENAMENOISE_INPUT_GRU(denoise_gru);
     RENAMENOISE_INPUT_DENSE(denoise_output);
     RENAMENOISE_INPUT_DENSE(vad_output);
 
