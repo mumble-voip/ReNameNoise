@@ -350,9 +350,9 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, kiss_fft_cpx *X, 
   follow = -2;
   for (i=0;i<NB_BANDS;i++) {
     Ly[i] = log10(1e-2+Ex[i]);
-    Ly[i] = MAX16(logMax-7, MAX16(follow-1.5, Ly[i]));
-    logMax = MAX16(logMax, Ly[i]);
-    follow = MAX16(follow-1.5, Ly[i]);
+    Ly[i] = RENAMENOISE_MAX16(logMax-7, RENAMENOISE_MAX16(follow-1.5, Ly[i]));
+    logMax = RENAMENOISE_MAX16(logMax, Ly[i]);
+    follow = RENAMENOISE_MAX16(follow-1.5, Ly[i]);
     E += Ex[i];
   }
   if (!TRAINING && E < 0.04) {
@@ -428,11 +428,11 @@ void pitch_filter(kiss_fft_cpx *X, const kiss_fft_cpx *P, const float *Ex, const
 #if 0
     if (Exp[i]>g[i]) r[i] = 1;
     else r[i] = Exp[i]*(1-g[i])/(.001 + g[i]*(1-Exp[i]));
-    r[i] = RENAMENOISE_MIN16(1, MAX16(0, r[i]));
+    r[i] = RENAMENOISE_MIN16(1, RENAMENOISE_MAX16(0, r[i]));
 #else
     if (Exp[i]>g[i]) r[i] = 1;
     else r[i] = SQUARE(Exp[i])*(1-SQUARE(g[i]))/(.001 + SQUARE(g[i])*(1-SQUARE(Exp[i])));
-    r[i] = sqrt(RENAMENOISE_MIN16(1, MAX16(0, r[i])));
+    r[i] = sqrt(RENAMENOISE_MIN16(1, RENAMENOISE_MAX16(0, r[i])));
 #endif
     r[i] *= sqrt(Ex[i]/(1e-8+Ep[i]));
   }
@@ -477,7 +477,7 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
     pitch_filter(X, P, Ex, Ep, Exp, g);
     for (i=0;i<NB_BANDS;i++) {
       float alpha = .6f;
-      g[i] = MAX16(g[i], alpha*st->lastg[i]);
+      g[i] = RENAMENOISE_MAX16(g[i], alpha*st->lastg[i]);
       st->lastg[i] = g[i];
     }
     interp_band_gain(gf, g);

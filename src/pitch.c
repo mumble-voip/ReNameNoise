@@ -487,13 +487,13 @@ opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperi
          cont = HALF16(prev_gain);
       else
          cont = 0;
-      thresh = MAX16(QCONST16(.3f,15), MULT16_16_Q15(QCONST16(.7f,15),g0)-cont);
+      thresh = RENAMENOISE_MAX16(QCONST16(.3f,15), MULT16_16_Q15(QCONST16(.7f,15),g0)-cont);
       /* Bias against very high pitch (very short period) to avoid false-positives
          due to short-term correlation */
       if (T1<3*minperiod)
-         thresh = MAX16(QCONST16(.4f,15), MULT16_16_Q15(QCONST16(.85f,15),g0)-cont);
+         thresh = RENAMENOISE_MAX16(QCONST16(.4f,15), MULT16_16_Q15(QCONST16(.85f,15),g0)-cont);
       else if (T1<2*minperiod)
-         thresh = MAX16(QCONST16(.5f,15), MULT16_16_Q15(QCONST16(.9f,15),g0)-cont);
+         thresh = RENAMENOISE_MAX16(QCONST16(.5f,15), MULT16_16_Q15(QCONST16(.9f,15),g0)-cont);
       if (g1 > thresh)
       {
          best_xy = xy;
