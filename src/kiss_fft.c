@@ -187,12 +187,7 @@ static void kf_bfly3(
    kiss_twiddle_cpx epi3;
 
    kiss_fft_cpx * Fout_beg = Fout;
-#ifdef FIXED_POINT
-   /*epi3.r = -16384;*/ /* Unused */
-   epi3.i = -28378;
-#else
    epi3 = st->twiddles[fstride*m];
-#endif
    for (i=0;i<N;i++)
    {
       Fout = Fout_beg + i*mm;
@@ -245,15 +240,8 @@ static void kf_bfly5(
    kiss_twiddle_cpx ya,yb;
    kiss_fft_cpx * Fout_beg = Fout;
 
-#ifdef FIXED_POINT
-   ya.r = 10126;
-   ya.i = -31164;
-   yb.r = -26510;
-   yb.i = -19261;
-#else
    ya = st->twiddles[fstride*m];
    yb = st->twiddles[fstride*2*m];
-#endif
    tw=st->twiddles;
 
    for (i=0;i<N;i++)
@@ -406,18 +394,11 @@ int kf_factor(int n,renamenoise_int16 * facbuf)
 static void compute_twiddles(kiss_twiddle_cpx *twiddles, int nfft)
 {
    int i;
-#ifdef FIXED_POINT
-   for (i=0;i<nfft;++i) {
-      opus_val32 phase = -i;
-      kf_cexp2(twiddles+i, DIV32(SHL32(phase,17),nfft));
-   }
-#else
    for (i=0;i<nfft;++i) {
       const double pi=3.14159265358979323846264338327;
       double phase = ( -2*pi /nfft ) * i;
       kf_cexp(twiddles+i, phase );
    }
-#endif
 }
 
 int opus_fft_alloc_arch_c(kiss_fft_state *st) {
@@ -449,15 +430,7 @@ kiss_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem,
         kiss_twiddle_cpx *twiddles;
 
         st->nfft=nfft;
-#ifdef FIXED_POINT
-        st->scale_shift = celt_ilog2(st->nfft);
-        if (st->nfft == 1<<st->scale_shift)
-           st->scale = Q15ONE;
-        else
-           st->scale = (1073741824+st->nfft/2)/st->nfft>>(15-st->scale_shift);
-#else
         st->scale = 1.f/nfft;
-#endif
         if (base != NULL)
         {
            st->twiddles = base->twiddles;
@@ -567,11 +540,6 @@ void opus_fft_c(const kiss_fft_state *st,const kiss_fft_cpx *fin,kiss_fft_cpx *f
 {
    int i;
    opus_val16 scale;
-#ifdef FIXED_POINT
-   /* Allows us to scale with MULT16_32_Q16(), which is faster than
-      MULT16_32_Q15() on ARM. */
-   int scale_shift = st->scale_shift-1;
-#endif
    scale = st->scale;
 
    renamenoise_assert2 (fin != fout, "In-place FFT not supported");

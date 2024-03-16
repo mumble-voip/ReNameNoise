@@ -49,20 +49,11 @@ extern "C" {
 #define KISS_FFT_MALLOC opus_alloc
 #endif
 
-#ifdef FIXED_POINT
-#include "arch.h"
-
-#  define kiss_fft_scalar renamenoise_int32
-#  define kiss_twiddle_scalar renamenoise_int16
-
-
-#else
-# ifndef kiss_fft_scalar
+#ifndef kiss_fft_scalar
 /*  default is float */
-#   define kiss_fft_scalar float
-#   define kiss_twiddle_scalar float
-#   define KF_SUFFIX _celt_single
-# endif
+#  define kiss_fft_scalar float
+#  define kiss_twiddle_scalar float
+#  define KF_SUFFIX _celt_single
 #endif
 
 typedef struct {
@@ -89,9 +80,6 @@ typedef struct arch_fft_state{
 typedef struct kiss_fft_state{
     int nfft;
     opus_val16 scale;
-#ifdef FIXED_POINT
-    int scale_shift;
-#endif
     int shift;
     renamenoise_int16 factors[2*MAXFACTORS];
     const renamenoise_int16 *bitrev;

@@ -45,20 +45,12 @@
 
 static void renamenoise_find_best_pitch(opus_val32 *xcorr, opus_val16 *y, int len,
                             int max_pitch, int *best_pitch
-#ifdef FIXED_POINT
-                            , int yshift, opus_val32 maxcorr
-#endif
                             )
 {
    int i, j;
    opus_val32 Syy=1;
    opus_val16 best_num[2];
    opus_val32 best_den[2];
-#ifdef FIXED_POINT
-   int xshift;
-
-   xshift = celt_ilog2(maxcorr)-14;
-#endif
 
    best_num[0] = -1;
    best_num[1] = -1;
@@ -75,11 +67,9 @@ static void renamenoise_find_best_pitch(opus_val32 *xcorr, opus_val16 *y, int le
          opus_val16 num;
          opus_val32 xcorr16;
          xcorr16 = EXTRACT16(VSHR32(xcorr[i], xshift));
-#ifndef FIXED_POINT
          /* Considering the range of xcorr16, this should avoid both underflows
             and overflows (inf) when squaring xcorr16 */
          xcorr16 *= 1e-12f;
-#endif
          num = MULT16_16_Q15(xcorr16,xcorr16);
          if (MULT16_32_Q15(num,best_den[1]) > MULT16_32_Q15(best_num[1],Syy))
          {
@@ -154,22 +144,6 @@ void renamenoise_pitch_downsample(celt_sig *x[], opus_val16 *x_lp,
    opus_val16 lpc[4], mem[5]={0,0,0,0,0};
    opus_val16 lpc2[5];
    opus_val16 c1 = QCONST16(.8f,15);
-#ifdef FIXED_POINT
-   int shift;
-   opus_val32 maxabs = celt_maxabs32(x[0], len);
-   if (C==2)
-   {
-      opus_val32 maxabs_1 = celt_maxabs32(x[1], len);
-      maxabs = RENAMENOISE_MAX32(maxabs, maxabs_1);
-   }
-   if (maxabs<1)
-      maxabs=1;
-   shift = celt_ilog2(maxabs)-10;
-   if (shift<0)
-      shift=0;
-   if (C==2)
-      shift++;
-#endif
    for (i=1;i<len>>1;i++)
       x_lp[i] = SHR32(HALF32(HALF32(x[0][(2*i-1)]+x[0][(2*i+1)])+x[0][2*i]), shift);
    x_lp[0] = SHR32(HALF32(HALF32(x[0][1])+x[0][0]), shift);
@@ -184,20 +158,12 @@ void renamenoise_pitch_downsample(celt_sig *x[], opus_val16 *x_lp,
                   4, len>>1);
 
    /* Noise floor -40 dB */
-#ifdef FIXED_POINT
-   ac[0] += SHR32(ac[0],13);
-#else
    ac[0] *= 1.0001f;
-#endif
    /* Lag windowing */
    for (i=1;i<=4;i++)
    {
       /*ac[i] *= exp(-.5*(2*M_PI*.002*i)*(2*M_PI*.002*i));*/
-#ifdef FIXED_POINT
-      ac[i] -= MULT16_32_Q15(2*i*i, ac[i]);
-#else
       ac[i] -= ac[i]*(.008f*i)*(.008f*i);
-#endif
    }
 
    _renamenoise_lpc(lpc, ac, 4);
@@ -222,31 +188,20 @@ void renamenoise_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
 #if 0 /* This is a simple version of the pitch correlation that should work
          well on DSPs like Blackfin and TI C5x/C6x */
    int i, j;
-#ifdef FIXED_POINT
-   opus_val32 maxcorr=1;
-#endif
    for (i=0;i<max_pitch;i++)
    {
       opus_val32 sum = 0;
       for (j=0;j<len;j++)
          sum = MAC16_16(sum, _x[j], _y[i+j]);
       xcorr[i] = sum;
-#ifdef FIXED_POINT
-      maxcorr = RENAMENOISE_MAX32(maxcorr, sum);
-#endif
    }
-#ifdef FIXED_POINT
-   return maxcorr;
-#endif
+
 
 #else /* Unrolled version of the pitch correlation -- runs faster on x86 and ARM */
    int i;
    /*The EDSP version requires that max_pitch is at least 1, and that _x is
       32-bit aligned.
      Since it's hard to put asserts in assembly, put them here.*/
-#ifdef FIXED_POINT
-   opus_val32 maxcorr=1;
-#endif
    renamenoise_assert(max_pitch>0);
    renamenoise_assert((((unsigned char *)_x-(unsigned char *)NULL)&3)==0);
    for (i=0;i<max_pitch-3;i+=4)
@@ -257,12 +212,6 @@ void renamenoise_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
       xcorr[i+1]=sum[1];
       xcorr[i+2]=sum[2];
       xcorr[i+3]=sum[3];
-#ifdef FIXED_POINT
-      sum[0] = RENAMENOISE_MAX32(sum[0], sum[1]);
-      sum[2] = RENAMENOISE_MAX32(sum[2], sum[3]);
-      sum[0] = RENAMENOISE_MAX32(sum[0], sum[2]);
-      maxcorr = RENAMENOISE_MAX32(maxcorr, sum[0]);
-#endif
    }
    /* In case max_pitch isn't a multiple of 4, do non-unrolled version. */
    for (;i<max_pitch;i++)
@@ -270,13 +219,7 @@ void renamenoise_pitch_xcorr(const opus_val16 *_x, const opus_val16 *_y,
       opus_val32 sum;
       sum = renamenoise_inner_prod(_x, _y+i, len);
       xcorr[i] = sum;
-#ifdef FIXED_POINT
-      maxcorr = RENAMENOISE_MAX32(maxcorr, sum);
-#endif
    }
-#ifdef FIXED_POINT
-   return maxcorr;
-#endif
 #endif
 }
 
@@ -286,11 +229,6 @@ void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
    int i, j;
    int lag;
    int best_pitch[2]={0,0};
-#ifdef FIXED_POINT
-   opus_val32 maxcorr;
-   opus_val32 xmax, ymax;
-   int shift=0;
-#endif
    int offset;
 
    renamenoise_assert(len>0);
@@ -307,62 +245,24 @@ void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
    for (j=0;j<lag>>2;j++)
       y_lp4[j] = y[2*j];
 
-#ifdef FIXED_POINT
-   xmax = celt_maxabs16(x_lp4, len>>2);
-   ymax = celt_maxabs16(y_lp4, lag>>2);
-   shift = celt_ilog2(RENAMENOISE_MAX32(1, RENAMENOISE_MAX32(xmax, ymax)))-11;
-   if (shift>0)
-   {
-      for (j=0;j<len>>2;j++)
-         x_lp4[j] = SHR16(x_lp4[j], shift);
-      for (j=0;j<lag>>2;j++)
-         y_lp4[j] = SHR16(y_lp4[j], shift);
-      /* Use double the shift for a MAC */
-      shift *= 2;
-   } else {
-      shift = 0;
-   }
-#endif
-
    /* Coarse search with 4x decimation */
 
-#ifdef FIXED_POINT
-   maxcorr =
-#endif
    renamenoise_pitch_xcorr(x_lp4, y_lp4, xcorr, len>>2, max_pitch>>2);
 
    renamenoise_find_best_pitch(xcorr, y_lp4, len>>2, max_pitch>>2, best_pitch
-#ifdef FIXED_POINT
-                   , 0, maxcorr
-#endif
                    );
 
    /* Finer search with 2x decimation */
-#ifdef FIXED_POINT
-   maxcorr=1;
-#endif
    for (i=0;i<max_pitch>>1;i++)
    {
       opus_val32 sum;
       xcorr[i] = 0;
       if (abs(i-2*best_pitch[0])>2 && abs(i-2*best_pitch[1])>2)
          continue;
-#ifdef FIXED_POINT
-      sum = 0;
-      for (j=0;j<len>>1;j++)
-         sum += SHR32(MULT16_16(x_lp[j],y[i+j]), shift);
-#else
       sum = renamenoise_inner_prod(x_lp, y+i, len>>1);
-#endif
       xcorr[i] = RENAMENOISE_MAX32(-1, sum);
-#ifdef FIXED_POINT
-      maxcorr = RENAMENOISE_MAX32(maxcorr, sum);
-#endif
    }
    renamenoise_find_best_pitch(xcorr, y, len>>1, max_pitch>>1, best_pitch
-#ifdef FIXED_POINT
-                   , shift+1, maxcorr
-#endif
                    );
 
    /* Refine by pseudo-interpolation */
@@ -384,40 +284,10 @@ void renamenoise_pitch_search(const opus_val16 *x_lp, opus_val16 *y,
    *pitch = 2*best_pitch[0]-offset;
 }
 
-#ifdef FIXED_POINT
-static opus_val16 renamenoise_compute_pitch_gain(opus_val32 xy, opus_val32 xx, opus_val32 yy)
-{
-   opus_val32 x2y2;
-   int sx, sy, shift;
-   opus_val32 g;
-   opus_val16 den;
-   if (xy == 0 || xx == 0 || yy == 0)
-      return 0;
-   sx = celt_ilog2(xx)-14;
-   sy = celt_ilog2(yy)-14;
-   shift = sx + sy;
-   x2y2 = SHR32(MULT16_16(VSHR32(xx, sx), VSHR32(yy, sy)), 14);
-   if (shift & 1) {
-      if (x2y2 < 32768)
-      {
-         x2y2 <<= 1;
-         shift--;
-      } else {
-         x2y2 >>= 1;
-         shift++;
-      }
-   }
-   den = celt_rsqrt_norm(x2y2);
-   g = MULT16_32_Q15(den, xy);
-   g = VSHR32(g, (shift>>1)-1);
-   return EXTRACT16(RENAMENOISE_MIN32(g, Q15ONE));
-}
-#else
 static opus_val16 renamenoise_compute_pitch_gain(opus_val32 xy, opus_val32 xx, opus_val32 yy)
 {
    return xy/sqrt(1+xx*yy);
 }
-#endif
 
 static const int renamenoise_second_check[16] = {0, 0, 3, 2, 3, 2, 5, 2, 3, 2, 3, 2, 5, 2, 3, 2};
 opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperiod,

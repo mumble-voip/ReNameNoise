@@ -43,11 +43,7 @@ int          p
    int i, j;
    opus_val32 r;
    opus_val32 error = ac[0];
-#ifdef FIXED_POINT
-   opus_val32 lpc[RENAMENOISE_LPC_ORDER];
-#else
    float *lpc = _lpc;
-#endif
 
    RENAMENOISE_CLEAR(lpc, p);
    if (ac[0] != 0)
@@ -72,19 +68,10 @@ int          p
 
          error = error - MULT32_32_Q31(MULT32_32_Q31(r,r),error);
          /* Bail out once we get 30 dB gain */
-#ifdef FIXED_POINT
-         if (error<SHR32(ac[0],10))
-            break;
-#else
          if (error<.001f*ac[0])
             break;
-#endif
       }
    }
-#ifdef FIXED_POINT
-   for (i=0;i<p;i++)
-      _lpc[i] = ROUND16(lpc[i],16);
-#endif
 }
 
 
@@ -225,28 +212,6 @@ int _renamenoise_autocorr(
       xptr = xx;
    }
    shift=0;
-#ifdef FIXED_POINT
-   {
-      opus_val32 ac0;
-      ac0 = 1+(n<<7);
-      if (n&1) ac0 += SHR32(MULT16_16(xptr[0],xptr[0]),9);
-      for(i=(n&1);i<n;i+=2)
-      {
-         ac0 += SHR32(MULT16_16(xptr[i],xptr[i]),9);
-         ac0 += SHR32(MULT16_16(xptr[i+1],xptr[i+1]),9);
-      }
-
-      shift = celt_ilog2(ac0)-30+10;
-      shift = (shift)/2;
-      if (shift>0)
-      {
-         for(i=0;i<n;i++)
-            xx[i] = PSHR32(xptr[i], shift);
-         xptr = xx;
-      } else
-         shift = 0;
-   }
-#endif
    renamenoise_pitch_xcorr(xptr, xptr, ac, fastN, lag+1);
    for (k=0;k<=lag;k++)
    {
@@ -254,26 +219,6 @@ int _renamenoise_autocorr(
          d = MAC16_16(d, xptr[i], xptr[i-k]);
       ac[k] += d;
    }
-#ifdef FIXED_POINT
-   shift = 2*shift;
-   if (shift<=0)
-      ac[0] += SHL32((renamenoise_int32)1, -shift);
-   if (ac[0] < 268435456)
-   {
-      int shift2 = 29 - EC_ILOG(ac[0]);
-      for (i=0;i<=lag;i++)
-         ac[i] = SHL32(ac[i], shift2);
-      shift -= shift2;
-   } else if (ac[0] >= 536870912)
-   {
-      int shift2=1;
-      if (ac[0] >= 1073741824)
-         shift2++;
-      for (i=0;i<=lag;i++)
-         ac[i] = SHR32(ac[i], shift2);
-      shift += shift2;
-   }
-#endif
 
    return shift;
 }

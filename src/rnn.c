@@ -48,11 +48,9 @@ static RENAMENOISE_INLINE float renamenoise_tansig_approx(float x)
         return 1;
     if (!(x>-8))
         return -1;
-#ifndef FIXED_POINT
     /* Another check in case of -ffast-math */
     if (celt_isnan(x))
        return 0;
-#endif
     if (x<0)
     {
        x=-x;

@@ -89,66 +89,6 @@ static RENAMENOISE_INLINE void _renamenoise_fatal(const char *str, const char *f
 
 #define PRINT_MIPS(file)
 
-#ifdef FIXED_POINT
-
-typedef renamenoise_int16 opus_val16;
-typedef renamenoise_int32 opus_val32;
-typedef renamenoise_int64 opus_val64;
-
-typedef opus_val32 celt_sig;
-typedef opus_val16 celt_norm;
-typedef opus_val32 celt_ener;
-
-#define Q15ONE 32767
-
-#define SIG_SHIFT 12
-/* Safe saturation value for 32-bit signals. Should be less than
-   2^31*(1-0.85) to avoid blowing up on DC at deemphasis.*/
-#define SIG_SAT (300000000)
-
-#define NORM_SCALING 16384
-
-#define DB_SHIFT 10
-
-#define EPSILON 1
-#define VERY_SMALL 0
-#define VERY_LARGE16 ((opus_val16)32767)
-#define Q15_ONE ((opus_val16)32767)
-
-#define SCALEIN(a)      (a)
-#define SCALEOUT(a)     (a)
-
-#define ABS16(x) ((x) < 0 ? (-(x)) : (x))
-#define ABS32(x) ((x) < 0 ? (-(x)) : (x))
-
-static RENAMENOISE_INLINE renamenoise_int16 SAT16(renamenoise_int32 x) {
-   return x > 32767 ? 32767 : x < -32768 ? -32768 : (renamenoise_int16)x;
-}
-
-#ifdef FIXED_DEBUG
-#include "fixed_debug.h"
-#else
-
-#include "fixed_generic.h"
-
-#ifdef OPUS_ARM_PRESUME_AARCH64_NEON_INTR
-#include "arm/fixed_arm64.h"
-#elif OPUS_ARM_INLINE_EDSP
-#include "arm/fixed_armv5e.h"
-#elif defined (OPUS_ARM_INLINE_ASM)
-#include "arm/fixed_armv4.h"
-#elif defined (BFIN_ASM)
-#include "fixed_bfin.h"
-#elif defined (TI_C5X_ASM)
-#include "fixed_c5x.h"
-#elif defined (TI_C6X_ASM)
-#include "fixed_c6x.h"
-#endif
-
-#endif
-
-#else /* FIXED_POINT */
-
 typedef float opus_val16;
 typedef float opus_val32;
 typedef float opus_val64;
@@ -248,14 +188,8 @@ static RENAMENOISE_INLINE int celt_isnan(float x)
 
 #define SIG2WORD16(x) (x)
 
-#endif /* !FIXED_POINT */
-
 #ifndef GLOBAL_STACK_SIZE
-#ifdef FIXED_POINT
 #define GLOBAL_STACK_SIZE 120000
-#else
-#define GLOBAL_STACK_SIZE 120000
-#endif
 #endif
 
 #endif /* ARCH_H */
