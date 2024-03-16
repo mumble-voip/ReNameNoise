@@ -50,7 +50,7 @@ opus_val16 renamenoise_remove_doubling(opus_val16 *x, int maxperiod, int minperi
 
 /* OPT: This is the kernel you really want to optimize. It gets used a lot
    by the prefilter and by the PLC. */
-static OPUS_INLINE void renamenoise_xcorr_kernel(const opus_val16 * x, const opus_val16 * y, opus_val32 sum[4], int len)
+static RENAMENOISE_INLINE void renamenoise_xcorr_kernel(const opus_val16 * x, const opus_val16 * y, opus_val32 sum[4], int len)
 {
    int j;
    opus_val16 y_0, y_1, y_2, y_3;
@@ -116,7 +116,7 @@ static OPUS_INLINE void renamenoise_xcorr_kernel(const opus_val16 * x, const opu
    }
 }
 
-static OPUS_INLINE void renamenoise_dual_inner_prod(const opus_val16 *x, const opus_val16 *y01, const opus_val16 *y02,
+static RENAMENOISE_INLINE void renamenoise_dual_inner_prod(const opus_val16 *x, const opus_val16 *y01, const opus_val16 *y02,
       int N, opus_val32 *xy1, opus_val32 *xy2)
 {
    int i;
@@ -133,7 +133,7 @@ static OPUS_INLINE void renamenoise_dual_inner_prod(const opus_val16 *x, const o
 
 /*We make sure a C version is always available for cases where the overhead of
   vectorization and passing around an arch flag aren't worth it.*/
-static OPUS_INLINE opus_val32 renamenoise_inner_prod(const opus_val16 *x,
+static RENAMENOISE_INLINE opus_val32 renamenoise_inner_prod(const opus_val16 *x,
       const opus_val16 *y, int N)
 {
    int i;

@@ -38,7 +38,7 @@
 #include "rnn_data.h"
 #include <stdio.h>
 
-static OPUS_INLINE float renamenoise_tansig_approx(float x)
+static RENAMENOISE_INLINE float renamenoise_tansig_approx(float x)
 {
     int i;
     float y, dy;
@@ -66,12 +66,12 @@ static OPUS_INLINE float renamenoise_tansig_approx(float x)
     return sign*y;
 }
 
-static OPUS_INLINE float renamenoise_sigmoid_approx(float x)
+static RENAMENOISE_INLINE float renamenoise_sigmoid_approx(float x)
 {
    return .5 + .5*renamenoise_tansig_approx(.5*x);
 }
 
-static OPUS_INLINE float renamenoise_relu(float x)
+static RENAMENOISE_INLINE float renamenoise_relu(float x)
 {
    return x < 0 ? 0 : x;
 }
