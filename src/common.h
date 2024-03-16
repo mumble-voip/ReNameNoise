@@ -19,7 +19,7 @@ static RENAMENOISE_INLINE void *rnnoise_alloc (size_t size)
 #endif
 
 /** ReNameNoise wrapper for free(). To do your own dynamic allocation, all you need to do is replace this function and rnnoise_alloc */
-#ifndef OVERRIDE_RNNOISE_FREE
+#ifndef OVERRIDE_RENAMENOISE_FREE
 static RENAMENOISE_INLINE void rnnoise_free (void *ptr)
 {
    free(ptr);
