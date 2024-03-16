@@ -91,7 +91,7 @@ static RENAMENOISE_INLINE void _renamenoise_fatal(const char *str, const char *f
 
 typedef float renamenoise_val16;
 typedef float renamenoise_val32;
-typedef float opus_val64;
+typedef float renamenoise_val64;
 
 typedef float celt_sig;
 typedef float celt_norm;
