@@ -97,7 +97,7 @@ typedef float renamenoise_sig;
 typedef float renamenoise_norm;
 typedef float renamenoise_ener;
 
-#ifdef FLOAT_APPROX
+#ifdef RENAMENOISE_FLOAT_APPROX
 /* This code should reliably detect NaN/inf even when -ffast-math is used.
    Assumes IEEE 754 format. */
 static RENAMENOISE_INLINE int celt_isnan(float x)
@@ -108,7 +108,7 @@ static RENAMENOISE_INLINE int celt_isnan(float x)
 }
 #else
 #ifdef __FAST_MATH__
-#error Cannot build libopus with -ffast-math unless FLOAT_APPROX is defined. This could result in crashes on extreme (e.g. NaN) input
+#error Cannot build renamenoise with -ffast-math unless RENAMENOISE_FLOAT_APPROX is defined. This could result in crashes on extreme (e.g. NaN) input
 #endif
 #define celt_isnan(x) ((x)!=(x))
 #endif
