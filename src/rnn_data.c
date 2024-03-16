@@ -136,14 +136,14 @@ static const renamenoise_rnn_weight renamenoise_input_dense_weights[1008] = {
    14, 6, 9, 26, 25, -25, -25, -18
 };
 
-static const renamenoise_rnn_weight input_dense_bias[24] = {
+static const renamenoise_rnn_weight renamenoise_input_dense_bias[24] = {
    38, -6, 127, 127, 127, -43, -127, 78,
    127, 5, 127, 123, 127, 127, -128, -76,
    -126, 28, 127, 125, -30, 127, -89, -20
 };
 
 static const ReNameNoiseDenseLayer input_dense = {
-   input_dense_bias,
+   renamenoise_input_dense_bias,
    renamenoise_input_dense_weights,
    42, 24, RENAMENOISE_ACTIVATION_TANH
 };
