@@ -139,7 +139,7 @@ ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
 
 void renamenoise_model_free(ReNameNoiseModel *model)
 {
-#define FREE_MAYBE(ptr) do { if (ptr) free(ptr); } while (0)
+#define RENAMENOISE_FREE_MAYBE(ptr) do { if (ptr) free(ptr); } while (0)
 #define FREE_DENSE(name) do { \
     if (model->name) { \
         free((void *) model->name->input_weights); \
