@@ -135,7 +135,7 @@ static void renamenoise_fir5(const renamenoise_val16 *x,
 }
 
 
-void renamenoise_pitch_downsample(celt_sig *x[], renamenoise_val16 *x_lp,
+void renamenoise_pitch_downsample(renamenoise_sig *x[], renamenoise_val16 *x_lp,
       int len, int C)
 {
    int i;

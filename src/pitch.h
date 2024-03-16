@@ -38,7 +38,7 @@
 //#include "cpu_support.h"
 #include "arch.h"
 
-void renamenoise_pitch_downsample(celt_sig *x[], renamenoise_val16 *x_lp,
+void renamenoise_pitch_downsample(renamenoise_sig *x[], renamenoise_val16 *x_lp,
       int len, int C);
 
 void renamenoise_pitch_search(const renamenoise_val16 *x_lp, renamenoise_val16 *y,

@@ -93,7 +93,7 @@ typedef float renamenoise_val16;
 typedef float renamenoise_val32;
 typedef float renamenoise_val64;
 
-typedef float celt_sig;
+typedef float renamenoise_sig;
 typedef float celt_norm;
 typedef float celt_ener;
 
