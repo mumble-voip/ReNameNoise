@@ -46,7 +46,7 @@
 #  endif
 # endif
 
-#define CELT_SIG_SCALE 32768.f
+#define RENAMENOISE_SIG_SCALE 32768.f
 
 #define celt_fatal(str) _celt_fatal(str, __FILE__, __LINE__);
 #ifdef ENABLE_ASSERTIONS
@@ -243,8 +243,8 @@ static RENAMENOISE_INLINE int celt_isnan(float x)
 #define DIV32_16(a,b)     (((opus_val32)(a))/(opus_val16)(b))
 #define DIV32(a,b)     (((opus_val32)(a))/(opus_val32)(b))
 
-#define SCALEIN(a)      ((a)*CELT_SIG_SCALE)
-#define SCALEOUT(a)     ((a)*(1/CELT_SIG_SCALE))
+#define SCALEIN(a)      ((a)*RENAMENOISE_SIG_SCALE)
+#define SCALEOUT(a)     ((a)*(1/RENAMENOISE_SIG_SCALE))
 
 #define SIG2WORD16(x) (x)
 
