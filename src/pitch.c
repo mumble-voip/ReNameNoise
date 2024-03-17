@@ -71,9 +71,9 @@ static void renamenoise_find_best_pitch(renamenoise_val32 *xcorr, renamenoise_va
             and overflows (inf) when squaring xcorr16 */
          xcorr16 *= 1e-12f;
          num = MULT16_16_Q15(xcorr16,xcorr16);
-         if (MULT16_32_Q15(num,best_den[1]) > MULT16_32_Q15(best_num[1],Syy))
+         if (RENAMENOISE_MULT16_32_Q15(num,best_den[1]) > RENAMENOISE_MULT16_32_Q15(best_num[1],Syy))
          {
-            if (MULT16_32_Q15(num,best_den[0]) > MULT16_32_Q15(best_num[0],Syy))
+            if (RENAMENOISE_MULT16_32_Q15(num,best_den[0]) > RENAMENOISE_MULT16_32_Q15(best_num[0],Syy))
             {
                best_num[1] = best_num[0];
                best_den[1] = best_den[0];
@@ -272,9 +272,9 @@ void renamenoise_pitch_search(const renamenoise_val16 *x_lp, renamenoise_val16 *
       a = xcorr[best_pitch[0]-1];
       b = xcorr[best_pitch[0]];
       c = xcorr[best_pitch[0]+1];
-      if ((c-a) > MULT16_32_Q15(RENAMENOISE_QCONST16(.7f,15),b-a))
+      if ((c-a) > RENAMENOISE_MULT16_32_Q15(RENAMENOISE_QCONST16(.7f,15),b-a))
          offset = 1;
-      else if ((a-c) > MULT16_32_Q15(RENAMENOISE_QCONST16(.7f,15),b-c))
+      else if ((a-c) > RENAMENOISE_MULT16_32_Q15(RENAMENOISE_QCONST16(.7f,15),b-c))
          offset = -1;
       else
          offset = 0;
@@ -380,9 +380,9 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
 
    for (k=0;k<3;k++)
       xcorr[k] = renamenoise_inner_prod(x, x-(T+k-1), N);
-   if ((xcorr[2]-xcorr[0]) > MULT16_32_Q15(RENAMENOISE_QCONST16(.7f,15),xcorr[1]-xcorr[0]))
+   if ((xcorr[2]-xcorr[0]) > RENAMENOISE_MULT16_32_Q15(RENAMENOISE_QCONST16(.7f,15),xcorr[1]-xcorr[0]))
       offset = 1;
-   else if ((xcorr[0]-xcorr[2]) > MULT16_32_Q15(RENAMENOISE_QCONST16(.7f,15),xcorr[1]-xcorr[2]))
+   else if ((xcorr[0]-xcorr[2]) > RENAMENOISE_MULT16_32_Q15(RENAMENOISE_QCONST16(.7f,15),xcorr[1]-xcorr[2]))
       offset = -1;
    else
       offset = 0;
