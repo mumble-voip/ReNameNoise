@@ -26,8 +26,8 @@
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
   POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef KISS_FFT_H
-#define KISS_FFT_H
+#ifndef RENAMENOISE_FFT_H
+#define RENAMENOISE_FFT_H
 
 #include <stdlib.h>
 #include <math.h>
@@ -188,4 +188,4 @@ extern void (*const OPUS_IFFT[OPUS_ARCHMASK+1])(const kiss_fft_state *cfg,
 }
 #endif
 
-#endif
+#endif /* RENAMENOISE_FFT_H */

@@ -23,17 +23,17 @@
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
   POSSIBILITY OF SUCH DAMAGE.*/
 
-#ifndef KISS_FFT_GUTS_H
-#define KISS_FFT_GUTS_H
+#ifndef RENAMENOISE_FFT_GUTS_H
+#define RENAMENOISE_FFT_GUTS_H
 
 #define MIN(a,b) ((a)<(b) ? (a):(b))
 #define MAX(a,b) ((a)>(b) ? (a):(b))
 
-/* kiss_fft.h
+/* renamenoise_fft.h
    defines kiss_fft_scalar as either short or a float type
    and defines
    typedef struct { kiss_fft_scalar r; kiss_fft_scalar i; }kiss_fft_cpx; */
-#include "kiss_fft.h"
+#include "renamenoise_fft.h"
 
 /*
   Explanation of macros dealing with complex math:
@@ -114,4 +114,4 @@
       (x)->i = TRIG_UPSCALE*celt_cos_norm((phase)-32768);\
 }while(0)
 
-#endif /* KISS_FFT_GUTS_H */
+#endif /* RENAMENOISE_FFT_GUTS_H */

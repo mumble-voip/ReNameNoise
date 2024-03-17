@@ -10,8 +10,8 @@ lib_LTLIBRARIES = librenamenoise.la
 noinst_HEADERS = src/arch.h  \
 		 src/renamenoise_lpc.h  \
 		 src/common.h  \
-		 src/_kiss_fft_guts.h  \
-		 src/kiss_fft.h  \
+		 src/_renamenoise_fft_guts.h  \
+		 src/renamenoise_fft.h  \
 		 src/renamenoise_types.h  \
 		 src/pitch.h  \
 		 src/rnn_data.h  \
@@ -24,7 +24,7 @@ librenamenoise_la_SOURCES = \
 	src/rnn_data.c \
 	src/rnn_reader.c \
 	src/pitch.c \
-	src/kiss_fft.c \
+	src/renamenoise_fft.c \
 	src/renamenoise_lpc.c
 
 librenamenoise_la_LIBADD = $(DEPS_LIBS) $(lrintf_lib) $(LIBM)

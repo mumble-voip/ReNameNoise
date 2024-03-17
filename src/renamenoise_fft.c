@@ -35,7 +35,7 @@
 #  endif
 #endif
 
-#include "_kiss_fft_guts.h"
+#include "_renamenoise_fft_guts.h"
 #define CUSTOM_MODES
 
 /* The guts header contains all the multiplication and addition macros that are defined for
