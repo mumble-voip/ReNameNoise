@@ -401,7 +401,7 @@ static void compute_twiddles(renamenoise_twiddle_cpx *twiddles, int nfft)
    }
 }
 
-int opus_fft_alloc_arch_c(renamenoise_fft_state *st) {
+int renamenoise_fft_alloc_arch_c(renamenoise_fft_state *st) {
    (void)st;
    return 0;
 }
