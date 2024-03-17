@@ -71,7 +71,7 @@
             RENAMENOISE_CHECK_OVERFLOW_OP((a).i,+,(b).i)\
             (res).r=(a).r+(b).r;  (res).i=(a).i+(b).i; \
     }while(0)
-#define  C_SUB( res, a,b)\
+#define  RENAMENOISE_C_SUB( res, a,b)\
     do { \
             RENAMENOISE_CHECK_OVERFLOW_OP((a).r,-,(b).r)\
             RENAMENOISE_CHECK_OVERFLOW_OP((a).i,-,(b).i)\
