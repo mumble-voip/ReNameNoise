@@ -488,7 +488,7 @@ void opus_fft_free(const renamenoise_fft_state *cfg, int arch)
 
 #endif /* CUSTOM_MODES */
 
-void opus_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *fout)
+void renamenoise_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *fout)
 {
     int m2, m;
     int p;
@@ -550,7 +550,7 @@ void renamenoise_fft_c(const renamenoise_fft_state *st,const renamenoise_fft_cpx
       fout[st->bitrev[i]].r = RENAMENOISE_SHR32(RENAMENOISE_MULT16_32_Q16(scale, x.r), scale_shift);
       fout[st->bitrev[i]].i = RENAMENOISE_SHR32(RENAMENOISE_MULT16_32_Q16(scale, x.i), scale_shift);
    }
-   opus_fft_impl(st, fout);
+   renamenoise_fft_impl(st, fout);
 }
 
 
@@ -563,7 +563,7 @@ void renamenoise_ifft_c(const renamenoise_fft_state *st,const renamenoise_fft_cp
       fout[st->bitrev[i]] = fin[i];
    for (i=0;i<st->nfft;i++)
       fout[i].i = -fout[i].i;
-   opus_fft_impl(st, fout);
+   renamenoise_fft_impl(st, fout);
    for (i=0;i<st->nfft;i++)
       fout[i].i = -fout[i].i;
 }

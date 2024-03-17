@@ -128,7 +128,7 @@ renamenoise_fft_state *renamenoise_fft_alloc(int nfft,void * mem,size_t * lenmem
 void renamenoise_fft_c(const renamenoise_fft_state *cfg,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout);
 void renamenoise_ifft_c(const renamenoise_fft_state *cfg,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout);
 
-void opus_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *fout);
+void renamenoise_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *fout);
 void opus_ifft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *fout);
 
 void opus_fft_free(const renamenoise_fft_state *cfg, int arch);
