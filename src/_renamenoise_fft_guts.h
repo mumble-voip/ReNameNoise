@@ -30,9 +30,9 @@
 #define RENAMENOISE_MAX(a,b) ((a)>(b) ? (a):(b))
 
 /* renamenoise_fft.h
-   defines kiss_fft_scalar as either short or a float type
+   defines renamenoise_fft_scalar as either short or a float type
    and defines
-   typedef struct { kiss_fft_scalar r; kiss_fft_scalar i; }kiss_fft_cpx; */
+   typedef struct { renamenoise_fft_scalar r; renamenoise_fft_scalar i; }kiss_fft_cpx; */
 #include "renamenoise_fft.h"
 
 /*
@@ -97,8 +97,8 @@
 #  define RENAMENOISE_FFT_SIN(phase) _mm_set1_ps( sin(phase) )
 #  define RENAMENOISE_HALF_OF(x) ((x)*_mm_set1_ps(.5f))
 #else
-#  define RENAMENOISE_FFT_COS(phase) (kiss_fft_scalar) cos(phase)
-#  define RENAMENOISE_FFT_SIN(phase) (kiss_fft_scalar) sin(phase)
+#  define RENAMENOISE_FFT_COS(phase) (renamenoise_fft_scalar) cos(phase)
+#  define RENAMENOISE_FFT_SIN(phase) (renamenoise_fft_scalar) sin(phase)
 #  define RENAMENOISE_HALF_OF(x) ((x)*.5f)
 #endif
 

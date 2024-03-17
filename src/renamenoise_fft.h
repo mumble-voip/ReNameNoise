@@ -43,22 +43,22 @@ extern "C" {
 
 #ifdef USE_SIMD
 # include <xmmintrin.h>
-# define kiss_fft_scalar __m128
+# define renamenoise_fft_scalar __m128
 #define KISS_FFT_MALLOC(nbytes) memalign(16,nbytes)
 #else
 #define KISS_FFT_MALLOC renamenoise_alloc2
 #endif
 
-#ifndef kiss_fft_scalar
+#ifndef renamenoise_fft_scalar
 /*  default is float */
-#  define kiss_fft_scalar float
+#  define renamenoise_fft_scalar float
 #  define kiss_twiddle_scalar float
 #  define KF_SUFFIX _celt_single
 #endif
 
 typedef struct {
-    kiss_fft_scalar r;
-    kiss_fft_scalar i;
+    renamenoise_fft_scalar r;
+    renamenoise_fft_scalar i;
 }kiss_fft_cpx;
 
 typedef struct {
