@@ -145,13 +145,13 @@ void renamenoise_pitch_downsample(renamenoise_sig *x[], renamenoise_val16 *x_lp,
    renamenoise_val16 lpc2[5];
    renamenoise_val16 c1 = RENAMENOISE_QCONST16(.8f,15);
    for (i=1;i<len>>1;i++)
-      x_lp[i] = RENAMENOISE_SHR32(HALF32(HALF32(x[0][(2*i-1)]+x[0][(2*i+1)])+x[0][2*i]), shift);
-   x_lp[0] = RENAMENOISE_SHR32(HALF32(HALF32(x[0][1])+x[0][0]), shift);
+      x_lp[i] = RENAMENOISE_SHR32(RENAMENOISE_HALF32(RENAMENOISE_HALF32(x[0][(2*i-1)]+x[0][(2*i+1)])+x[0][2*i]), shift);
+   x_lp[0] = RENAMENOISE_SHR32(RENAMENOISE_HALF32(RENAMENOISE_HALF32(x[0][1])+x[0][0]), shift);
    if (C==2)
    {
       for (i=1;i<len>>1;i++)
-         x_lp[i] += RENAMENOISE_SHR32(HALF32(HALF32(x[1][(2*i-1)]+x[1][(2*i+1)])+x[1][2*i]), shift);
-      x_lp[0] += RENAMENOISE_SHR32(HALF32(HALF32(x[1][1])+x[1][0]), shift);
+         x_lp[i] += RENAMENOISE_SHR32(RENAMENOISE_HALF32(RENAMENOISE_HALF32(x[1][(2*i-1)]+x[1][(2*i+1)])+x[1][2*i]), shift);
+      x_lp[0] += RENAMENOISE_SHR32(RENAMENOISE_HALF32(RENAMENOISE_HALF32(x[1][1])+x[1][0]), shift);
    }
 
    _renamenoise_autocorr(x_lp, ac, NULL, 0,
@@ -348,8 +348,8 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
          T1b = (2*renamenoise_second_check[k]*T0+k)/(2*k);
       }
       renamenoise_dual_inner_prod(x, &x[-T1], &x[-T1b], N, &xy, &xy2);
-      xy = HALF32(xy + xy2);
-      yy = HALF32(yy_lookup[T1] + yy_lookup[T1b]);
+      xy = RENAMENOISE_HALF32(xy + xy2);
+      yy = RENAMENOISE_HALF32(yy_lookup[T1] + yy_lookup[T1b]);
       g1 = renamenoise_compute_pitch_gain(xy, xx, yy);
       if (abs(T1-prev_period)<=1)
          cont = prev_gain;
