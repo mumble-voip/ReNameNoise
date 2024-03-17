@@ -154,7 +154,7 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 
 #define RENAMENOISE_ADD16(a,b) ((a)+(b))
 #define RENAMENOISE_SUB16(a,b) ((a)-(b))
-#define ADD32(a,b) ((a)+(b))
+#define RENAMENOISE_ADD32(a,b) ((a)+(b))
 #define SUB32(a,b) ((a)-(b))
 #define ADD32_ovflw(a,b) ((a)+(b))
 #define SUB32_ovflw(a,b) ((a)-(b))

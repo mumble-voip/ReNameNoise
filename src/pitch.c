@@ -59,7 +59,7 @@ static void renamenoise_find_best_pitch(renamenoise_val32 *xcorr, renamenoise_va
    best_pitch[0] = 0;
    best_pitch[1] = 1;
    for (j=0;j<len;j++)
-      Syy = ADD32(Syy, RENAMENOISE_SHR32(MULT16_16(y[j],y[j]), yshift));
+      Syy = RENAMENOISE_ADD32(Syy, RENAMENOISE_SHR32(MULT16_16(y[j],y[j]), yshift));
    for (i=0;i<max_pitch;i++)
    {
       if (xcorr[i]>0)
