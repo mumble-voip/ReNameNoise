@@ -165,7 +165,7 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 #define RENAMENOISE_MULT16_32_Q15(a,b)     ((a)*(b))
 #define RENAMENOISE_MULT16_32_Q16(a,b)     ((a)*(b))
 
-#define MULT32_32_Q31(a,b)     ((a)*(b))
+#define RENAMENOISE_MULT32_32_Q31(a,b)     ((a)*(b))
 
 #define MAC16_32_Q15(c,a,b)     ((c)+(a)*(b))
 #define MAC16_32_Q16(c,a,b)     ((c)+(a)*(b))

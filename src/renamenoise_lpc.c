@@ -52,7 +52,7 @@ int          p
          /* Sum up this iteration's reflection coefficient */
          renamenoise_val32 rr = 0;
          for (j = 0; j < i; j++)
-            rr += MULT32_32_Q31(lpc[j],ac[i - j]);
+            rr += RENAMENOISE_MULT32_32_Q31(lpc[j],ac[i - j]);
          rr += RENAMENOISE_SHR32(ac[i + 1],3);
          r = -RENAMENOISE_SHL32(rr,3)/error;
          /*  Update LPC coefficients and total error */
@@ -62,11 +62,11 @@ int          p
             renamenoise_val32 tmp1, tmp2;
             tmp1 = lpc[j];
             tmp2 = lpc[i-1-j];
-            lpc[j]     = tmp1 + MULT32_32_Q31(r,tmp2);
-            lpc[i-1-j] = tmp2 + MULT32_32_Q31(r,tmp1);
+            lpc[j]     = tmp1 + RENAMENOISE_MULT32_32_Q31(r,tmp2);
+            lpc[i-1-j] = tmp2 + RENAMENOISE_MULT32_32_Q31(r,tmp1);
          }
 
-         error = error - MULT32_32_Q31(MULT32_32_Q31(r,r),error);
+         error = error - RENAMENOISE_MULT32_32_Q31(RENAMENOISE_MULT32_32_Q31(r,r),error);
          /* Bail out once we get 30 dB gain */
          if (error<.001f*ac[0])
             break;
