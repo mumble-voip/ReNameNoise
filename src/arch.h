@@ -186,7 +186,7 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 #define RENAMENOISE_SCALEIN(a)      ((a)*RENAMENOISE_SIG_SCALE)
 #define RENAMENOISE_SCALEOUT(a)     ((a)*(1/RENAMENOISE_SIG_SCALE))
 
-#define SIG2WORD16(x) (x)
+#define RENAMENOISE_SIG2WORD16(x) (x)
 
 #ifndef GLOBAL_STACK_SIZE
 #define GLOBAL_STACK_SIZE 120000
