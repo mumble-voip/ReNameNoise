@@ -169,7 +169,7 @@ static void renamenoise_kf_bfly4(
 }
 
 
-#ifndef RADIX_TWO_ONLY
+#ifndef RENAMENOISE_RADIX_TWO_ONLY
 
 static void kf_bfly3(
                      renamenoise_fft_cpx * Fout,
@@ -357,7 +357,7 @@ int kf_factor(int n,renamenoise_int16 * facbuf)
                 p = n;          /* no more factors, skip to end */
         }
         n /= p;
-#ifdef RADIX_TWO_ONLY
+#ifdef RENAMENOISE_RADIX_TWO_ONLY
         if (p!=2 && p != 4)
 #else
         if (p>5)
@@ -524,7 +524,7 @@ void renamenoise_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *f
        case 4:
           renamenoise_kf_bfly4(fout,fstride[i]<<shift,st,m, fstride[i], m2);
           break;
- #ifndef RADIX_TWO_ONLY
+ #ifndef RENAMENOISE_RADIX_TWO_ONLY
        case 3:
           kf_bfly3(fout,fstride[i]<<shift,st,m, fstride[i], m2);
           break;
