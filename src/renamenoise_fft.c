@@ -478,7 +478,7 @@ void renamenoise_fft_free(const renamenoise_fft_state *cfg, int arch)
 {
    if (cfg)
    {
-      opus_fft_free_arch((renamenoise_fft_state *)cfg, arch);
+      renamenoise_fft_free_arch((renamenoise_fft_state *)cfg, arch);
       renamenoise_free2((renamenoise_int16*)cfg->bitrev);
       if (cfg->shift < 0)
          renamenoise_free2((renamenoise_twiddle_cpx*)cfg->twiddles);
