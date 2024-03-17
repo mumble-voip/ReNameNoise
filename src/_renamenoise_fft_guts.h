@@ -27,7 +27,7 @@
 #define RENAMENOISE_FFT_GUTS_H
 
 #define RENAMENOISE_MIN(a,b) ((a)<(b) ? (a):(b))
-#define MAX(a,b) ((a)>(b) ? (a):(b))
+#define RENAMENOISE_MAX(a,b) ((a)>(b) ? (a):(b))
 
 /* renamenoise_fft.h
    defines kiss_fft_scalar as either short or a float type
