@@ -117,7 +117,7 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 
 #define RENAMENOISE_NORM_SCALING 1.f
 
-#define EPSILON 1e-15f
+#define RENAMENOISE_EPSILON 1e-15f
 #define VERY_SMALL 1e-30f
 #define VERY_LARGE16 1e15f
 #define Q15_ONE ((renamenoise_val16)1.f)
