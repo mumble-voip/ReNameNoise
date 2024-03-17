@@ -55,7 +55,7 @@
 
 #define RENAMENOISE_C_MUL4(m,a,b) RENAMENOISE_C_MUL(m,a,b)
 
-#   define C_FIXDIV(c,div) /* NOOP */
+#   define RENAMENOISE_C_FIXDIV(c,div) /* NOOP */
 #   define C_MULBYSCALAR( c, s ) \
     do{ (c).r *= (s);\
         (c).i *= (s); }while(0)
