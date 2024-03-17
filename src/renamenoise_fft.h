@@ -58,7 +58,7 @@ extern "C" {
 typedef struct {
     renamenoise_fft_scalar r;
     renamenoise_fft_scalar i;
-}kiss_fft_cpx;
+}renamenoise_fft_cpx;
 
 typedef struct {
    renamenoise_twiddle_scalar r;
@@ -129,11 +129,11 @@ kiss_fft_state *opus_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch);
  * Note that each element is complex and can be accessed like
     f[k].r and f[k].i
  * */
-void opus_fft_c(const kiss_fft_state *cfg,const kiss_fft_cpx *fin,kiss_fft_cpx *fout);
-void opus_ifft_c(const kiss_fft_state *cfg,const kiss_fft_cpx *fin,kiss_fft_cpx *fout);
+void opus_fft_c(const kiss_fft_state *cfg,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout);
+void opus_ifft_c(const kiss_fft_state *cfg,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout);
 
-void opus_fft_impl(const kiss_fft_state *st,kiss_fft_cpx *fout);
-void opus_ifft_impl(const kiss_fft_state *st,kiss_fft_cpx *fout);
+void opus_fft_impl(const kiss_fft_state *st,renamenoise_fft_cpx *fout);
+void opus_ifft_impl(const kiss_fft_state *st,renamenoise_fft_cpx *fout);
 
 void opus_fft_free(const kiss_fft_state *cfg, int arch);
 
@@ -157,12 +157,12 @@ extern void (*const OPUS_FFT_FREE_ARCH_IMPL[OPUS_ARCHMASK+1])(
          ((*OPUS_FFT_FREE_ARCH_IMPL[(arch)&OPUS_ARCHMASK])(_st))
 
 extern void (*const OPUS_FFT[OPUS_ARCHMASK+1])(const kiss_fft_state *cfg,
- const kiss_fft_cpx *fin, kiss_fft_cpx *fout);
+ const renamenoise_fft_cpx *fin, renamenoise_fft_cpx *fout);
 #define opus_fft(_cfg, _fin, _fout, arch) \
    ((*OPUS_FFT[(arch)&OPUS_ARCHMASK])(_cfg, _fin, _fout))
 
 extern void (*const OPUS_IFFT[OPUS_ARCHMASK+1])(const kiss_fft_state *cfg,
- const kiss_fft_cpx *fin, kiss_fft_cpx *fout);
+ const renamenoise_fft_cpx *fin, renamenoise_fft_cpx *fout);
 #define opus_ifft(_cfg, _fin, _fout, arch) \
    ((*OPUS_IFFT[(arch)&OPUS_ARCHMASK])(_cfg, _fin, _fout))
 

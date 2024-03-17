@@ -32,7 +32,7 @@
 /* renamenoise_fft.h
    defines renamenoise_fft_scalar as either short or a float type
    and defines
-   typedef struct { renamenoise_fft_scalar r; renamenoise_fft_scalar i; }kiss_fft_cpx; */
+   typedef struct { renamenoise_fft_scalar r; renamenoise_fft_scalar i; }renamenoise_fft_cpx; */
 #include "renamenoise_fft.h"
 
 /*

@@ -97,7 +97,7 @@ struct ReNameNoiseDenoiseState {
   ReNameNoiseRNNState rnn;
 };
 
-void compute_band_energy(float *bandE, const kiss_fft_cpx *X) {
+void compute_band_energy(float *bandE, const renamenoise_fft_cpx *X) {
   int i;
   float sum[NB_BANDS] = {0};
   for (i=0;i<NB_BANDS-1;i++)
@@ -122,7 +122,7 @@ void compute_band_energy(float *bandE, const kiss_fft_cpx *X) {
   }
 }
 
-void compute_band_corr(float *bandE, const kiss_fft_cpx *X, const kiss_fft_cpx *P) {
+void compute_band_corr(float *bandE, const renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P) {
   int i;
   float sum[NB_BANDS] = {0};
   for (i=0;i<NB_BANDS-1;i++)
@@ -209,10 +209,10 @@ static void idct(float *out, const float *in) {
 }
 #endif
 
-static void forward_transform(kiss_fft_cpx *out, const float *in) {
+static void forward_transform(renamenoise_fft_cpx *out, const float *in) {
   int i;
-  kiss_fft_cpx x[WINDOW_SIZE];
-  kiss_fft_cpx y[WINDOW_SIZE];
+  renamenoise_fft_cpx x[WINDOW_SIZE];
+  renamenoise_fft_cpx y[WINDOW_SIZE];
   check_init();
   for (i=0;i<WINDOW_SIZE;i++) {
     x[i].r = in[i];
@@ -224,10 +224,10 @@ static void forward_transform(kiss_fft_cpx *out, const float *in) {
   }
 }
 
-static void inverse_transform(float *out, const kiss_fft_cpx *in) {
+static void inverse_transform(float *out, const renamenoise_fft_cpx *in) {
   int i;
-  kiss_fft_cpx x[WINDOW_SIZE];
-  kiss_fft_cpx y[WINDOW_SIZE];
+  renamenoise_fft_cpx x[WINDOW_SIZE];
+  renamenoise_fft_cpx y[WINDOW_SIZE];
   check_init();
   for (i=0;i<FREQ_SIZE;i++) {
     x[i] = in[i];
@@ -292,7 +292,7 @@ int lowpass = FREQ_SIZE;
 int band_lp = NB_BANDS;
 #endif
 
-static void frame_analysis(ReNameNoiseDenoiseState *st, kiss_fft_cpx *X, float *Ex, const float *in) {
+static void frame_analysis(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, float *Ex, const float *in) {
   int i;
   float x[WINDOW_SIZE];
   RENAMENOISE_COPY(x, st->analysis_mem, FRAME_SIZE);
@@ -307,7 +307,7 @@ static void frame_analysis(ReNameNoiseDenoiseState *st, kiss_fft_cpx *X, float *
   compute_band_energy(Ex, X);
 }
 
-static int compute_frame_features(ReNameNoiseDenoiseState *st, kiss_fft_cpx *X, kiss_fft_cpx *P,
+static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, renamenoise_fft_cpx *P,
                                   float *Ex, float *Ep, float *Exp, float *features, const float *in) {
   int i;
   float E = 0;
@@ -398,7 +398,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, kiss_fft_cpx *X, 
   return TRAINING && E < 0.1;
 }
 
-static void frame_synthesis(ReNameNoiseDenoiseState *st, float *out, const kiss_fft_cpx *y) {
+static void frame_synthesis(ReNameNoiseDenoiseState *st, float *out, const renamenoise_fft_cpx *y) {
   float x[WINDOW_SIZE];
   int i;
   inverse_transform(x, y);
@@ -419,7 +419,7 @@ static void biquad(float *y, float mem[2], const float *x, const float *b, const
   }
 }
 
-void pitch_filter(kiss_fft_cpx *X, const kiss_fft_cpx *P, const float *Ex, const float *Ep,
+void pitch_filter(renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P, const float *Ex, const float *Ep,
                   const float *Exp, const float *g) {
   int i;
   float r[NB_BANDS];
@@ -457,8 +457,8 @@ void pitch_filter(kiss_fft_cpx *X, const kiss_fft_cpx *P, const float *Ex, const
 
 float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const float *in) {
   int i;
-  kiss_fft_cpx X[FREQ_SIZE];
-  kiss_fft_cpx P[WINDOW_SIZE];
+  renamenoise_fft_cpx X[FREQ_SIZE];
+  renamenoise_fft_cpx P[WINDOW_SIZE];
   float x[FRAME_SIZE];
   float Ex[NB_BANDS], Ep[NB_BANDS];
   float Exp[NB_BANDS];
@@ -545,7 +545,7 @@ int main(int argc, char **argv) {
     fread(tmp, sizeof(short), FRAME_SIZE, f2);
   }
   while (1) {
-    kiss_fft_cpx X[FREQ_SIZE], Y[FREQ_SIZE], N[FREQ_SIZE], P[WINDOW_SIZE];
+    renamenoise_fft_cpx X[FREQ_SIZE], Y[FREQ_SIZE], N[FREQ_SIZE], P[WINDOW_SIZE];
     float Ex[NB_BANDS], Ey[NB_BANDS], En[NB_BANDS], Ep[NB_BANDS];
     float Exp[NB_BANDS];
     float Ln[NB_BANDS];

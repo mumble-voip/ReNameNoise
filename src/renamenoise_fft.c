@@ -43,12 +43,12 @@
 */
 
 static void kf_bfly2(
-                     kiss_fft_cpx * Fout,
+                     renamenoise_fft_cpx * Fout,
                      int m,
                      int N
                     )
 {
-   kiss_fft_cpx * Fout2;
+   renamenoise_fft_cpx * Fout2;
    int i;
    (void)m;
 #ifdef CUSTOM_MODES
@@ -57,7 +57,7 @@ static void kf_bfly2(
       renamenoise_assert(m==1);
       for (i=0;i<N;i++)
       {
-         kiss_fft_cpx t;
+         renamenoise_fft_cpx t;
          Fout2 = Fout + 1;
          t = *Fout2;
          RENAMENOISE_C_SUB( *Fout2 ,  *Fout , t );
@@ -73,7 +73,7 @@ static void kf_bfly2(
       renamenoise_assert(m==4);
       for (i=0;i<N;i++)
       {
-         kiss_fft_cpx t;
+         renamenoise_fft_cpx t;
          Fout2 = Fout + 4;
          t = Fout2[0];
          RENAMENOISE_C_SUB( Fout2[0] ,  Fout[0] , t );
@@ -99,7 +99,7 @@ static void kf_bfly2(
 }
 
 static void kf_bfly4(
-                     kiss_fft_cpx * Fout,
+                     renamenoise_fft_cpx * Fout,
                      const size_t fstride,
                      const kiss_fft_state *st,
                      int m,
@@ -114,7 +114,7 @@ static void kf_bfly4(
       /* Degenerate case where all the twiddles are 1. */
       for (i=0;i<N;i++)
       {
-         kiss_fft_cpx scratch0, scratch1;
+         renamenoise_fft_cpx scratch0, scratch1;
 
          RENAMENOISE_C_SUB( scratch0 , *Fout, Fout[2] );
          RENAMENOISE_C_ADDTO(*Fout, Fout[2]);
@@ -131,11 +131,11 @@ static void kf_bfly4(
       }
    } else {
       int j;
-      kiss_fft_cpx scratch[6];
+      renamenoise_fft_cpx scratch[6];
       const kiss_twiddle_cpx *tw1,*tw2,*tw3;
       const int m2=2*m;
       const int m3=3*m;
-      kiss_fft_cpx * Fout_beg = Fout;
+      renamenoise_fft_cpx * Fout_beg = Fout;
       for (i=0;i<N;i++)
       {
          Fout = Fout_beg + i*mm;
@@ -171,7 +171,7 @@ static void kf_bfly4(
 #ifndef RADIX_TWO_ONLY
 
 static void kf_bfly3(
-                     kiss_fft_cpx * Fout,
+                     renamenoise_fft_cpx * Fout,
                      const size_t fstride,
                      const kiss_fft_state *st,
                      int m,
@@ -183,10 +183,10 @@ static void kf_bfly3(
    size_t k;
    const size_t m2 = 2*m;
    const kiss_twiddle_cpx *tw1,*tw2;
-   kiss_fft_cpx scratch[5];
+   renamenoise_fft_cpx scratch[5];
    kiss_twiddle_cpx epi3;
 
-   kiss_fft_cpx * Fout_beg = Fout;
+   renamenoise_fft_cpx * Fout_beg = Fout;
    epi3 = st->twiddles[fstride*m];
    for (i=0;i<N;i++)
    {
@@ -225,7 +225,7 @@ static void kf_bfly3(
 
 #ifndef OVERRIDE_kf_bfly5
 static void kf_bfly5(
-                     kiss_fft_cpx * Fout,
+                     renamenoise_fft_cpx * Fout,
                      const size_t fstride,
                      const kiss_fft_state *st,
                      int m,
@@ -233,12 +233,12 @@ static void kf_bfly5(
                      int mm
                     )
 {
-   kiss_fft_cpx *Fout0,*Fout1,*Fout2,*Fout3,*Fout4;
+   renamenoise_fft_cpx *Fout0,*Fout1,*Fout2,*Fout3,*Fout4;
    int i, u;
-   kiss_fft_cpx scratch[13];
+   renamenoise_fft_cpx scratch[13];
    const kiss_twiddle_cpx *tw;
    kiss_twiddle_cpx ya,yb;
-   kiss_fft_cpx * Fout_beg = Fout;
+   renamenoise_fft_cpx * Fout_beg = Fout;
 
    ya = st->twiddles[fstride*m];
    yb = st->twiddles[fstride*2*m];
@@ -488,7 +488,7 @@ void opus_fft_free(const kiss_fft_state *cfg, int arch)
 
 #endif /* CUSTOM_MODES */
 
-void opus_fft_impl(const kiss_fft_state *st,kiss_fft_cpx *fout)
+void opus_fft_impl(const kiss_fft_state *st,renamenoise_fft_cpx *fout)
 {
     int m2, m;
     int p;
@@ -536,7 +536,7 @@ void opus_fft_impl(const kiss_fft_state *st,kiss_fft_cpx *fout)
     }
 }
 
-void opus_fft_c(const kiss_fft_state *st,const kiss_fft_cpx *fin,kiss_fft_cpx *fout)
+void opus_fft_c(const kiss_fft_state *st,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout)
 {
    int i;
    renamenoise_val16 scale;
@@ -546,7 +546,7 @@ void opus_fft_c(const kiss_fft_state *st,const kiss_fft_cpx *fin,kiss_fft_cpx *f
    /* Bit-reverse the input */
    for (i=0;i<st->nfft;i++)
    {
-      kiss_fft_cpx x = fin[i];
+      renamenoise_fft_cpx x = fin[i];
       fout[st->bitrev[i]].r = RENAMENOISE_SHR32(RENAMENOISE_MULT16_32_Q16(scale, x.r), scale_shift);
       fout[st->bitrev[i]].i = RENAMENOISE_SHR32(RENAMENOISE_MULT16_32_Q16(scale, x.i), scale_shift);
    }
@@ -554,7 +554,7 @@ void opus_fft_c(const kiss_fft_state *st,const kiss_fft_cpx *fin,kiss_fft_cpx *f
 }
 
 
-void opus_ifft_c(const kiss_fft_state *st,const kiss_fft_cpx *fin,kiss_fft_cpx *fout)
+void opus_ifft_c(const kiss_fft_state *st,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout)
 {
    int i;
    renamenoise_assert2 (fin != fout, "In-place FFT not supported");
