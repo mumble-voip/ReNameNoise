@@ -84,7 +84,7 @@
             (res).r += (a).r;  (res).i += (a).i;\
     }while(0)
 
-#define C_SUBFROM( res , a)\
+#define RENAMENOISE_C_SUBFROM( res , a)\
     do {\
             RENAMENOISE_CHECK_OVERFLOW_OP((res).r,-,(a).r)\
             RENAMENOISE_CHECK_OVERFLOW_OP((res).i,-,(a).i)\
