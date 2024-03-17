@@ -392,7 +392,7 @@ int renamenoise_kf_factor(int n,renamenoise_int16 * facbuf)
     return 1;
 }
 
-static void compute_twiddles(renamenoise_twiddle_cpx *twiddles, int nfft)
+static void renamenoise_compute_twiddles(renamenoise_twiddle_cpx *twiddles, int nfft)
 {
    int i;
    for (i=0;i<nfft;++i) {
@@ -442,7 +442,7 @@ renamenoise_fft_state *renamenoise_fft_alloc_twiddles(int nfft,void * mem,size_t
               goto fail;
         } else {
            st->twiddles = twiddles = (renamenoise_twiddle_cpx*)RENAMENOISE_FFT_MALLOC(sizeof(renamenoise_twiddle_cpx)*nfft);
-           compute_twiddles(twiddles, nfft);
+           renamenoise_compute_twiddles(twiddles, nfft);
            st->shift = -1;
         }
         if (!renamenoise_kf_factor(nfft,st->factors))
