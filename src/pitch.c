@@ -114,7 +114,7 @@ static void renamenoise_fir5(const renamenoise_val16 *x,
    mem4=mem[4];
    for (i=0;i<N;i++)
    {
-      renamenoise_val32 sum = SHL32(RENAMENOISE_EXTEND32(x[i]), SIG_SHIFT);
+      renamenoise_val32 sum = RENAMENOISE_SHL32(RENAMENOISE_EXTEND32(x[i]), SIG_SHIFT);
       sum = MAC16_16(sum,num0,mem0);
       sum = MAC16_16(sum,num1,mem1);
       sum = MAC16_16(sum,num2,mem2);
