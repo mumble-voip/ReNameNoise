@@ -93,18 +93,18 @@
 #endif /* RENAMENOISE_C_ADD defined */
 
 #ifdef USE_SIMD
-#  define KISS_FFT_COS(phase) _mm_set1_ps( cos(phase) )
+#  define RENAMENOISE_FFT_COS(phase) _mm_set1_ps( cos(phase) )
 #  define KISS_FFT_SIN(phase) _mm_set1_ps( sin(phase) )
 #  define HALF_OF(x) ((x)*_mm_set1_ps(.5f))
 #else
-#  define KISS_FFT_COS(phase) (kiss_fft_scalar) cos(phase)
+#  define RENAMENOISE_FFT_COS(phase) (kiss_fft_scalar) cos(phase)
 #  define KISS_FFT_SIN(phase) (kiss_fft_scalar) sin(phase)
 #  define HALF_OF(x) ((x)*.5f)
 #endif
 
 #define  kf_cexp(x,phase) \
         do{ \
-                (x)->r = KISS_FFT_COS(phase);\
+                (x)->r = RENAMENOISE_FFT_COS(phase);\
                 (x)->i = KISS_FFT_SIN(phase);\
         }while(0)
 
