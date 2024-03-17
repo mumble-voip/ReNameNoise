@@ -338,7 +338,7 @@ void renamenoise_compute_bitrev_table(
     p[i] * m[i] = m[i-1]
     m0 = n                  */
 static
-int kf_factor(int n,renamenoise_int16 * facbuf)
+int renamenoise_kf_factor(int n,renamenoise_int16 * facbuf)
 {
     int p=4;
     int i;
@@ -445,7 +445,7 @@ renamenoise_fft_state *renamenoise_fft_alloc_twiddles(int nfft,void * mem,size_t
            compute_twiddles(twiddles, nfft);
            st->shift = -1;
         }
-        if (!kf_factor(nfft,st->factors))
+        if (!renamenoise_kf_factor(nfft,st->factors))
         {
            goto fail;
         }
