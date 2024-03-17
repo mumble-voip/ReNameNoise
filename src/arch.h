@@ -124,7 +124,7 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 
 /* This appears to be the same speed as C99's fabsf() but it's more portable. */
 #define RENAMENOISE_ABS16(x) ((float)fabs(x))
-#define ABS32(x) ((float)fabs(x))
+#define RENAMENOISE_ABS32(x) ((float)fabs(x))
 
 #define QCONST16(x,bits) (x)
 #define QCONST32(x,bits) (x)
