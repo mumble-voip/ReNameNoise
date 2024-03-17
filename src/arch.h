@@ -119,7 +119,7 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 
 #define RENAMENOISE_EPSILON 1e-15f
 #define RENAMENOISE_VERY_SMALL 1e-30f
-#define VERY_LARGE16 1e15f
+#define RENAMENOISE_VERY_LARGE16 1e15f
 #define Q15_ONE ((renamenoise_val16)1.f)
 
 /* This appears to be the same speed as C99's fabsf() but it's more portable. */
