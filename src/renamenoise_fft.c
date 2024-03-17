@@ -225,7 +225,7 @@ static void renamenoise_kf_bfly3(
 
 
 #ifndef OVERRIDE_RENAMENOISE_kf_bfly5
-static void kf_bfly5(
+static void renamenoise_kf_bfly5(
                      renamenoise_fft_cpx * Fout,
                      const size_t fstride,
                      const renamenoise_fft_state *st,
@@ -529,7 +529,7 @@ void renamenoise_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *f
           renamenoise_kf_bfly3(fout,fstride[i]<<shift,st,m, fstride[i], m2);
           break;
        case 5:
-          kf_bfly5(fout,fstride[i]<<shift,st,m, fstride[i], m2);
+          renamenoise_kf_bfly5(fout,fstride[i]<<shift,st,m, fstride[i], m2);
           break;
  #endif
        }
