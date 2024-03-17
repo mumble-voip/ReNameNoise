@@ -224,7 +224,7 @@ static void renamenoise_kf_bfly3(
 }
 
 
-#ifndef OVERRIDE_kf_bfly5
+#ifndef OVERRIDE_RENAMENOISE_kf_bfly5
 static void kf_bfly5(
                      renamenoise_fft_cpx * Fout,
                      const size_t fstride,
@@ -292,7 +292,7 @@ static void kf_bfly5(
       }
    }
 }
-#endif /* OVERRIDE_kf_bfly5 */
+#endif /* OVERRIDE_RENAMENOISE_kf_bfly5 */
 
 
 #endif
