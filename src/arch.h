@@ -178,7 +178,7 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 #define RENAMENOISE_MULT16_16_P15(a,b)     ((a)*(b))
 #define RENAMENOISE_MULT16_16_P13(a,b)     ((a)*(b))
 #define RENAMENOISE_MULT16_16_P14(a,b)     ((a)*(b))
-#define MULT16_32_P16(a,b)     ((a)*(b))
+#define RENAMENOISE_MULT16_32_P16(a,b)     ((a)*(b))
 
 #define DIV32_16(a,b)     (((renamenoise_val32)(a))/(renamenoise_val16)(b))
 #define DIV32(a,b)     (((renamenoise_val32)(a))/(renamenoise_val32)(b))
