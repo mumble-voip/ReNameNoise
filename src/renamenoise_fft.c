@@ -412,7 +412,7 @@ int opus_fft_alloc_arch_c(renamenoise_fft_state *st) {
  * The return value is a contiguous block of memory.  As such,
  * It can be freed with free().
  * */
-renamenoise_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem,
+renamenoise_fft_state *renamenoise_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem,
                                         const renamenoise_fft_state *base, int arch)
 {
     renamenoise_fft_state *st=NULL;
@@ -467,7 +467,7 @@ fail:
 
 renamenoise_fft_state *opus_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch)
 {
-   return opus_fft_alloc_twiddles(nfft, mem, lenmem, NULL, arch);
+   return renamenoise_fft_alloc_twiddles(nfft, mem, lenmem, NULL, arch);
 }
 
 void opus_fft_free_arch_c(renamenoise_fft_state *st) {

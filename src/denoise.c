@@ -168,7 +168,7 @@ CommonState common;
 static void check_init() {
   int i;
   if (common.init) return;
-  common.kfft = opus_fft_alloc_twiddles(2*FRAME_SIZE, NULL, NULL, NULL, 0);
+  common.kfft = renamenoise_fft_alloc_twiddles(2*FRAME_SIZE, NULL, NULL, NULL, 0);
   for (i=0;i<FRAME_SIZE;i++)
     common.half_window[i] = sin(.5*M_PI*sin(.5*M_PI*(i+.5)/FRAME_SIZE) * sin(.5*M_PI*(i+.5)/FRAME_SIZE));
   for (i=0;i<NB_BANDS;i++) {

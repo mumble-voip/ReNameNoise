@@ -111,7 +111,7 @@ typedef struct renamenoise_fft_state{
  *      buffer size in *lenmem.
  * */
 
-renamenoise_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem, const renamenoise_fft_state *base, int arch);
+renamenoise_fft_state *renamenoise_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem, const renamenoise_fft_state *base, int arch);
 
 renamenoise_fft_state *opus_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch);
 
