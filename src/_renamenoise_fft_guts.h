@@ -108,7 +108,7 @@
                 (x)->i = RENAMENOISE_FFT_SIN(phase);\
         }while(0)
 
-#define  kf_cexp2(x,phase) \
+#define  renamenoise_kf_cexp2(x,phase) \
    do{ \
       (x)->r = TRIG_UPSCALE*celt_cos_norm((phase));\
       (x)->i = TRIG_UPSCALE*celt_cos_norm((phase)-32768);\
