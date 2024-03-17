@@ -171,7 +171,7 @@ static void renamenoise_kf_bfly4(
 
 #ifndef RENAMENOISE_RADIX_TWO_ONLY
 
-static void kf_bfly3(
+static void renamenoise_kf_bfly3(
                      renamenoise_fft_cpx * Fout,
                      const size_t fstride,
                      const renamenoise_fft_state *st,
@@ -526,7 +526,7 @@ void renamenoise_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *f
           break;
  #ifndef RENAMENOISE_RADIX_TWO_ONLY
        case 3:
-          kf_bfly3(fout,fstride[i]<<shift,st,m, fstride[i], m2);
+          renamenoise_kf_bfly3(fout,fstride[i]<<shift,st,m, fstride[i], m2);
           break;
        case 5:
           kf_bfly5(fout,fstride[i]<<shift,st,m, fstride[i], m2);
