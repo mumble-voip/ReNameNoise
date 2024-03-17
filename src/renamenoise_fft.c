@@ -461,7 +461,7 @@ renamenoise_fft_state *renamenoise_fft_alloc_twiddles(int nfft,void * mem,size_t
     }
     return st;
 fail:
-    opus_fft_free(st, arch);
+    renamenoise_fft_free(st, arch);
     return NULL;
 }
 
@@ -474,7 +474,7 @@ void opus_fft_free_arch_c(renamenoise_fft_state *st) {
    (void)st;
 }
 
-void opus_fft_free(const renamenoise_fft_state *cfg, int arch)
+void renamenoise_fft_free(const renamenoise_fft_state *cfg, int arch)
 {
    if (cfg)
    {
