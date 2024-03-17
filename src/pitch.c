@@ -115,11 +115,11 @@ static void renamenoise_fir5(const renamenoise_val16 *x,
    for (i=0;i<N;i++)
    {
       renamenoise_val32 sum = RENAMENOISE_SHL32(RENAMENOISE_EXTEND32(x[i]), SIG_SHIFT);
-      sum = MAC16_16(sum,num0,mem0);
-      sum = MAC16_16(sum,num1,mem1);
-      sum = MAC16_16(sum,num2,mem2);
-      sum = MAC16_16(sum,num3,mem3);
-      sum = MAC16_16(sum,num4,mem4);
+      sum = RENAMENOISE_MAC16_16(sum,num0,mem0);
+      sum = RENAMENOISE_MAC16_16(sum,num1,mem1);
+      sum = RENAMENOISE_MAC16_16(sum,num2,mem2);
+      sum = RENAMENOISE_MAC16_16(sum,num3,mem3);
+      sum = RENAMENOISE_MAC16_16(sum,num4,mem4);
       mem4 = mem3;
       mem3 = mem2;
       mem2 = mem1;
@@ -192,7 +192,7 @@ void renamenoise_pitch_xcorr(const renamenoise_val16 *_x, const renamenoise_val1
    {
       renamenoise_val32 sum = 0;
       for (j=0;j<len;j++)
-         sum = MAC16_16(sum, _x[j], _y[i+j]);
+         sum = RENAMENOISE_MAC16_16(sum, _x[j], _y[i+j]);
       xcorr[i] = sum;
    }
 

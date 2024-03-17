@@ -103,7 +103,7 @@ void renamenoise_fir(
    {
       renamenoise_val32 sum = RENAMENOISE_SHL32(RENAMENOISE_EXTEND32(x[i]), SIG_SHIFT);
       for (j=0;j<ord;j++)
-         sum = MAC16_16(sum,rnum[j],x[i+j-ord]);
+         sum = RENAMENOISE_MAC16_16(sum,rnum[j],x[i+j-ord]);
       y[i] = RENAMENOISE_ROUND16(sum, SIG_SHIFT);
    }
 }
@@ -155,17 +155,17 @@ void renamenoise_iir(const renamenoise_val32 *_x,
       /* Patch up the result to compensate for the fact that this is an IIR */
       y[i+ord  ] = -RENAMENOISE_SROUND16(sum[0],SIG_SHIFT);
       _y[i  ] = sum[0];
-      sum[1] = MAC16_16(sum[1], y[i+ord  ], den[0]);
+      sum[1] = RENAMENOISE_MAC16_16(sum[1], y[i+ord  ], den[0]);
       y[i+ord+1] = -RENAMENOISE_SROUND16(sum[1],SIG_SHIFT);
       _y[i+1] = sum[1];
-      sum[2] = MAC16_16(sum[2], y[i+ord+1], den[0]);
-      sum[2] = MAC16_16(sum[2], y[i+ord  ], den[1]);
+      sum[2] = RENAMENOISE_MAC16_16(sum[2], y[i+ord+1], den[0]);
+      sum[2] = RENAMENOISE_MAC16_16(sum[2], y[i+ord  ], den[1]);
       y[i+ord+2] = -RENAMENOISE_SROUND16(sum[2],SIG_SHIFT);
       _y[i+2] = sum[2];
 
-      sum[3] = MAC16_16(sum[3], y[i+ord+2], den[0]);
-      sum[3] = MAC16_16(sum[3], y[i+ord+1], den[1]);
-      sum[3] = MAC16_16(sum[3], y[i+ord  ], den[2]);
+      sum[3] = RENAMENOISE_MAC16_16(sum[3], y[i+ord+2], den[0]);
+      sum[3] = RENAMENOISE_MAC16_16(sum[3], y[i+ord+1], den[1]);
+      sum[3] = RENAMENOISE_MAC16_16(sum[3], y[i+ord  ], den[2]);
       y[i+ord+3] = -RENAMENOISE_SROUND16(sum[3],SIG_SHIFT);
       _y[i+3] = sum[3];
    }
@@ -216,7 +216,7 @@ int _renamenoise_autocorr(
    for (k=0;k<=lag;k++)
    {
       for (i = k+fastN, d = 0; i < n; i++)
-         d = MAC16_16(d, xptr[i], xptr[i-k]);
+         d = RENAMENOISE_MAC16_16(d, xptr[i], xptr[i-k]);
       ac[k] += d;
    }
 

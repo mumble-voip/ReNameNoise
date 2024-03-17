@@ -64,55 +64,55 @@ static RENAMENOISE_INLINE void renamenoise_xcorr_kernel(const renamenoise_val16 
       renamenoise_val16 tmp;
       tmp = *x++;
       y_3=*y++;
-      sum[0] = MAC16_16(sum[0],tmp,y_0);
-      sum[1] = MAC16_16(sum[1],tmp,y_1);
-      sum[2] = MAC16_16(sum[2],tmp,y_2);
-      sum[3] = MAC16_16(sum[3],tmp,y_3);
+      sum[0] = RENAMENOISE_MAC16_16(sum[0],tmp,y_0);
+      sum[1] = RENAMENOISE_MAC16_16(sum[1],tmp,y_1);
+      sum[2] = RENAMENOISE_MAC16_16(sum[2],tmp,y_2);
+      sum[3] = RENAMENOISE_MAC16_16(sum[3],tmp,y_3);
       tmp=*x++;
       y_0=*y++;
-      sum[0] = MAC16_16(sum[0],tmp,y_1);
-      sum[1] = MAC16_16(sum[1],tmp,y_2);
-      sum[2] = MAC16_16(sum[2],tmp,y_3);
-      sum[3] = MAC16_16(sum[3],tmp,y_0);
+      sum[0] = RENAMENOISE_MAC16_16(sum[0],tmp,y_1);
+      sum[1] = RENAMENOISE_MAC16_16(sum[1],tmp,y_2);
+      sum[2] = RENAMENOISE_MAC16_16(sum[2],tmp,y_3);
+      sum[3] = RENAMENOISE_MAC16_16(sum[3],tmp,y_0);
       tmp=*x++;
       y_1=*y++;
-      sum[0] = MAC16_16(sum[0],tmp,y_2);
-      sum[1] = MAC16_16(sum[1],tmp,y_3);
-      sum[2] = MAC16_16(sum[2],tmp,y_0);
-      sum[3] = MAC16_16(sum[3],tmp,y_1);
+      sum[0] = RENAMENOISE_MAC16_16(sum[0],tmp,y_2);
+      sum[1] = RENAMENOISE_MAC16_16(sum[1],tmp,y_3);
+      sum[2] = RENAMENOISE_MAC16_16(sum[2],tmp,y_0);
+      sum[3] = RENAMENOISE_MAC16_16(sum[3],tmp,y_1);
       tmp=*x++;
       y_2=*y++;
-      sum[0] = MAC16_16(sum[0],tmp,y_3);
-      sum[1] = MAC16_16(sum[1],tmp,y_0);
-      sum[2] = MAC16_16(sum[2],tmp,y_1);
-      sum[3] = MAC16_16(sum[3],tmp,y_2);
+      sum[0] = RENAMENOISE_MAC16_16(sum[0],tmp,y_3);
+      sum[1] = RENAMENOISE_MAC16_16(sum[1],tmp,y_0);
+      sum[2] = RENAMENOISE_MAC16_16(sum[2],tmp,y_1);
+      sum[3] = RENAMENOISE_MAC16_16(sum[3],tmp,y_2);
    }
    if (j++<len)
    {
       renamenoise_val16 tmp = *x++;
       y_3=*y++;
-      sum[0] = MAC16_16(sum[0],tmp,y_0);
-      sum[1] = MAC16_16(sum[1],tmp,y_1);
-      sum[2] = MAC16_16(sum[2],tmp,y_2);
-      sum[3] = MAC16_16(sum[3],tmp,y_3);
+      sum[0] = RENAMENOISE_MAC16_16(sum[0],tmp,y_0);
+      sum[1] = RENAMENOISE_MAC16_16(sum[1],tmp,y_1);
+      sum[2] = RENAMENOISE_MAC16_16(sum[2],tmp,y_2);
+      sum[3] = RENAMENOISE_MAC16_16(sum[3],tmp,y_3);
    }
    if (j++<len)
    {
       renamenoise_val16 tmp=*x++;
       y_0=*y++;
-      sum[0] = MAC16_16(sum[0],tmp,y_1);
-      sum[1] = MAC16_16(sum[1],tmp,y_2);
-      sum[2] = MAC16_16(sum[2],tmp,y_3);
-      sum[3] = MAC16_16(sum[3],tmp,y_0);
+      sum[0] = RENAMENOISE_MAC16_16(sum[0],tmp,y_1);
+      sum[1] = RENAMENOISE_MAC16_16(sum[1],tmp,y_2);
+      sum[2] = RENAMENOISE_MAC16_16(sum[2],tmp,y_3);
+      sum[3] = RENAMENOISE_MAC16_16(sum[3],tmp,y_0);
    }
    if (j<len)
    {
       renamenoise_val16 tmp=*x++;
       y_1=*y++;
-      sum[0] = MAC16_16(sum[0],tmp,y_2);
-      sum[1] = MAC16_16(sum[1],tmp,y_3);
-      sum[2] = MAC16_16(sum[2],tmp,y_0);
-      sum[3] = MAC16_16(sum[3],tmp,y_1);
+      sum[0] = RENAMENOISE_MAC16_16(sum[0],tmp,y_2);
+      sum[1] = RENAMENOISE_MAC16_16(sum[1],tmp,y_3);
+      sum[2] = RENAMENOISE_MAC16_16(sum[2],tmp,y_0);
+      sum[3] = RENAMENOISE_MAC16_16(sum[3],tmp,y_1);
    }
 }
 
@@ -124,8 +124,8 @@ static RENAMENOISE_INLINE void renamenoise_dual_inner_prod(const renamenoise_val
    renamenoise_val32 xy02=0;
    for (i=0;i<N;i++)
    {
-      xy01 = MAC16_16(xy01, x[i], y01[i]);
-      xy02 = MAC16_16(xy02, x[i], y02[i]);
+      xy01 = RENAMENOISE_MAC16_16(xy01, x[i], y01[i]);
+      xy02 = RENAMENOISE_MAC16_16(xy02, x[i], y02[i]);
    }
    *xy1 = xy01;
    *xy2 = xy02;
@@ -139,7 +139,7 @@ static RENAMENOISE_INLINE renamenoise_val32 renamenoise_inner_prod(const renamen
    int i;
    renamenoise_val32 xy=0;
    for (i=0;i<N;i++)
-      xy = MAC16_16(xy, x[i], y[i]);
+      xy = RENAMENOISE_MAC16_16(xy, x[i], y[i]);
    return xy;
 }
 

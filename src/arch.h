@@ -160,7 +160,7 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 #define RENAMENOISE_SUB32_ovflw(a,b) ((a)-(b))
 #define RENAMENOISE_MULT16_16_16(a,b)     ((a)*(b))
 #define RENAMENOISE_MULT16_16(a,b)     ((renamenoise_val32)(a)*(renamenoise_val32)(b))
-#define MAC16_16(c,a,b)     ((c)+(renamenoise_val32)(a)*(renamenoise_val32)(b))
+#define RENAMENOISE_MAC16_16(c,a,b)     ((c)+(renamenoise_val32)(a)*(renamenoise_val32)(b))
 
 #define MULT16_32_Q15(a,b)     ((a)*(b))
 #define MULT16_32_Q16(a,b)     ((a)*(b))
