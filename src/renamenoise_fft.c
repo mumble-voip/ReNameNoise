@@ -132,7 +132,7 @@ static void kf_bfly4(
    } else {
       int j;
       renamenoise_fft_cpx scratch[6];
-      const kiss_twiddle_cpx *tw1,*tw2,*tw3;
+      const renamenoise_twiddle_cpx *tw1,*tw2,*tw3;
       const int m2=2*m;
       const int m3=3*m;
       renamenoise_fft_cpx * Fout_beg = Fout;
@@ -182,9 +182,9 @@ static void kf_bfly3(
    int i;
    size_t k;
    const size_t m2 = 2*m;
-   const kiss_twiddle_cpx *tw1,*tw2;
+   const renamenoise_twiddle_cpx *tw1,*tw2;
    renamenoise_fft_cpx scratch[5];
-   kiss_twiddle_cpx epi3;
+   renamenoise_twiddle_cpx epi3;
 
    renamenoise_fft_cpx * Fout_beg = Fout;
    epi3 = st->twiddles[fstride*m];
@@ -236,8 +236,8 @@ static void kf_bfly5(
    renamenoise_fft_cpx *Fout0,*Fout1,*Fout2,*Fout3,*Fout4;
    int i, u;
    renamenoise_fft_cpx scratch[13];
-   const kiss_twiddle_cpx *tw;
-   kiss_twiddle_cpx ya,yb;
+   const renamenoise_twiddle_cpx *tw;
+   renamenoise_twiddle_cpx ya,yb;
    renamenoise_fft_cpx * Fout_beg = Fout;
 
    ya = st->twiddles[fstride*m];
@@ -391,7 +391,7 @@ int kf_factor(int n,renamenoise_int16 * facbuf)
     return 1;
 }
 
-static void compute_twiddles(kiss_twiddle_cpx *twiddles, int nfft)
+static void compute_twiddles(renamenoise_twiddle_cpx *twiddles, int nfft)
 {
    int i;
    for (i=0;i<nfft;++i) {
@@ -427,7 +427,7 @@ kiss_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem,
     }
     if (st) {
         renamenoise_int16 *bitrev;
-        kiss_twiddle_cpx *twiddles;
+        renamenoise_twiddle_cpx *twiddles;
 
         st->nfft=nfft;
         st->scale = 1.f/nfft;
@@ -440,7 +440,7 @@ kiss_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem,
            if (st->shift>=32)
               goto fail;
         } else {
-           st->twiddles = twiddles = (kiss_twiddle_cpx*)RENAMENOISE_FFT_MALLOC(sizeof(kiss_twiddle_cpx)*nfft);
+           st->twiddles = twiddles = (renamenoise_twiddle_cpx*)RENAMENOISE_FFT_MALLOC(sizeof(renamenoise_twiddle_cpx)*nfft);
            compute_twiddles(twiddles, nfft);
            st->shift = -1;
         }
@@ -481,7 +481,7 @@ void opus_fft_free(const kiss_fft_state *cfg, int arch)
       opus_fft_free_arch((kiss_fft_state *)cfg, arch);
       renamenoise_free2((renamenoise_int16*)cfg->bitrev);
       if (cfg->shift < 0)
-         renamenoise_free2((kiss_twiddle_cpx*)cfg->twiddles);
+         renamenoise_free2((renamenoise_twiddle_cpx*)cfg->twiddles);
       renamenoise_free2((kiss_fft_state*)cfg);
    }
 }

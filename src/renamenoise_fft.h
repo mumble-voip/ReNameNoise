@@ -63,7 +63,7 @@ typedef struct {
 typedef struct {
    renamenoise_twiddle_scalar r;
    renamenoise_twiddle_scalar i;
-}kiss_twiddle_cpx;
+}renamenoise_twiddle_cpx;
 
 #define MAXFACTORS 8
 /* e.g. an fft of length 128 has 4 factors
@@ -82,7 +82,7 @@ typedef struct kiss_fft_state{
     int shift;
     renamenoise_int16 factors[2*MAXFACTORS];
     const renamenoise_int16 *bitrev;
-    const kiss_twiddle_cpx *twiddles;
+    const renamenoise_twiddle_cpx *twiddles;
     arch_fft_state *arch_fft;
 } kiss_fft_state;
 
