@@ -71,10 +71,10 @@ typedef struct {
  4*4*4*2
  */
 
-typedef struct arch_fft_state{
+typedef struct renamenoise_arch_fft_state{
    int is_supported;
    void *priv;
-} arch_fft_state;
+} renamenoise_arch_fft_state;
 
 typedef struct kiss_fft_state{
     int nfft;
@@ -83,7 +83,7 @@ typedef struct kiss_fft_state{
     renamenoise_int16 factors[2*RENAMENOISE_MAXFACTORS];
     const renamenoise_int16 *bitrev;
     const renamenoise_twiddle_cpx *twiddles;
-    arch_fft_state *arch_fft;
+    renamenoise_arch_fft_state *arch_fft;
 } kiss_fft_state;
 
 #if defined(HAVE_ARM_NE10)
