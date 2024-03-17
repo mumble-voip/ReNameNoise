@@ -52,7 +52,7 @@ extern "C" {
 #ifndef renamenoise_fft_scalar
 /*  default is float */
 #  define renamenoise_fft_scalar float
-#  define kiss_twiddle_scalar float
+#  define renamenoise_twiddle_scalar float
 #  define KF_SUFFIX _celt_single
 #endif
 
@@ -62,8 +62,8 @@ typedef struct {
 }kiss_fft_cpx;
 
 typedef struct {
-   kiss_twiddle_scalar r;
-   kiss_twiddle_scalar i;
+   renamenoise_twiddle_scalar r;
+   renamenoise_twiddle_scalar i;
 }kiss_twiddle_cpx;
 
 #define MAXFACTORS 8
