@@ -66,7 +66,7 @@ static void renamenoise_find_best_pitch(renamenoise_val32 *xcorr, renamenoise_va
       {
          renamenoise_val16 num;
          renamenoise_val32 xcorr16;
-         xcorr16 = RENAMENOISE_EXTRACT16(VSHR32(xcorr[i], xshift));
+         xcorr16 = RENAMENOISE_EXTRACT16(RENAMENOISE_VSHR32(xcorr[i], xshift));
          /* Considering the range of xcorr16, this should avoid both underflows
             and overflows (inf) when squaring xcorr16 */
          xcorr16 *= 1e-12f;
