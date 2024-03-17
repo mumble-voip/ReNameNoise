@@ -134,7 +134,7 @@ void renamenoise_ifft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *
 void renamenoise_fft_free(const renamenoise_fft_state *cfg, int arch);
 
 
-void opus_fft_free_arch_c(renamenoise_fft_state *st);
+void renamenoise_fft_free_arch_c(renamenoise_fft_state *st);
 int opus_fft_alloc_arch_c(renamenoise_fft_state *st);
 
 #if !defined(OVERRIDE_OPUS_FFT)
@@ -143,7 +143,7 @@ int opus_fft_alloc_arch_c(renamenoise_fft_state *st);
          ((void)(arch), opus_fft_alloc_arch_c(_st))
 
 #define opus_fft_free_arch(_st, arch) \
-         ((void)(arch), opus_fft_free_arch_c(_st))
+         ((void)(arch), renamenoise_fft_free_arch_c(_st))
 
 #define opus_fft(_cfg, _fin, _fout, arch) \
          ((void)(arch), renamenoise_fft_c(_cfg, _fin, _fout))
