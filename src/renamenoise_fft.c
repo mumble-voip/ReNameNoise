@@ -99,7 +99,7 @@ static void renamenoise_kf_bfly2(
    }
 }
 
-static void kf_bfly4(
+static void renamenoise_kf_bfly4(
                      renamenoise_fft_cpx * Fout,
                      const size_t fstride,
                      const renamenoise_fft_state *st,
@@ -522,7 +522,7 @@ void renamenoise_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *f
           renamenoise_kf_bfly2(fout, m, fstride[i]);
           break;
        case 4:
-          kf_bfly4(fout,fstride[i]<<shift,st,m, fstride[i], m2);
+          renamenoise_kf_bfly4(fout,fstride[i]<<shift,st,m, fstride[i], m2);
           break;
  #ifndef RADIX_TWO_ONLY
        case 3:
