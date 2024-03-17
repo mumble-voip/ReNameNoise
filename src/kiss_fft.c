@@ -90,7 +90,7 @@ static void kf_bfly2(
          C_ADDTO( Fout[2] ,  t );
 
          t.r = S_MUL(SUB32_ovflw(Fout2[3].i, Fout2[3].r), tw);
-         t.i = S_MUL(NEG32_ovflw(ADD32_ovflw(Fout2[3].i, Fout2[3].r)), tw);
+         t.i = S_MUL(RENAMENOISE_NEG32_ovflw(ADD32_ovflw(Fout2[3].i, Fout2[3].r)), tw);
          C_SUB( Fout2[3] ,  Fout[3] , t );
          C_ADDTO( Fout[3] ,  t );
          Fout += 8;
@@ -274,7 +274,7 @@ static void kf_bfly5(
          scratch[5].i = ADD32_ovflw(scratch[0].i, ADD32_ovflw(S_MUL(scratch[7].i,ya.r), S_MUL(scratch[8].i,yb.r)));
 
          scratch[6].r =  ADD32_ovflw(S_MUL(scratch[10].i,ya.i), S_MUL(scratch[9].i,yb.i));
-         scratch[6].i = NEG32_ovflw(ADD32_ovflw(S_MUL(scratch[10].r,ya.i), S_MUL(scratch[9].r,yb.i)));
+         scratch[6].i = RENAMENOISE_NEG32_ovflw(ADD32_ovflw(S_MUL(scratch[10].r,ya.i), S_MUL(scratch[9].r,yb.i)));
 
          C_SUB(*Fout1,scratch[5],scratch[6]);
          C_ADD(*Fout4,scratch[5],scratch[6]);
