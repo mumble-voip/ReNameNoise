@@ -89,10 +89,10 @@ void renamenoise_fir(
    for (i=0;i<N-3;i+=4)
    {
       renamenoise_val32 sum[4];
-      sum[0] = SHL32(EXTEND32(x[i  ]), SIG_SHIFT);
-      sum[1] = SHL32(EXTEND32(x[i+1]), SIG_SHIFT);
-      sum[2] = SHL32(EXTEND32(x[i+2]), SIG_SHIFT);
-      sum[3] = SHL32(EXTEND32(x[i+3]), SIG_SHIFT);
+      sum[0] = SHL32(RENAMENOISE_EXTEND32(x[i  ]), SIG_SHIFT);
+      sum[1] = SHL32(RENAMENOISE_EXTEND32(x[i+1]), SIG_SHIFT);
+      sum[2] = SHL32(RENAMENOISE_EXTEND32(x[i+2]), SIG_SHIFT);
+      sum[3] = SHL32(RENAMENOISE_EXTEND32(x[i+3]), SIG_SHIFT);
       renamenoise_xcorr_kernel(rnum, x+i-ord, sum, ord);
       y[i  ] = ROUND16(sum[0], SIG_SHIFT);
       y[i+1] = ROUND16(sum[1], SIG_SHIFT);
@@ -101,7 +101,7 @@ void renamenoise_fir(
    }
    for (;i<N;i++)
    {
-      renamenoise_val32 sum = SHL32(EXTEND32(x[i]), SIG_SHIFT);
+      renamenoise_val32 sum = SHL32(RENAMENOISE_EXTEND32(x[i]), SIG_SHIFT);
       for (j=0;j<ord;j++)
          sum = MAC16_16(sum,rnum[j],x[i+j-ord]);
       y[i] = ROUND16(sum, SIG_SHIFT);
