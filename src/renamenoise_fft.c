@@ -493,7 +493,7 @@ void opus_fft_impl(const kiss_fft_state *st,renamenoise_fft_cpx *fout)
     int m2, m;
     int p;
     int L;
-    int fstride[MAXFACTORS];
+    int fstride[RENAMENOISE_MAXFACTORS];
     int i;
     int shift;
 
