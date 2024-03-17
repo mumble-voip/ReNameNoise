@@ -59,7 +59,7 @@ static void renamenoise_find_best_pitch(renamenoise_val32 *xcorr, renamenoise_va
    best_pitch[0] = 0;
    best_pitch[1] = 1;
    for (j=0;j<len;j++)
-      Syy = RENAMENOISE_ADD32(Syy, RENAMENOISE_SHR32(MULT16_16(y[j],y[j]), yshift));
+      Syy = RENAMENOISE_ADD32(Syy, RENAMENOISE_SHR32(RENAMENOISE_MULT16_16(y[j],y[j]), yshift));
    for (i=0;i<max_pitch;i++)
    {
       if (xcorr[i]>0)
@@ -88,7 +88,7 @@ static void renamenoise_find_best_pitch(renamenoise_val32 *xcorr, renamenoise_va
             }
          }
       }
-      Syy += RENAMENOISE_SHR32(MULT16_16(y[i+len],y[i+len]),yshift) - RENAMENOISE_SHR32(MULT16_16(y[i],y[i]),yshift);
+      Syy += RENAMENOISE_SHR32(RENAMENOISE_MULT16_16(y[i+len],y[i+len]),yshift) - RENAMENOISE_SHR32(RENAMENOISE_MULT16_16(y[i],y[i]),yshift);
       Syy = RENAMENOISE_MAX32(1, Syy);
    }
 }
@@ -319,7 +319,7 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
    yy=xx;
    for (i=1;i<=maxperiod;i++)
    {
-      yy = yy+MULT16_16(x[-i],x[-i])-MULT16_16(x[N-i],x[N-i]);
+      yy = yy+RENAMENOISE_MULT16_16(x[-i],x[-i])-RENAMENOISE_MULT16_16(x[N-i],x[N-i]);
       yy_lookup[i] = RENAMENOISE_MAX32(0, yy);
    }
    yy = yy_lookup[T0];

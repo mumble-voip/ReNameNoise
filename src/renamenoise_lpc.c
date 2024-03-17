@@ -122,7 +122,7 @@ void renamenoise_iir(const renamenoise_val32 *_x,
       renamenoise_val32 sum = _x[i];
       for (j=0;j<ord;j++)
       {
-         sum -= MULT16_16(den[j],mem[j]);
+         sum -= RENAMENOISE_MULT16_16(den[j],mem[j]);
       }
       for (j=ord-1;j>=1;j--)
       {
@@ -173,7 +173,7 @@ void renamenoise_iir(const renamenoise_val32 *_x,
    {
       renamenoise_val32 sum = _x[i];
       for (j=0;j<ord;j++)
-         sum -= MULT16_16(rden[j],y[i+j]);
+         sum -= RENAMENOISE_MULT16_16(rden[j],y[i+j]);
       y[i+ord] = RENAMENOISE_SROUND16(sum,SIG_SHIFT);
       _y[i] = sum;
    }
