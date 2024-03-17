@@ -45,7 +45,7 @@
    C_ADDTO( res , a)    : res += a
  * */
 
-#   define S_MUL(a,b) ( (a)*(b) )
+#   define RENAMENOISE_S_MUL(a,b) ( (a)*(b) )
 #define C_MUL(m,a,b) \
     do{ (m).r = (a).r*(b).r - (a).i*(b).i;\
         (m).i = (a).r*(b).i + (a).i*(b).r; }while(0)
