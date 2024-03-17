@@ -126,7 +126,7 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 #define RENAMENOISE_ABS16(x) ((float)fabs(x))
 #define RENAMENOISE_ABS32(x) ((float)fabs(x))
 
-#define QCONST16(x,bits) (x)
+#define RENAMENOISE_QCONST16(x,bits) (x)
 #define QCONST32(x,bits) (x)
 
 #define NEG16(x) (-(x))

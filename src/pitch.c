@@ -143,7 +143,7 @@ void renamenoise_pitch_downsample(renamenoise_sig *x[], renamenoise_val16 *x_lp,
    renamenoise_val16 tmp=RENAMENOISE_Q15ONE;
    renamenoise_val16 lpc[4], mem[5]={0,0,0,0,0};
    renamenoise_val16 lpc2[5];
-   renamenoise_val16 c1 = QCONST16(.8f,15);
+   renamenoise_val16 c1 = RENAMENOISE_QCONST16(.8f,15);
    for (i=1;i<len>>1;i++)
       x_lp[i] = SHR32(HALF32(HALF32(x[0][(2*i-1)]+x[0][(2*i+1)])+x[0][2*i]), shift);
    x_lp[0] = SHR32(HALF32(HALF32(x[0][1])+x[0][0]), shift);
@@ -169,11 +169,11 @@ void renamenoise_pitch_downsample(renamenoise_sig *x[], renamenoise_val16 *x_lp,
    _renamenoise_lpc(lpc, ac, 4);
    for (i=0;i<4;i++)
    {
-      tmp = MULT16_16_Q15(QCONST16(.9f,15), tmp);
+      tmp = MULT16_16_Q15(RENAMENOISE_QCONST16(.9f,15), tmp);
       lpc[i] = MULT16_16_Q15(lpc[i], tmp);
    }
    /* Add a zero */
-   lpc2[0] = lpc[0] + QCONST16(.8f,SIG_SHIFT);
+   lpc2[0] = lpc[0] + RENAMENOISE_QCONST16(.8f,SIG_SHIFT);
    lpc2[1] = lpc[1] + MULT16_16_Q15(c1,lpc[0]);
    lpc2[2] = lpc[2] + MULT16_16_Q15(c1,lpc[1]);
    lpc2[3] = lpc[3] + MULT16_16_Q15(c1,lpc[2]);
@@ -272,9 +272,9 @@ void renamenoise_pitch_search(const renamenoise_val16 *x_lp, renamenoise_val16 *
       a = xcorr[best_pitch[0]-1];
       b = xcorr[best_pitch[0]];
       c = xcorr[best_pitch[0]+1];
-      if ((c-a) > MULT16_32_Q15(QCONST16(.7f,15),b-a))
+      if ((c-a) > MULT16_32_Q15(RENAMENOISE_QCONST16(.7f,15),b-a))
          offset = 1;
-      else if ((a-c) > MULT16_32_Q15(QCONST16(.7f,15),b-c))
+      else if ((a-c) > MULT16_32_Q15(RENAMENOISE_QCONST16(.7f,15),b-c))
          offset = -1;
       else
          offset = 0;
@@ -357,13 +357,13 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
          cont = HALF16(prev_gain);
       else
          cont = 0;
-      thresh = RENAMENOISE_MAX16(QCONST16(.3f,15), MULT16_16_Q15(QCONST16(.7f,15),g0)-cont);
+      thresh = RENAMENOISE_MAX16(RENAMENOISE_QCONST16(.3f,15), MULT16_16_Q15(RENAMENOISE_QCONST16(.7f,15),g0)-cont);
       /* Bias against very high pitch (very short period) to avoid false-positives
          due to short-term correlation */
       if (T1<3*minperiod)
-         thresh = RENAMENOISE_MAX16(QCONST16(.4f,15), MULT16_16_Q15(QCONST16(.85f,15),g0)-cont);
+         thresh = RENAMENOISE_MAX16(RENAMENOISE_QCONST16(.4f,15), MULT16_16_Q15(RENAMENOISE_QCONST16(.85f,15),g0)-cont);
       else if (T1<2*minperiod)
-         thresh = RENAMENOISE_MAX16(QCONST16(.5f,15), MULT16_16_Q15(QCONST16(.9f,15),g0)-cont);
+         thresh = RENAMENOISE_MAX16(RENAMENOISE_QCONST16(.5f,15), MULT16_16_Q15(RENAMENOISE_QCONST16(.9f,15),g0)-cont);
       if (g1 > thresh)
       {
          best_xy = xy;
@@ -380,9 +380,9 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
 
    for (k=0;k<3;k++)
       xcorr[k] = renamenoise_inner_prod(x, x-(T+k-1), N);
-   if ((xcorr[2]-xcorr[0]) > MULT16_32_Q15(QCONST16(.7f,15),xcorr[1]-xcorr[0]))
+   if ((xcorr[2]-xcorr[0]) > MULT16_32_Q15(RENAMENOISE_QCONST16(.7f,15),xcorr[1]-xcorr[0]))
       offset = 1;
-   else if ((xcorr[0]-xcorr[2]) > MULT16_32_Q15(QCONST16(.7f,15),xcorr[1]-xcorr[2]))
+   else if ((xcorr[0]-xcorr[2]) > MULT16_32_Q15(RENAMENOISE_QCONST16(.7f,15),xcorr[1]-xcorr[2]))
       offset = -1;
    else
       offset = 0;
