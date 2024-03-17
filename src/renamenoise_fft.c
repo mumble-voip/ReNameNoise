@@ -43,7 +43,7 @@
    complex numbers.  It also declares the kf_ internal functions.
 */
 
-static void kf_bfly2(
+static void renamenoise_kf_bfly2(
                      renamenoise_fft_cpx * Fout,
                      int m,
                      int N
@@ -519,7 +519,7 @@ void renamenoise_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *f
        switch (st->factors[2*i])
        {
        case 2:
-          kf_bfly2(fout, m, fstride[i]);
+          renamenoise_kf_bfly2(fout, m, fstride[i]);
           break;
        case 4:
           kf_bfly4(fout,fstride[i]<<shift,st,m, fstride[i], m2);
