@@ -536,7 +536,7 @@ void opus_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *fout)
     }
 }
 
-void opus_fft_c(const renamenoise_fft_state *st,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout)
+void renamenoise_fft_c(const renamenoise_fft_state *st,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout)
 {
    int i;
    renamenoise_val16 scale;
