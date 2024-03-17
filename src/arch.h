@@ -143,7 +143,7 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 
 #define RENAMENOISE_PSHR(a,shift)   (a)
 #define RENAMENOISE_SHR(a,shift)    (a)
-#define SHL(a,shift)    (a)
+#define RENAMENOISE_SHL(a,shift)    (a)
 #define SATURATE(x,a)   (x)
 #define SATURATE16(x)   (x)
 
