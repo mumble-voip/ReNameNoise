@@ -89,16 +89,16 @@ typedef struct renamenoise_fft_state{
 /*typedef struct renamenoise_fft_state* renamenoise_fft_cfg;*/
 
 /**
- *  opus_fft_alloc
+ *  renamenoise_fft_alloc
  *
  *  Initialize a FFT (or IFFT) algorithm's cfg/state buffer.
  *
- *  typical usage:      renamenoise_fft_cfg mycfg=opus_fft_alloc(1024,0,NULL,NULL);
+ *  typical usage:      renamenoise_fft_cfg mycfg=renamenoise_fft_alloc(1024,0,NULL,NULL);
  *
  *  The return value from fft_alloc is a cfg buffer used internally
  *  by the fft routine or NULL.
  *
- *  If lenmem is NULL, then opus_fft_alloc will allocate a cfg buffer using malloc.
+ *  If lenmem is NULL, then renamenoise_fft_alloc will allocate a cfg buffer using malloc.
  *  The returned value should be free()d when done to avoid memory leaks.
  *
  *  The state can be placed in a user supplied buffer 'mem':
@@ -113,7 +113,7 @@ typedef struct renamenoise_fft_state{
 
 renamenoise_fft_state *renamenoise_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem, const renamenoise_fft_state *base, int arch);
 
-renamenoise_fft_state *opus_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch);
+renamenoise_fft_state *renamenoise_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch);
 
 /**
  * opus_fft(cfg,in_out_buf)

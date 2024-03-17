@@ -465,7 +465,7 @@ fail:
     return NULL;
 }
 
-renamenoise_fft_state *opus_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch)
+renamenoise_fft_state *renamenoise_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch)
 {
    return renamenoise_fft_alloc_twiddles(nfft, mem, lenmem, NULL, arch);
 }
