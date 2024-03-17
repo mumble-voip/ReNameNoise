@@ -397,7 +397,7 @@ static void compute_twiddles(kiss_twiddle_cpx *twiddles, int nfft)
    for (i=0;i<nfft;++i) {
       const double pi=3.14159265358979323846264338327;
       double phase = ( -2*pi /nfft ) * i;
-      kf_cexp(twiddles+i, phase );
+      renamenoise_kf_cexp(twiddles+i, phase );
    }
 }
 

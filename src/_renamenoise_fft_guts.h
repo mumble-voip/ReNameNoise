@@ -102,7 +102,7 @@
 #  define RENAMENOISE_HALF_OF(x) ((x)*.5f)
 #endif
 
-#define  kf_cexp(x,phase) \
+#define  renamenoise_kf_cexp(x,phase) \
         do{ \
                 (x)->r = RENAMENOISE_FFT_COS(phase);\
                 (x)->i = RENAMENOISE_FFT_SIN(phase);\
