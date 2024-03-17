@@ -37,7 +37,7 @@
 #endif
 
 #include "_renamenoise_fft_guts.h"
-#define CUSTOM_MODES
+#define RENAMENOISE_CUSTOM_MODES
 
 /* The guts header contains all the multiplication and addition macros that are defined for
    complex numbers.  It also declares the kf_ internal functions.
@@ -52,7 +52,7 @@ static void renamenoise_kf_bfly2(
    renamenoise_fft_cpx * Fout2;
    int i;
    (void)m;
-#ifdef CUSTOM_MODES
+#ifdef RENAMENOISE_CUSTOM_MODES
    if (m==1)
    {
       renamenoise_assert(m==1);
@@ -298,7 +298,7 @@ static void renamenoise_kf_bfly5(
 #endif
 
 
-#ifdef CUSTOM_MODES
+#ifdef RENAMENOISE_CUSTOM_MODES
 
 static
 void compute_bitrev_table(
@@ -487,7 +487,7 @@ void renamenoise_fft_free(const renamenoise_fft_state *cfg, int arch)
    }
 }
 
-#endif /* CUSTOM_MODES */
+#endif /* RENAMENOISE_CUSTOM_MODES */
 
 void renamenoise_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *fout)
 {
