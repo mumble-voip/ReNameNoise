@@ -301,7 +301,7 @@ static void renamenoise_kf_bfly5(
 #ifdef RENAMENOISE_CUSTOM_MODES
 
 static
-void compute_bitrev_table(
+void renamenoise_compute_bitrev_table(
          int Fout,
          renamenoise_int16 *f,
          const size_t fstride,
@@ -326,7 +326,7 @@ void compute_bitrev_table(
       int j;
       for (j=0;j<p;j++)
       {
-         compute_bitrev_table( Fout , f, fstride*p, in_stride, factors,st);
+         renamenoise_compute_bitrev_table( Fout , f, fstride*p, in_stride, factors,st);
          f += fstride*in_stride;
          Fout += m;
       }
@@ -454,7 +454,7 @@ renamenoise_fft_state *renamenoise_fft_alloc_twiddles(int nfft,void * mem,size_t
         st->bitrev = bitrev = (renamenoise_int16*)RENAMENOISE_FFT_MALLOC(sizeof(renamenoise_int16)*nfft);
         if (st->bitrev==NULL)
             goto fail;
-        compute_bitrev_table(0, bitrev, 1,1, st->factors,st);
+        renamenoise_compute_bitrev_table(0, bitrev, 1,1, st->factors,st);
 
         /* Initialize architecture specific fft parameters */
         if (renamenoise_fft_alloc_arch(st, arch))
