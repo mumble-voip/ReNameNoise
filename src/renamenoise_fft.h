@@ -139,7 +139,7 @@ int renamenoise_fft_alloc_arch_c(renamenoise_fft_state *st);
 
 #if !defined(OVERRIDE_RENAMENOISE_FFT)
 
-#define opus_fft_alloc_arch(_st, arch) \
+#define renamenoise_fft_alloc_arch(_st, arch) \
          ((void)(arch), renamenoise_fft_alloc_arch_c(_st))
 
 #define opus_fft_free_arch(_st, arch) \

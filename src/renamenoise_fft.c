@@ -456,7 +456,7 @@ renamenoise_fft_state *renamenoise_fft_alloc_twiddles(int nfft,void * mem,size_t
         compute_bitrev_table(0, bitrev, 1,1, st->factors,st);
 
         /* Initialize architecture specific fft parameters */
-        if (opus_fft_alloc_arch(st, arch))
+        if (renamenoise_fft_alloc_arch(st, arch))
             goto fail;
     }
     return st;
