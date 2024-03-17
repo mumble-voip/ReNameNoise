@@ -188,8 +188,8 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 
 #define RENAMENOISE_SIG2WORD16(x) (x)
 
-#ifndef GLOBAL_STACK_SIZE
-#define GLOBAL_STACK_SIZE 120000
+#ifndef RENAMENOISE_GLOBAL_STACK_SIZE
+#define RENAMENOISE_GLOBAL_STACK_SIZE 120000
 #endif
 
 #endif /* ARCH_H */
