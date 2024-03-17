@@ -354,7 +354,7 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
       if (abs(T1-prev_period)<=1)
          cont = prev_gain;
       else if (abs(T1-prev_period)<=2 && 5*k*k < T0)
-         cont = HALF16(prev_gain);
+         cont = RENAMENOISE_HALF16(prev_gain);
       else
          cont = 0;
       thresh = RENAMENOISE_MAX16(RENAMENOISE_QCONST16(.3f,15), MULT16_16_Q15(RENAMENOISE_QCONST16(.7f,15),g0)-cont);
