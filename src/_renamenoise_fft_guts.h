@@ -60,34 +60,34 @@
     do{ (c).r *= (s);\
         (c).i *= (s); }while(0)
 
-#ifndef CHECK_OVERFLOW_OP
-#  define CHECK_OVERFLOW_OP(a,op,b) /* noop */
+#ifndef RENAMENOISE_CHECK_OVERFLOW_OP
+#  define RENAMENOISE_CHECK_OVERFLOW_OP(a,op,b) /* noop */
 #endif
 
 #ifndef C_ADD
 #define  C_ADD( res, a,b)\
     do { \
-            CHECK_OVERFLOW_OP((a).r,+,(b).r)\
-            CHECK_OVERFLOW_OP((a).i,+,(b).i)\
+            RENAMENOISE_CHECK_OVERFLOW_OP((a).r,+,(b).r)\
+            RENAMENOISE_CHECK_OVERFLOW_OP((a).i,+,(b).i)\
             (res).r=(a).r+(b).r;  (res).i=(a).i+(b).i; \
     }while(0)
 #define  C_SUB( res, a,b)\
     do { \
-            CHECK_OVERFLOW_OP((a).r,-,(b).r)\
-            CHECK_OVERFLOW_OP((a).i,-,(b).i)\
+            RENAMENOISE_CHECK_OVERFLOW_OP((a).r,-,(b).r)\
+            RENAMENOISE_CHECK_OVERFLOW_OP((a).i,-,(b).i)\
             (res).r=(a).r-(b).r;  (res).i=(a).i-(b).i; \
     }while(0)
 #define C_ADDTO( res , a)\
     do { \
-            CHECK_OVERFLOW_OP((res).r,+,(a).r)\
-            CHECK_OVERFLOW_OP((res).i,+,(a).i)\
+            RENAMENOISE_CHECK_OVERFLOW_OP((res).r,+,(a).r)\
+            RENAMENOISE_CHECK_OVERFLOW_OP((res).i,+,(a).i)\
             (res).r += (a).r;  (res).i += (a).i;\
     }while(0)
 
 #define C_SUBFROM( res , a)\
     do {\
-            CHECK_OVERFLOW_OP((res).r,-,(a).r)\
-            CHECK_OVERFLOW_OP((res).i,-,(a).i)\
+            RENAMENOISE_CHECK_OVERFLOW_OP((res).r,-,(a).r)\
+            RENAMENOISE_CHECK_OVERFLOW_OP((res).i,-,(a).i)\
             (res).r -= (a).r;  (res).i -= (a).i; \
     }while(0)
 #endif /* C_ADD defined */
