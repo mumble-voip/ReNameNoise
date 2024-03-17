@@ -143,9 +143,9 @@ static void kf_bfly4(
          /* m is guaranteed to be a multiple of 4. */
          for (j=0;j<m;j++)
          {
-            C_MUL(scratch[0],Fout[m] , *tw1 );
-            C_MUL(scratch[1],Fout[m2] , *tw2 );
-            C_MUL(scratch[2],Fout[m3] , *tw3 );
+            RENAMENOISE_C_MUL(scratch[0],Fout[m] , *tw1 );
+            RENAMENOISE_C_MUL(scratch[1],Fout[m2] , *tw2 );
+            RENAMENOISE_C_MUL(scratch[2],Fout[m3] , *tw3 );
 
             C_SUB( scratch[5] , *Fout, scratch[1] );
             C_ADDTO(*Fout, scratch[1]);
@@ -196,8 +196,8 @@ static void kf_bfly3(
       k=m;
       do {
 
-         C_MUL(scratch[1],Fout[m] , *tw1);
-         C_MUL(scratch[2],Fout[m2] , *tw2);
+         RENAMENOISE_C_MUL(scratch[1],Fout[m] , *tw1);
+         RENAMENOISE_C_MUL(scratch[2],Fout[m2] , *tw2);
 
          C_ADD(scratch[3],scratch[1],scratch[2]);
          C_SUB(scratch[0],scratch[1],scratch[2]);
@@ -257,10 +257,10 @@ static void kf_bfly5(
       for ( u=0; u<m; ++u ) {
          scratch[0] = *Fout0;
 
-         C_MUL(scratch[1] ,*Fout1, tw[u*fstride]);
-         C_MUL(scratch[2] ,*Fout2, tw[2*u*fstride]);
-         C_MUL(scratch[3] ,*Fout3, tw[3*u*fstride]);
-         C_MUL(scratch[4] ,*Fout4, tw[4*u*fstride]);
+         RENAMENOISE_C_MUL(scratch[1] ,*Fout1, tw[u*fstride]);
+         RENAMENOISE_C_MUL(scratch[2] ,*Fout2, tw[2*u*fstride]);
+         RENAMENOISE_C_MUL(scratch[3] ,*Fout3, tw[3*u*fstride]);
+         RENAMENOISE_C_MUL(scratch[4] ,*Fout4, tw[4*u*fstride]);
 
          C_ADD( scratch[7],scratch[1],scratch[4]);
          C_SUB( scratch[10],scratch[1],scratch[4]);
