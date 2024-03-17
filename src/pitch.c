@@ -70,7 +70,7 @@ static void renamenoise_find_best_pitch(renamenoise_val32 *xcorr, renamenoise_va
          /* Considering the range of xcorr16, this should avoid both underflows
             and overflows (inf) when squaring xcorr16 */
          xcorr16 *= 1e-12f;
-         num = MULT16_16_Q15(xcorr16,xcorr16);
+         num = RENAMENOISE_MULT16_16_Q15(xcorr16,xcorr16);
          if (RENAMENOISE_MULT16_32_Q15(num,best_den[1]) > RENAMENOISE_MULT16_32_Q15(best_num[1],Syy))
          {
             if (RENAMENOISE_MULT16_32_Q15(num,best_den[0]) > RENAMENOISE_MULT16_32_Q15(best_num[0],Syy))
@@ -169,15 +169,15 @@ void renamenoise_pitch_downsample(renamenoise_sig *x[], renamenoise_val16 *x_lp,
    _renamenoise_lpc(lpc, ac, 4);
    for (i=0;i<4;i++)
    {
-      tmp = MULT16_16_Q15(RENAMENOISE_QCONST16(.9f,15), tmp);
-      lpc[i] = MULT16_16_Q15(lpc[i], tmp);
+      tmp = RENAMENOISE_MULT16_16_Q15(RENAMENOISE_QCONST16(.9f,15), tmp);
+      lpc[i] = RENAMENOISE_MULT16_16_Q15(lpc[i], tmp);
    }
    /* Add a zero */
    lpc2[0] = lpc[0] + RENAMENOISE_QCONST16(.8f,SIG_SHIFT);
-   lpc2[1] = lpc[1] + MULT16_16_Q15(c1,lpc[0]);
-   lpc2[2] = lpc[2] + MULT16_16_Q15(c1,lpc[1]);
-   lpc2[3] = lpc[3] + MULT16_16_Q15(c1,lpc[2]);
-   lpc2[4] = MULT16_16_Q15(c1,lpc[3]);
+   lpc2[1] = lpc[1] + RENAMENOISE_MULT16_16_Q15(c1,lpc[0]);
+   lpc2[2] = lpc[2] + RENAMENOISE_MULT16_16_Q15(c1,lpc[1]);
+   lpc2[3] = lpc[3] + RENAMENOISE_MULT16_16_Q15(c1,lpc[2]);
+   lpc2[4] = RENAMENOISE_MULT16_16_Q15(c1,lpc[3]);
    renamenoise_fir5(x_lp, lpc2, x_lp, len>>1, mem);
 }
 
@@ -357,13 +357,13 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
          cont = RENAMENOISE_HALF16(prev_gain);
       else
          cont = 0;
-      thresh = RENAMENOISE_MAX16(RENAMENOISE_QCONST16(.3f,15), MULT16_16_Q15(RENAMENOISE_QCONST16(.7f,15),g0)-cont);
+      thresh = RENAMENOISE_MAX16(RENAMENOISE_QCONST16(.3f,15), RENAMENOISE_MULT16_16_Q15(RENAMENOISE_QCONST16(.7f,15),g0)-cont);
       /* Bias against very high pitch (very short period) to avoid false-positives
          due to short-term correlation */
       if (T1<3*minperiod)
-         thresh = RENAMENOISE_MAX16(RENAMENOISE_QCONST16(.4f,15), MULT16_16_Q15(RENAMENOISE_QCONST16(.85f,15),g0)-cont);
+         thresh = RENAMENOISE_MAX16(RENAMENOISE_QCONST16(.4f,15), RENAMENOISE_MULT16_16_Q15(RENAMENOISE_QCONST16(.85f,15),g0)-cont);
       else if (T1<2*minperiod)
-         thresh = RENAMENOISE_MAX16(RENAMENOISE_QCONST16(.5f,15), MULT16_16_Q15(RENAMENOISE_QCONST16(.9f,15),g0)-cont);
+         thresh = RENAMENOISE_MAX16(RENAMENOISE_QCONST16(.5f,15), RENAMENOISE_MULT16_16_Q15(RENAMENOISE_QCONST16(.9f,15),g0)-cont);
       if (g1 > thresh)
       {
          best_xy = xy;

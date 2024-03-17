@@ -206,8 +206,8 @@ int _renamenoise_autocorr(
          xx[i] = x[i];
       for (i=0;i<overlap;i++)
       {
-         xx[i] = MULT16_16_Q15(x[i],window[i]);
-         xx[n-i-1] = MULT16_16_Q15(x[n-i-1],window[i]);
+         xx[i] = RENAMENOISE_MULT16_16_Q15(x[i],window[i]);
+         xx[n-i-1] = RENAMENOISE_MULT16_16_Q15(x[n-i-1],window[i]);
       }
       xptr = xx;
    }
