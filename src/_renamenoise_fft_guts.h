@@ -64,8 +64,8 @@
 #  define RENAMENOISE_CHECK_OVERFLOW_OP(a,op,b) /* noop */
 #endif
 
-#ifndef C_ADD
-#define  C_ADD( res, a,b)\
+#ifndef RENAMENOISE_C_ADD
+#define  RENAMENOISE_C_ADD( res, a,b)\
     do { \
             RENAMENOISE_CHECK_OVERFLOW_OP((a).r,+,(b).r)\
             RENAMENOISE_CHECK_OVERFLOW_OP((a).i,+,(b).i)\
@@ -90,7 +90,7 @@
             RENAMENOISE_CHECK_OVERFLOW_OP((res).i,-,(a).i)\
             (res).r -= (a).r;  (res).i -= (a).i; \
     }while(0)
-#endif /* C_ADD defined */
+#endif /* RENAMENOISE_C_ADD defined */
 
 #ifdef USE_SIMD
 #  define KISS_FFT_COS(phase) _mm_set1_ps( cos(phase) )
