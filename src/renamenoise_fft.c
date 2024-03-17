@@ -554,7 +554,7 @@ void renamenoise_fft_c(const renamenoise_fft_state *st,const renamenoise_fft_cpx
 }
 
 
-void opus_ifft_c(const renamenoise_fft_state *st,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout)
+void renamenoise_ifft_c(const renamenoise_fft_state *st,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout)
 {
    int i;
    renamenoise_assert2 (fin != fout, "In-place FFT not supported");
