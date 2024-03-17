@@ -35,7 +35,7 @@
 
 #include <stdlib.h>
 #define renamenoise_alloc2(x) malloc(x)
-#define opus_free(x) free(x)
+#define renamenoise_free2(x) free(x)
 
 #ifdef __cplusplus
 extern "C" {

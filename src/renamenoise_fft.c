@@ -479,10 +479,10 @@ void opus_fft_free(const kiss_fft_state *cfg, int arch)
    if (cfg)
    {
       opus_fft_free_arch((kiss_fft_state *)cfg, arch);
-      opus_free((renamenoise_int16*)cfg->bitrev);
+      renamenoise_free2((renamenoise_int16*)cfg->bitrev);
       if (cfg->shift < 0)
-         opus_free((kiss_twiddle_cpx*)cfg->twiddles);
-      opus_free((kiss_fft_state*)cfg);
+         renamenoise_free2((kiss_twiddle_cpx*)cfg->twiddles);
+      renamenoise_free2((kiss_fft_state*)cfg);
    }
 }
 
