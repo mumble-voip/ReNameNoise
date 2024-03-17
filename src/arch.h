@@ -147,7 +147,7 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 #define RENAMENOISE_SATURATE(x,a)   (x)
 #define RENAMENOISE_SATURATE16(x)   (x)
 
-#define ROUND16(a,shift)  (a)
+#define RENAMENOISE_ROUND16(a,shift)  (a)
 #define SROUND16(a,shift) (a)
 #define HALF16(x)       (.5f*(x))
 #define HALF32(x)       (.5f*(x))

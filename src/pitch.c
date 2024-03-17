@@ -125,7 +125,7 @@ static void renamenoise_fir5(const renamenoise_val16 *x,
       mem2 = mem1;
       mem1 = mem0;
       mem0 = x[i];
-      y[i] = ROUND16(sum, SIG_SHIFT);
+      y[i] = RENAMENOISE_ROUND16(sum, SIG_SHIFT);
    }
    mem[0]=mem0;
    mem[1]=mem1;
