@@ -80,7 +80,7 @@ static void kf_bfly2(
          C_ADDTO( Fout[0] ,  t );
 
          t.r = S_MUL(RENAMENOISE_ADD32_ovflw(Fout2[1].r, Fout2[1].i), tw);
-         t.i = S_MUL(SUB32_ovflw(Fout2[1].i, Fout2[1].r), tw);
+         t.i = S_MUL(RENAMENOISE_SUB32_ovflw(Fout2[1].i, Fout2[1].r), tw);
          C_SUB( Fout2[1] ,  Fout[1] , t );
          C_ADDTO( Fout[1] ,  t );
 
@@ -89,7 +89,7 @@ static void kf_bfly2(
          C_SUB( Fout2[2] ,  Fout[2] , t );
          C_ADDTO( Fout[2] ,  t );
 
-         t.r = S_MUL(SUB32_ovflw(Fout2[3].i, Fout2[3].r), tw);
+         t.r = S_MUL(RENAMENOISE_SUB32_ovflw(Fout2[3].i, Fout2[3].r), tw);
          t.i = S_MUL(RENAMENOISE_NEG32_ovflw(RENAMENOISE_ADD32_ovflw(Fout2[3].i, Fout2[3].r)), tw);
          C_SUB( Fout2[3] ,  Fout[3] , t );
          C_ADDTO( Fout[3] ,  t );
@@ -124,8 +124,8 @@ static void kf_bfly4(
          C_SUB( scratch1 , Fout[1] , Fout[3] );
 
          Fout[1].r = RENAMENOISE_ADD32_ovflw(scratch0.r, scratch1.i);
-         Fout[1].i = SUB32_ovflw(scratch0.i, scratch1.r);
-         Fout[3].r = SUB32_ovflw(scratch0.r, scratch1.i);
+         Fout[1].i = RENAMENOISE_SUB32_ovflw(scratch0.i, scratch1.r);
+         Fout[3].r = RENAMENOISE_SUB32_ovflw(scratch0.r, scratch1.i);
          Fout[3].i = RENAMENOISE_ADD32_ovflw(scratch0.i, scratch1.r);
          Fout+=4;
       }
@@ -158,8 +158,8 @@ static void kf_bfly4(
             C_ADDTO( *Fout , scratch[3] );
 
             Fout[m].r = RENAMENOISE_ADD32_ovflw(scratch[5].r, scratch[4].i);
-            Fout[m].i = SUB32_ovflw(scratch[5].i, scratch[4].r);
-            Fout[m3].r = SUB32_ovflw(scratch[5].r, scratch[4].i);
+            Fout[m].i = RENAMENOISE_SUB32_ovflw(scratch[5].i, scratch[4].r);
+            Fout[m3].r = RENAMENOISE_SUB32_ovflw(scratch[5].r, scratch[4].i);
             Fout[m3].i = RENAMENOISE_ADD32_ovflw(scratch[5].i, scratch[4].r);
             ++Fout;
          }
@@ -204,17 +204,17 @@ static void kf_bfly3(
          tw1 += fstride;
          tw2 += fstride*2;
 
-         Fout[m].r = SUB32_ovflw(Fout->r, HALF_OF(scratch[3].r));
-         Fout[m].i = SUB32_ovflw(Fout->i, HALF_OF(scratch[3].i));
+         Fout[m].r = RENAMENOISE_SUB32_ovflw(Fout->r, HALF_OF(scratch[3].r));
+         Fout[m].i = RENAMENOISE_SUB32_ovflw(Fout->i, HALF_OF(scratch[3].i));
 
          C_MULBYSCALAR( scratch[0] , epi3.i );
 
          C_ADDTO(*Fout,scratch[3]);
 
          Fout[m2].r = RENAMENOISE_ADD32_ovflw(Fout[m].r, scratch[0].i);
-         Fout[m2].i = SUB32_ovflw(Fout[m].i, scratch[0].r);
+         Fout[m2].i = RENAMENOISE_SUB32_ovflw(Fout[m].i, scratch[0].r);
 
-         Fout[m].r = SUB32_ovflw(Fout[m].r, scratch[0].i);
+         Fout[m].r = RENAMENOISE_SUB32_ovflw(Fout[m].r, scratch[0].i);
          Fout[m].i = RENAMENOISE_ADD32_ovflw(Fout[m].i, scratch[0].r);
 
          ++Fout;
@@ -281,8 +281,8 @@ static void kf_bfly5(
 
          scratch[11].r = RENAMENOISE_ADD32_ovflw(scratch[0].r, RENAMENOISE_ADD32_ovflw(S_MUL(scratch[7].r,yb.r), S_MUL(scratch[8].r,ya.r)));
          scratch[11].i = RENAMENOISE_ADD32_ovflw(scratch[0].i, RENAMENOISE_ADD32_ovflw(S_MUL(scratch[7].i,yb.r), S_MUL(scratch[8].i,ya.r)));
-         scratch[12].r = SUB32_ovflw(S_MUL(scratch[9].i,ya.i), S_MUL(scratch[10].i,yb.i));
-         scratch[12].i = SUB32_ovflw(S_MUL(scratch[10].r,yb.i), S_MUL(scratch[9].r,ya.i));
+         scratch[12].r = RENAMENOISE_SUB32_ovflw(S_MUL(scratch[9].i,ya.i), S_MUL(scratch[10].i,yb.i));
+         scratch[12].i = RENAMENOISE_SUB32_ovflw(S_MUL(scratch[10].r,yb.i), S_MUL(scratch[9].r,ya.i));
 
          C_ADD(*Fout2,scratch[11],scratch[12]);
          C_SUB(*Fout3,scratch[11],scratch[12]);
