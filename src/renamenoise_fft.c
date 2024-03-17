@@ -27,7 +27,8 @@
   POSSIBILITY OF SUCH DAMAGE.*/
 
 /* This code is originally from Mark Borgerding's KISS-FFT but has been
-   heavily modified to better suit Opus */
+   heavily modified to better suit Opus and was subsequently refactored
+   for ReNameNoise */
 
 #ifndef SKIP_CONFIG_H
 #  ifdef HAVE_CONFIG_H
