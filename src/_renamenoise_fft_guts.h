@@ -53,7 +53,7 @@
     do{ (m).r = (a).r*(b).r + (a).i*(b).i;\
         (m).i = (a).i*(b).r - (a).r*(b).i; }while(0)
 
-#define C_MUL4(m,a,b) RENAMENOISE_C_MUL(m,a,b)
+#define RENAMENOISE_C_MUL4(m,a,b) RENAMENOISE_C_MUL(m,a,b)
 
 #   define C_FIXDIV(c,div) /* NOOP */
 #   define C_MULBYSCALAR( c, s ) \
