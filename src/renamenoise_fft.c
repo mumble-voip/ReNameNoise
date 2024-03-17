@@ -419,7 +419,7 @@ kiss_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem,
     size_t memneeded = sizeof(struct kiss_fft_state); /* twiddle factors*/
 
     if ( lenmem==NULL ) {
-        st = ( kiss_fft_state*)KISS_FFT_MALLOC( memneeded );
+        st = ( kiss_fft_state*)RENAMENOISE_FFT_MALLOC( memneeded );
     }else{
         if (mem != NULL && *lenmem >= memneeded)
             st = (kiss_fft_state*)mem;
@@ -440,7 +440,7 @@ kiss_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem,
            if (st->shift>=32)
               goto fail;
         } else {
-           st->twiddles = twiddles = (kiss_twiddle_cpx*)KISS_FFT_MALLOC(sizeof(kiss_twiddle_cpx)*nfft);
+           st->twiddles = twiddles = (kiss_twiddle_cpx*)RENAMENOISE_FFT_MALLOC(sizeof(kiss_twiddle_cpx)*nfft);
            compute_twiddles(twiddles, nfft);
            st->shift = -1;
         }
@@ -450,7 +450,7 @@ kiss_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem,
         }
 
         /* bitrev */
-        st->bitrev = bitrev = (renamenoise_int16*)KISS_FFT_MALLOC(sizeof(renamenoise_int16)*nfft);
+        st->bitrev = bitrev = (renamenoise_int16*)RENAMENOISE_FFT_MALLOC(sizeof(renamenoise_int16)*nfft);
         if (st->bitrev==NULL)
             goto fail;
         compute_bitrev_table(0, bitrev, 1,1, st->factors,st);

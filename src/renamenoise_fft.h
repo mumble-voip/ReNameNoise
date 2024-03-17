@@ -44,9 +44,9 @@ extern "C" {
 #ifdef USE_SIMD
 # include <xmmintrin.h>
 # define renamenoise_fft_scalar __m128
-#define KISS_FFT_MALLOC(nbytes) memalign(16,nbytes)
+#define RENAMENOISE_FFT_MALLOC(nbytes) memalign(16,nbytes)
 #else
-#define KISS_FFT_MALLOC renamenoise_alloc2
+#define RENAMENOISE_FFT_MALLOC renamenoise_alloc2
 #endif
 
 #ifndef renamenoise_fft_scalar
