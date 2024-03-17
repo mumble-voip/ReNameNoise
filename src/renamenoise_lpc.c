@@ -53,10 +53,10 @@ int          p
          renamenoise_val32 rr = 0;
          for (j = 0; j < i; j++)
             rr += MULT32_32_Q31(lpc[j],ac[i - j]);
-         rr += SHR32(ac[i + 1],3);
+         rr += RENAMENOISE_SHR32(ac[i + 1],3);
          r = -SHL32(rr,3)/error;
          /*  Update LPC coefficients and total error */
-         lpc[i] = SHR32(r,3);
+         lpc[i] = RENAMENOISE_SHR32(r,3);
          for (j = 0; j < (i+1)>>1; j++)
          {
             renamenoise_val32 tmp1, tmp2;

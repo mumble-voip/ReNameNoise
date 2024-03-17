@@ -547,8 +547,8 @@ void opus_fft_c(const kiss_fft_state *st,const kiss_fft_cpx *fin,kiss_fft_cpx *f
    for (i=0;i<st->nfft;i++)
    {
       kiss_fft_cpx x = fin[i];
-      fout[st->bitrev[i]].r = SHR32(MULT16_32_Q16(scale, x.r), scale_shift);
-      fout[st->bitrev[i]].i = SHR32(MULT16_32_Q16(scale, x.i), scale_shift);
+      fout[st->bitrev[i]].r = RENAMENOISE_SHR32(MULT16_32_Q16(scale, x.r), scale_shift);
+      fout[st->bitrev[i]].i = RENAMENOISE_SHR32(MULT16_32_Q16(scale, x.i), scale_shift);
    }
    opus_fft_impl(st, fout);
 }

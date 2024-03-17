@@ -59,7 +59,7 @@ static void renamenoise_find_best_pitch(renamenoise_val32 *xcorr, renamenoise_va
    best_pitch[0] = 0;
    best_pitch[1] = 1;
    for (j=0;j<len;j++)
-      Syy = ADD32(Syy, SHR32(MULT16_16(y[j],y[j]), yshift));
+      Syy = ADD32(Syy, RENAMENOISE_SHR32(MULT16_16(y[j],y[j]), yshift));
    for (i=0;i<max_pitch;i++)
    {
       if (xcorr[i]>0)
@@ -88,7 +88,7 @@ static void renamenoise_find_best_pitch(renamenoise_val32 *xcorr, renamenoise_va
             }
          }
       }
-      Syy += SHR32(MULT16_16(y[i+len],y[i+len]),yshift) - SHR32(MULT16_16(y[i],y[i]),yshift);
+      Syy += RENAMENOISE_SHR32(MULT16_16(y[i+len],y[i+len]),yshift) - RENAMENOISE_SHR32(MULT16_16(y[i],y[i]),yshift);
       Syy = RENAMENOISE_MAX32(1, Syy);
    }
 }
@@ -145,13 +145,13 @@ void renamenoise_pitch_downsample(renamenoise_sig *x[], renamenoise_val16 *x_lp,
    renamenoise_val16 lpc2[5];
    renamenoise_val16 c1 = RENAMENOISE_QCONST16(.8f,15);
    for (i=1;i<len>>1;i++)
-      x_lp[i] = SHR32(HALF32(HALF32(x[0][(2*i-1)]+x[0][(2*i+1)])+x[0][2*i]), shift);
-   x_lp[0] = SHR32(HALF32(HALF32(x[0][1])+x[0][0]), shift);
+      x_lp[i] = RENAMENOISE_SHR32(HALF32(HALF32(x[0][(2*i-1)]+x[0][(2*i+1)])+x[0][2*i]), shift);
+   x_lp[0] = RENAMENOISE_SHR32(HALF32(HALF32(x[0][1])+x[0][0]), shift);
    if (C==2)
    {
       for (i=1;i<len>>1;i++)
-         x_lp[i] += SHR32(HALF32(HALF32(x[1][(2*i-1)]+x[1][(2*i+1)])+x[1][2*i]), shift);
-      x_lp[0] += SHR32(HALF32(HALF32(x[1][1])+x[1][0]), shift);
+         x_lp[i] += RENAMENOISE_SHR32(HALF32(HALF32(x[1][(2*i-1)]+x[1][(2*i+1)])+x[1][2*i]), shift);
+      x_lp[0] += RENAMENOISE_SHR32(HALF32(HALF32(x[1][1])+x[1][0]), shift);
    }
 
    _renamenoise_autocorr(x_lp, ac, NULL, 0,
