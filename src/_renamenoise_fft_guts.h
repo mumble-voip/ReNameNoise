@@ -26,7 +26,7 @@
 #ifndef RENAMENOISE_FFT_GUTS_H
 #define RENAMENOISE_FFT_GUTS_H
 
-#define MIN(a,b) ((a)<(b) ? (a):(b))
+#define RENAMENOISE_MIN(a,b) ((a)<(b) ? (a):(b))
 #define MAX(a,b) ((a)>(b) ? (a):(b))
 
 /* renamenoise_fft.h
