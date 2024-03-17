@@ -184,7 +184,7 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 #define RENAMENOISE_DIV32(a,b)     (((renamenoise_val32)(a))/(renamenoise_val32)(b))
 
 #define RENAMENOISE_SCALEIN(a)      ((a)*RENAMENOISE_SIG_SCALE)
-#define SCALEOUT(a)     ((a)*(1/RENAMENOISE_SIG_SCALE))
+#define RENAMENOISE_SCALEOUT(a)     ((a)*(1/RENAMENOISE_SIG_SCALE))
 
 #define SIG2WORD16(x) (x)
 
