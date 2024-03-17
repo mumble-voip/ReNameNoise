@@ -76,7 +76,7 @@ typedef struct renamenoise_arch_fft_state{
    void *priv;
 } renamenoise_arch_fft_state;
 
-typedef struct kiss_fft_state{
+typedef struct renamenoise_fft_state{
     int nfft;
     renamenoise_val16 scale;
     int shift;
@@ -84,13 +84,13 @@ typedef struct kiss_fft_state{
     const renamenoise_int16 *bitrev;
     const renamenoise_twiddle_cpx *twiddles;
     renamenoise_arch_fft_state *arch_fft;
-} kiss_fft_state;
+} renamenoise_fft_state;
 
 #if defined(HAVE_ARM_NE10)
 #include "arm/fft_arm.h"
 #endif
 
-/*typedef struct kiss_fft_state* kiss_fft_cfg;*/
+/*typedef struct renamenoise_fft_state* kiss_fft_cfg;*/
 
 /**
  *  opus_fft_alloc
@@ -115,9 +115,9 @@ typedef struct kiss_fft_state{
  *      buffer size in *lenmem.
  * */
 
-kiss_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem, const kiss_fft_state *base, int arch);
+renamenoise_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem, const renamenoise_fft_state *base, int arch);
 
-kiss_fft_state *opus_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch);
+renamenoise_fft_state *opus_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch);
 
 /**
  * opus_fft(cfg,in_out_buf)
@@ -129,39 +129,39 @@ kiss_fft_state *opus_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch);
  * Note that each element is complex and can be accessed like
     f[k].r and f[k].i
  * */
-void opus_fft_c(const kiss_fft_state *cfg,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout);
-void opus_ifft_c(const kiss_fft_state *cfg,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout);
+void opus_fft_c(const renamenoise_fft_state *cfg,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout);
+void opus_ifft_c(const renamenoise_fft_state *cfg,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout);
 
-void opus_fft_impl(const kiss_fft_state *st,renamenoise_fft_cpx *fout);
-void opus_ifft_impl(const kiss_fft_state *st,renamenoise_fft_cpx *fout);
+void opus_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *fout);
+void opus_ifft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *fout);
 
-void opus_fft_free(const kiss_fft_state *cfg, int arch);
+void opus_fft_free(const renamenoise_fft_state *cfg, int arch);
 
 
-void opus_fft_free_arch_c(kiss_fft_state *st);
-int opus_fft_alloc_arch_c(kiss_fft_state *st);
+void opus_fft_free_arch_c(renamenoise_fft_state *st);
+int opus_fft_alloc_arch_c(renamenoise_fft_state *st);
 
 #if !defined(OVERRIDE_OPUS_FFT)
 /* Is run-time CPU detection enabled on this platform? */
 #if defined(OPUS_HAVE_RTCD) && (defined(HAVE_ARM_NE10))
 
 extern int (*const OPUS_FFT_ALLOC_ARCH_IMPL[OPUS_ARCHMASK+1])(
- kiss_fft_state *st);
+ renamenoise_fft_state *st);
 
 #define opus_fft_alloc_arch(_st, arch) \
          ((*OPUS_FFT_ALLOC_ARCH_IMPL[(arch)&OPUS_ARCHMASK])(_st))
 
 extern void (*const OPUS_FFT_FREE_ARCH_IMPL[OPUS_ARCHMASK+1])(
- kiss_fft_state *st);
+ renamenoise_fft_state *st);
 #define opus_fft_free_arch(_st, arch) \
          ((*OPUS_FFT_FREE_ARCH_IMPL[(arch)&OPUS_ARCHMASK])(_st))
 
-extern void (*const OPUS_FFT[OPUS_ARCHMASK+1])(const kiss_fft_state *cfg,
+extern void (*const OPUS_FFT[OPUS_ARCHMASK+1])(const renamenoise_fft_state *cfg,
  const renamenoise_fft_cpx *fin, renamenoise_fft_cpx *fout);
 #define opus_fft(_cfg, _fin, _fout, arch) \
    ((*OPUS_FFT[(arch)&OPUS_ARCHMASK])(_cfg, _fin, _fout))
 
-extern void (*const OPUS_IFFT[OPUS_ARCHMASK+1])(const kiss_fft_state *cfg,
+extern void (*const OPUS_IFFT[OPUS_ARCHMASK+1])(const renamenoise_fft_state *cfg,
  const renamenoise_fft_cpx *fin, renamenoise_fft_cpx *fout);
 #define opus_ifft(_cfg, _fin, _fout, arch) \
    ((*OPUS_IFFT[(arch)&OPUS_ARCHMASK])(_cfg, _fin, _fout))

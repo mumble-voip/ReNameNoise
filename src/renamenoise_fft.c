@@ -101,7 +101,7 @@ static void kf_bfly2(
 static void kf_bfly4(
                      renamenoise_fft_cpx * Fout,
                      const size_t fstride,
-                     const kiss_fft_state *st,
+                     const renamenoise_fft_state *st,
                      int m,
                      int N,
                      int mm
@@ -173,7 +173,7 @@ static void kf_bfly4(
 static void kf_bfly3(
                      renamenoise_fft_cpx * Fout,
                      const size_t fstride,
-                     const kiss_fft_state *st,
+                     const renamenoise_fft_state *st,
                      int m,
                      int N,
                      int mm
@@ -227,7 +227,7 @@ static void kf_bfly3(
 static void kf_bfly5(
                      renamenoise_fft_cpx * Fout,
                      const size_t fstride,
-                     const kiss_fft_state *st,
+                     const renamenoise_fft_state *st,
                      int m,
                      int N,
                      int mm
@@ -306,7 +306,7 @@ void compute_bitrev_table(
          const size_t fstride,
          int in_stride,
          renamenoise_int16 * factors,
-         const kiss_fft_state *st
+         const renamenoise_fft_state *st
             )
 {
    const int p=*factors++; /* the radix  */
@@ -401,7 +401,7 @@ static void compute_twiddles(renamenoise_twiddle_cpx *twiddles, int nfft)
    }
 }
 
-int opus_fft_alloc_arch_c(kiss_fft_state *st) {
+int opus_fft_alloc_arch_c(renamenoise_fft_state *st) {
    (void)st;
    return 0;
 }
@@ -412,17 +412,17 @@ int opus_fft_alloc_arch_c(kiss_fft_state *st) {
  * The return value is a contiguous block of memory.  As such,
  * It can be freed with free().
  * */
-kiss_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem,
-                                        const kiss_fft_state *base, int arch)
+renamenoise_fft_state *opus_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem,
+                                        const renamenoise_fft_state *base, int arch)
 {
-    kiss_fft_state *st=NULL;
-    size_t memneeded = sizeof(struct kiss_fft_state); /* twiddle factors*/
+    renamenoise_fft_state *st=NULL;
+    size_t memneeded = sizeof(struct renamenoise_fft_state); /* twiddle factors*/
 
     if ( lenmem==NULL ) {
-        st = ( kiss_fft_state*)RENAMENOISE_FFT_MALLOC( memneeded );
+        st = ( renamenoise_fft_state*)RENAMENOISE_FFT_MALLOC( memneeded );
     }else{
         if (mem != NULL && *lenmem >= memneeded)
-            st = (kiss_fft_state*)mem;
+            st = (renamenoise_fft_state*)mem;
         *lenmem = memneeded;
     }
     if (st) {
@@ -465,30 +465,30 @@ fail:
     return NULL;
 }
 
-kiss_fft_state *opus_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch)
+renamenoise_fft_state *opus_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch)
 {
    return opus_fft_alloc_twiddles(nfft, mem, lenmem, NULL, arch);
 }
 
-void opus_fft_free_arch_c(kiss_fft_state *st) {
+void opus_fft_free_arch_c(renamenoise_fft_state *st) {
    (void)st;
 }
 
-void opus_fft_free(const kiss_fft_state *cfg, int arch)
+void opus_fft_free(const renamenoise_fft_state *cfg, int arch)
 {
    if (cfg)
    {
-      opus_fft_free_arch((kiss_fft_state *)cfg, arch);
+      opus_fft_free_arch((renamenoise_fft_state *)cfg, arch);
       renamenoise_free2((renamenoise_int16*)cfg->bitrev);
       if (cfg->shift < 0)
          renamenoise_free2((renamenoise_twiddle_cpx*)cfg->twiddles);
-      renamenoise_free2((kiss_fft_state*)cfg);
+      renamenoise_free2((renamenoise_fft_state*)cfg);
    }
 }
 
 #endif /* CUSTOM_MODES */
 
-void opus_fft_impl(const kiss_fft_state *st,renamenoise_fft_cpx *fout)
+void opus_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *fout)
 {
     int m2, m;
     int p;
@@ -536,7 +536,7 @@ void opus_fft_impl(const kiss_fft_state *st,renamenoise_fft_cpx *fout)
     }
 }
 
-void opus_fft_c(const kiss_fft_state *st,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout)
+void opus_fft_c(const renamenoise_fft_state *st,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout)
 {
    int i;
    renamenoise_val16 scale;
@@ -554,7 +554,7 @@ void opus_fft_c(const kiss_fft_state *st,const renamenoise_fft_cpx *fin,renameno
 }
 
 
-void opus_ifft_c(const kiss_fft_state *st,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout)
+void opus_ifft_c(const renamenoise_fft_state *st,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout)
 {
    int i;
    renamenoise_assert2 (fin != fout, "In-place FFT not supported");

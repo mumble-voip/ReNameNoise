@@ -78,7 +78,7 @@ static const renamenoise_int16 eband5ms[] = {
 
 typedef struct {
   int init;
-  kiss_fft_state *kfft;
+  renamenoise_fft_state *kfft;
   float half_window[FRAME_SIZE];
   float dct_table[NB_BANDS*NB_BANDS];
 } CommonState;
