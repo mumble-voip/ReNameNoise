@@ -116,7 +116,7 @@ renamenoise_fft_state *renamenoise_fft_alloc_twiddles(int nfft,void * mem,size_t
 renamenoise_fft_state *renamenoise_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch);
 
 /**
- * opus_fft(cfg,in_out_buf)
+ * renamenoise_fft(cfg,in_out_buf)
  *
  * Perform an FFT on a complex input buffer.
  * for a forward FFT,
@@ -145,7 +145,7 @@ int renamenoise_fft_alloc_arch_c(renamenoise_fft_state *st);
 #define renamenoise_fft_free_arch(_st, arch) \
          ((void)(arch), renamenoise_fft_free_arch_c(_st))
 
-#define opus_fft(_cfg, _fin, _fout, arch) \
+#define renamenoise_fft(_cfg, _fin, _fout, arch) \
          ((void)(arch), renamenoise_fft_c(_cfg, _fin, _fout))
 
 #define opus_ifft(_cfg, _fin, _fout, arch) \
