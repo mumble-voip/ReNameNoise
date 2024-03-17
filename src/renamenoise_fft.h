@@ -86,14 +86,14 @@ typedef struct renamenoise_fft_state{
     renamenoise_arch_fft_state *arch_fft;
 } renamenoise_fft_state;
 
-/*typedef struct renamenoise_fft_state* kiss_fft_cfg;*/
+/*typedef struct renamenoise_fft_state* renamenoise_fft_cfg;*/
 
 /**
  *  opus_fft_alloc
  *
  *  Initialize a FFT (or IFFT) algorithm's cfg/state buffer.
  *
- *  typical usage:      kiss_fft_cfg mycfg=opus_fft_alloc(1024,0,NULL,NULL);
+ *  typical usage:      renamenoise_fft_cfg mycfg=opus_fft_alloc(1024,0,NULL,NULL);
  *
  *  The return value from fft_alloc is a cfg buffer used internally
  *  by the fft routine or NULL.
