@@ -4,7 +4,7 @@
    Written by Jean-Marc Valin */
 /**
    @file arch.h
-   @brief Various architecture definitions for CELT
+   @brief Various architecture definitions for ReNameNoise
 */
 /*
    Redistribution and use in source and binary forms, with or without
