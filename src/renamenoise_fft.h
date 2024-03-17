@@ -53,7 +53,6 @@ extern "C" {
 /*  default is float */
 #  define renamenoise_fft_scalar float
 #  define renamenoise_twiddle_scalar float
-#  define KF_SUFFIX _celt_single
 #endif
 
 typedef struct {
