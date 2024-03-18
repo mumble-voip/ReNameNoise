@@ -58,7 +58,7 @@
 #define RENAMENOISE_CEPS_MEM 8
 #define RENAMENOISE_NB_DELTA_CEPS 6
 
-#define NB_FEATURES (RENAMENOISE_NB_BANDS+3*RENAMENOISE_NB_DELTA_CEPS+2)
+#define RENAMENOISE_NB_FEATURES (RENAMENOISE_NB_BANDS+3*RENAMENOISE_NB_DELTA_CEPS+2)
 
 
 #ifndef TRAINING
@@ -357,7 +357,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   }
   if (!TRAINING && E < 0.04) {
     /* If there's no audio, avoid messing up the state. */
-    RENAMENOISE_CLEAR(features, NB_FEATURES);
+    RENAMENOISE_CLEAR(features, RENAMENOISE_NB_FEATURES);
     return 1;
   }
   dct(features, Ly);
@@ -462,7 +462,7 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
   float x[RENAMENOISE_FRAME_SIZE];
   float Ex[RENAMENOISE_NB_BANDS], Ep[RENAMENOISE_NB_BANDS];
   float Exp[RENAMENOISE_NB_BANDS];
-  float features[NB_FEATURES];
+  float features[RENAMENOISE_NB_FEATURES];
   float g[RENAMENOISE_NB_BANDS];
   float gf[RENAMENOISE_FREQ_SIZE]={1};
   float vad_prob = 0;
@@ -549,7 +549,7 @@ int main(int argc, char **argv) {
     float Ex[RENAMENOISE_NB_BANDS], Ey[RENAMENOISE_NB_BANDS], En[RENAMENOISE_NB_BANDS], Ep[RENAMENOISE_NB_BANDS];
     float Exp[RENAMENOISE_NB_BANDS];
     float Ln[RENAMENOISE_NB_BANDS];
-    float features[NB_FEATURES];
+    float features[RENAMENOISE_NB_FEATURES];
     float g[RENAMENOISE_NB_BANDS];
     short tmp[RENAMENOISE_FRAME_SIZE];
     float vad=0;
@@ -631,13 +631,13 @@ int main(int argc, char **argv) {
     }
     count++;
 #if 1
-    fwrite(features, sizeof(float), NB_FEATURES, stdout);
+    fwrite(features, sizeof(float), RENAMENOISE_NB_FEATURES, stdout);
     fwrite(g, sizeof(float), RENAMENOISE_NB_BANDS, stdout);
     fwrite(Ln, sizeof(float), RENAMENOISE_NB_BANDS, stdout);
     fwrite(&vad, sizeof(float), 1, stdout);
 #endif
   }
-  fprintf(stderr, "matrix size: %d x %d\n", count, NB_FEATURES + 2*RENAMENOISE_NB_BANDS + 1);
+  fprintf(stderr, "matrix size: %d x %d\n", count, RENAMENOISE_NB_FEATURES + 2*RENAMENOISE_NB_BANDS + 1);
   fclose(f1);
   fclose(f2);
   return 0;
