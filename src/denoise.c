@@ -407,7 +407,7 @@ static void renamenoise_frame_synthesis(ReNameNoiseDenoiseState *st, float *out,
   RENAMENOISE_COPY(st->synthesis_mem, &x[RENAMENOISE_FRAME_SIZE], RENAMENOISE_FRAME_SIZE);
 }
 
-static void biquad(float *y, float mem[2], const float *x, const float *b, const float *a, int N) {
+static void renamenoise_biquad(float *y, float mem[2], const float *x, const float *b, const float *a, int N) {
   int i;
   for (i=0;i<N;i++) {
     float xi, yi;
@@ -469,7 +469,7 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
   int silence;
   static const float a_hp[2] = {-1.99599, 0.99600};
   static const float b_hp[2] = {-2, 1};
-  biquad(x, st->mem_hp_x, in, b_hp, a_hp, RENAMENOISE_FRAME_SIZE);
+  renamenoise_biquad(x, st->mem_hp_x, in, b_hp, a_hp, RENAMENOISE_FRAME_SIZE);
   silence = renamenoise_compute_frame_features(st, X, P, Ex, Ep, Exp, features, x);
 
   if (!silence) {
@@ -595,10 +595,10 @@ int main(int argc, char **argv) {
     } else {
       for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) n[i] = 0;
     }
-    biquad(x, mem_hp_x, x, b_hp, a_hp, RENAMENOISE_FRAME_SIZE);
-    biquad(x, mem_resp_x, x, b_sig, a_sig, RENAMENOISE_FRAME_SIZE);
-    biquad(n, mem_hp_n, n, b_hp, a_hp, RENAMENOISE_FRAME_SIZE);
-    biquad(n, mem_resp_n, n, b_noise, a_noise, RENAMENOISE_FRAME_SIZE);
+    renamenoise_biquad(x, mem_hp_x, x, b_hp, a_hp, RENAMENOISE_FRAME_SIZE);
+    renamenoise_biquad(x, mem_resp_x, x, b_sig, a_sig, RENAMENOISE_FRAME_SIZE);
+    renamenoise_biquad(n, mem_hp_n, n, b_hp, a_hp, RENAMENOISE_FRAME_SIZE);
+    renamenoise_biquad(n, mem_resp_n, n, b_noise, a_noise, RENAMENOISE_FRAME_SIZE);
     for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) xn[i] = x[i] + n[i];
     if (E > 1e9f) {
       vad_cnt=0;
