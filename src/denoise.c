@@ -398,7 +398,7 @@ static int renamenoise_compute_frame_features(ReNameNoiseDenoiseState *st, renam
   return RENAMENOISE_TRAINING && E < 0.1;
 }
 
-static void frame_synthesis(ReNameNoiseDenoiseState *st, float *out, const renamenoise_fft_cpx *y) {
+static void renamenoise_frame_synthesis(ReNameNoiseDenoiseState *st, float *out, const renamenoise_fft_cpx *y) {
   float x[RENAMENOISE_WINDOW_SIZE];
   int i;
   renamenoise_inverse_transform(x, y);
@@ -489,7 +489,7 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
 #endif
   }
 
-  frame_synthesis(st, out, X);
+  renamenoise_frame_synthesis(st, out, X);
   return vad_prob;
 }
 
