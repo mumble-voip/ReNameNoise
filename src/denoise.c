@@ -224,7 +224,7 @@ static void renamenoise_forward_transform(renamenoise_fft_cpx *out, const float 
   }
 }
 
-static void inverse_transform(float *out, const renamenoise_fft_cpx *in) {
+static void renamenoise_inverse_transform(float *out, const renamenoise_fft_cpx *in) {
   int i;
   renamenoise_fft_cpx x[RENAMENOISE_WINDOW_SIZE];
   renamenoise_fft_cpx y[RENAMENOISE_WINDOW_SIZE];
@@ -401,7 +401,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
 static void frame_synthesis(ReNameNoiseDenoiseState *st, float *out, const renamenoise_fft_cpx *y) {
   float x[RENAMENOISE_WINDOW_SIZE];
   int i;
-  inverse_transform(x, y);
+  renamenoise_inverse_transform(x, y);
   apply_window(x);
   for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) out[i] = x[i] + st->synthesis_mem[i];
   RENAMENOISE_COPY(st->synthesis_mem, &x[RENAMENOISE_FRAME_SIZE], RENAMENOISE_FRAME_SIZE);
