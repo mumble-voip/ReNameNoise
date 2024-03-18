@@ -43,7 +43,7 @@
 
 #define RENAMENOISE_FRAME_SIZE_SHIFT 2
 #define RENAMENOISE_FRAME_SIZE (120<<RENAMENOISE_FRAME_SIZE_SHIFT)
-#define WINDOW_SIZE (2*RENAMENOISE_FRAME_SIZE)
+#define RENAMENOISE_WINDOW_SIZE (2*RENAMENOISE_FRAME_SIZE)
 #define FREQ_SIZE (RENAMENOISE_FRAME_SIZE + 1)
 
 #define PITCH_MIN_PERIOD 60
@@ -211,10 +211,10 @@ static void idct(float *out, const float *in) {
 
 static void forward_transform(renamenoise_fft_cpx *out, const float *in) {
   int i;
-  renamenoise_fft_cpx x[WINDOW_SIZE];
-  renamenoise_fft_cpx y[WINDOW_SIZE];
+  renamenoise_fft_cpx x[RENAMENOISE_WINDOW_SIZE];
+  renamenoise_fft_cpx y[RENAMENOISE_WINDOW_SIZE];
   check_init();
-  for (i=0;i<WINDOW_SIZE;i++) {
+  for (i=0;i<RENAMENOISE_WINDOW_SIZE;i++) {
     x[i].r = in[i];
     x[i].i = 0;
   }
@@ -226,21 +226,21 @@ static void forward_transform(renamenoise_fft_cpx *out, const float *in) {
 
 static void inverse_transform(float *out, const renamenoise_fft_cpx *in) {
   int i;
-  renamenoise_fft_cpx x[WINDOW_SIZE];
-  renamenoise_fft_cpx y[WINDOW_SIZE];
+  renamenoise_fft_cpx x[RENAMENOISE_WINDOW_SIZE];
+  renamenoise_fft_cpx y[RENAMENOISE_WINDOW_SIZE];
   check_init();
   for (i=0;i<FREQ_SIZE;i++) {
     x[i] = in[i];
   }
-  for (;i<WINDOW_SIZE;i++) {
-    x[i].r = x[WINDOW_SIZE - i].r;
-    x[i].i = -x[WINDOW_SIZE - i].i;
+  for (;i<RENAMENOISE_WINDOW_SIZE;i++) {
+    x[i].r = x[RENAMENOISE_WINDOW_SIZE - i].r;
+    x[i].i = -x[RENAMENOISE_WINDOW_SIZE - i].i;
   }
   renamenoise_fft(common.kfft, x, y, 0);
   /* output in reverse order for IFFT. */
-  out[0] = WINDOW_SIZE*y[0].r;
-  for (i=1;i<WINDOW_SIZE;i++) {
-    out[i] = WINDOW_SIZE*y[WINDOW_SIZE - i].r;
+  out[0] = RENAMENOISE_WINDOW_SIZE*y[0].r;
+  for (i=1;i<RENAMENOISE_WINDOW_SIZE;i++) {
+    out[i] = RENAMENOISE_WINDOW_SIZE*y[RENAMENOISE_WINDOW_SIZE - i].r;
   }
 }
 
@@ -249,7 +249,7 @@ static void apply_window(float *x) {
   check_init();
   for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) {
     x[i] *= common.half_window[i];
-    x[WINDOW_SIZE - 1 - i] *= common.half_window[i];
+    x[RENAMENOISE_WINDOW_SIZE - 1 - i] *= common.half_window[i];
   }
 }
 
@@ -294,7 +294,7 @@ int band_lp = NB_BANDS;
 
 static void frame_analysis(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, float *Ex, const float *in) {
   int i;
-  float x[WINDOW_SIZE];
+  float x[RENAMENOISE_WINDOW_SIZE];
   RENAMENOISE_COPY(x, st->analysis_mem, RENAMENOISE_FRAME_SIZE);
   for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) x[RENAMENOISE_FRAME_SIZE + i] = in[i];
   RENAMENOISE_COPY(st->analysis_mem, in, RENAMENOISE_FRAME_SIZE);
@@ -314,7 +314,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   float *ceps_0, *ceps_1, *ceps_2;
   float spec_variability = 0;
   float Ly[NB_BANDS];
-  float p[WINDOW_SIZE];
+  float p[RENAMENOISE_WINDOW_SIZE];
   float pitch_buf[PITCH_BUF_SIZE>>1];
   int pitch_index;
   float gain;
@@ -334,8 +334,8 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
           PITCH_FRAME_SIZE, &pitch_index, st->last_period, st->last_gain);
   st->last_period = pitch_index;
   st->last_gain = gain;
-  for (i=0;i<WINDOW_SIZE;i++)
-    p[i] = st->pitch_buf[PITCH_BUF_SIZE-WINDOW_SIZE-pitch_index+i];
+  for (i=0;i<RENAMENOISE_WINDOW_SIZE;i++)
+    p[i] = st->pitch_buf[PITCH_BUF_SIZE-RENAMENOISE_WINDOW_SIZE-pitch_index+i];
   apply_window(p);
   forward_transform(P, p);
   compute_band_energy(Ep, P);
@@ -399,7 +399,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
 }
 
 static void frame_synthesis(ReNameNoiseDenoiseState *st, float *out, const renamenoise_fft_cpx *y) {
-  float x[WINDOW_SIZE];
+  float x[RENAMENOISE_WINDOW_SIZE];
   int i;
   inverse_transform(x, y);
   apply_window(x);
@@ -458,7 +458,7 @@ void pitch_filter(renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P, const fl
 float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const float *in) {
   int i;
   renamenoise_fft_cpx X[FREQ_SIZE];
-  renamenoise_fft_cpx P[WINDOW_SIZE];
+  renamenoise_fft_cpx P[RENAMENOISE_WINDOW_SIZE];
   float x[RENAMENOISE_FRAME_SIZE];
   float Ex[NB_BANDS], Ep[NB_BANDS];
   float Exp[NB_BANDS];
@@ -545,7 +545,7 @@ int main(int argc, char **argv) {
     fread(tmp, sizeof(short), RENAMENOISE_FRAME_SIZE, f2);
   }
   while (1) {
-    renamenoise_fft_cpx X[FREQ_SIZE], Y[FREQ_SIZE], N[FREQ_SIZE], P[WINDOW_SIZE];
+    renamenoise_fft_cpx X[FREQ_SIZE], Y[FREQ_SIZE], N[FREQ_SIZE], P[RENAMENOISE_WINDOW_SIZE];
     float Ex[NB_BANDS], Ey[NB_BANDS], En[NB_BANDS], Ep[NB_BANDS];
     float Exp[NB_BANDS];
     float Ln[NB_BANDS];
