@@ -97,7 +97,7 @@ struct ReNameNoiseDenoiseState {
   ReNameNoiseRNNState rnn;
 };
 
-void compute_band_energy(float *bandE, const renamenoise_fft_cpx *X) {
+void renamenoise_compute_band_energy(float *bandE, const renamenoise_fft_cpx *X) {
   int i;
   float sum[RENAMENOISE_NB_BANDS] = {0};
   for (i=0;i<RENAMENOISE_NB_BANDS-1;i++)
@@ -304,7 +304,7 @@ static void frame_analysis(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, 
   for (i=lowpass;i<RENAMENOISE_FREQ_SIZE;i++)
     X[i].r = X[i].i = 0;
 #endif
-  compute_band_energy(Ex, X);
+  renamenoise_compute_band_energy(Ex, X);
 }
 
 static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, renamenoise_fft_cpx *P,
@@ -338,7 +338,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
     p[i] = st->pitch_buf[RENAMENOISE_PITCH_BUF_SIZE-RENAMENOISE_WINDOW_SIZE-pitch_index+i];
   apply_window(p);
   forward_transform(P, p);
-  compute_band_energy(Ep, P);
+  renamenoise_compute_band_energy(Ep, P);
   compute_band_corr(Exp, X, P);
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) Exp[i] = Exp[i]/sqrt(.001+Ex[i]*Ep[i]);
   dct(tmp, Exp);
@@ -442,7 +442,7 @@ void pitch_filter(renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P, const fl
     X[i].i += rf[i]*P[i].i;
   }
   float newE[RENAMENOISE_NB_BANDS];
-  compute_band_energy(newE, X);
+  renamenoise_compute_band_energy(newE, X);
   float norm[RENAMENOISE_NB_BANDS];
   float normf[RENAMENOISE_FREQ_SIZE]={0};
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
