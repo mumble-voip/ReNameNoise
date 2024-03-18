@@ -307,7 +307,7 @@ static void renamenoise_frame_analysis(ReNameNoiseDenoiseState *st, renamenoise_
   renamenoise_compute_band_energy(Ex, X);
 }
 
-static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, renamenoise_fft_cpx *P,
+static int renamenoise_compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, renamenoise_fft_cpx *P,
                                   float *Ex, float *Ep, float *Exp, float *features, const float *in) {
   int i;
   float E = 0;
@@ -470,7 +470,7 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
   static const float a_hp[2] = {-1.99599, 0.99600};
   static const float b_hp[2] = {-2, 1};
   biquad(x, st->mem_hp_x, in, b_hp, a_hp, RENAMENOISE_FRAME_SIZE);
-  silence = compute_frame_features(st, X, P, Ex, Ep, Exp, features, x);
+  silence = renamenoise_compute_frame_features(st, X, P, Ex, Ep, Exp, features, x);
 
   if (!silence) {
     renamenoise_compute_rnn(&st->rnn, g, &vad_prob, features);
@@ -619,7 +619,7 @@ int main(int argc, char **argv) {
     renamenoise_frame_analysis(st, Y, Ey, x);
     renamenoise_frame_analysis(noise_state, N, En, n);
     for (i=0;i<RENAMENOISE_NB_BANDS;i++) Ln[i] = log10(1e-2+En[i]);
-    int silence = compute_frame_features(noisy, X, P, Ex, Ep, Exp, features, xn);
+    int silence = renamenoise_compute_frame_features(noisy, X, P, Ex, Ep, Exp, features, xn);
     pitch_filter(X, P, Ex, Ep, Exp, g);
     //printf("%f %d\n", noisy->last_gain, noisy->last_period);
     for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
