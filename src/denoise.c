@@ -244,7 +244,7 @@ static void renamenoise_inverse_transform(float *out, const renamenoise_fft_cpx 
   }
 }
 
-static void apply_window(float *x) {
+static void renamenoise_apply_window(float *x) {
   int i;
   renamenoise_check_init();
   for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) {
@@ -298,7 +298,7 @@ static void frame_analysis(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, 
   RENAMENOISE_COPY(x, st->analysis_mem, RENAMENOISE_FRAME_SIZE);
   for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) x[RENAMENOISE_FRAME_SIZE + i] = in[i];
   RENAMENOISE_COPY(st->analysis_mem, in, RENAMENOISE_FRAME_SIZE);
-  apply_window(x);
+  renamenoise_apply_window(x);
   renamenoise_forward_transform(X, x);
 #if RENAMENOISE_TRAINING
   for (i=lowpass;i<RENAMENOISE_FREQ_SIZE;i++)
@@ -336,7 +336,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   st->last_gain = gain;
   for (i=0;i<RENAMENOISE_WINDOW_SIZE;i++)
     p[i] = st->pitch_buf[RENAMENOISE_PITCH_BUF_SIZE-RENAMENOISE_WINDOW_SIZE-pitch_index+i];
-  apply_window(p);
+  renamenoise_apply_window(p);
   renamenoise_forward_transform(P, p);
   renamenoise_compute_band_energy(Ep, P);
   renamenoise_compute_band_corr(Exp, X, P);
@@ -402,7 +402,7 @@ static void frame_synthesis(ReNameNoiseDenoiseState *st, float *out, const renam
   float x[RENAMENOISE_WINDOW_SIZE];
   int i;
   renamenoise_inverse_transform(x, y);
-  apply_window(x);
+  renamenoise_apply_window(x);
   for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) out[i] = x[i] + st->synthesis_mem[i];
   RENAMENOISE_COPY(st->synthesis_mem, &x[RENAMENOISE_FRAME_SIZE], RENAMENOISE_FRAME_SIZE);
 }
