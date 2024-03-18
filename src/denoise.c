@@ -195,7 +195,7 @@ static void renamenoise_dct(float *out, const float *in) {
 }
 
 #if 0
-static void idct(float *out, const float *in) {
+static void renamenoise_idct(float *out, const float *in) {
   int i;
   renamenoise_check_init();
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
