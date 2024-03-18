@@ -495,15 +495,15 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
 
 #if RENAMENOISE_TRAINING
 
-static float uni_rand() {
+static float renamenoise_uni_rand() {
   return rand()/(double)RAND_MAX-.5;
 }
 
 static void rand_resp(float *a, float *b) {
-  a[0] = .75*uni_rand();
-  a[1] = .75*uni_rand();
-  b[0] = .75*uni_rand();
-  b[1] = .75*uni_rand();
+  a[0] = .75*renamenoise_uni_rand();
+  a[1] = .75*renamenoise_uni_rand();
+  b[0] = .75*renamenoise_uni_rand();
+  b[1] = .75*renamenoise_uni_rand();
 }
 
 int main(int argc, char **argv) {
