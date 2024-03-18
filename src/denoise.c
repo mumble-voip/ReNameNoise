@@ -53,12 +53,12 @@
 
 #define RENAMENOISE_SQUARE(x) ((x)*(x))
 
-#define NB_BANDS 22
+#define RENAMENOISE_NB_BANDS 22
 
 #define CEPS_MEM 8
 #define NB_DELTA_CEPS 6
 
-#define NB_FEATURES (NB_BANDS+3*NB_DELTA_CEPS+2)
+#define NB_FEATURES (RENAMENOISE_NB_BANDS+3*NB_DELTA_CEPS+2)
 
 
 #ifndef TRAINING
@@ -80,12 +80,12 @@ typedef struct {
   int init;
   renamenoise_fft_state *kfft;
   float half_window[RENAMENOISE_FRAME_SIZE];
-  float dct_table[NB_BANDS*NB_BANDS];
+  float dct_table[RENAMENOISE_NB_BANDS*RENAMENOISE_NB_BANDS];
 } CommonState;
 
 struct ReNameNoiseDenoiseState {
   float analysis_mem[RENAMENOISE_FRAME_SIZE];
-  float cepstral_mem[CEPS_MEM][NB_BANDS];
+  float cepstral_mem[CEPS_MEM][RENAMENOISE_NB_BANDS];
   int memid;
   float synthesis_mem[RENAMENOISE_FRAME_SIZE];
   float pitch_buf[RENAMENOISE_PITCH_BUF_SIZE];
@@ -93,14 +93,14 @@ struct ReNameNoiseDenoiseState {
   float last_gain;
   int last_period;
   float mem_hp_x[2];
-  float lastg[NB_BANDS];
+  float lastg[RENAMENOISE_NB_BANDS];
   ReNameNoiseRNNState rnn;
 };
 
 void compute_band_energy(float *bandE, const renamenoise_fft_cpx *X) {
   int i;
-  float sum[NB_BANDS] = {0};
-  for (i=0;i<NB_BANDS-1;i++)
+  float sum[RENAMENOISE_NB_BANDS] = {0};
+  for (i=0;i<RENAMENOISE_NB_BANDS-1;i++)
   {
     int j;
     int band_size;
@@ -115,8 +115,8 @@ void compute_band_energy(float *bandE, const renamenoise_fft_cpx *X) {
     }
   }
   sum[0] *= 2;
-  sum[NB_BANDS-1] *= 2;
-  for (i=0;i<NB_BANDS;i++)
+  sum[RENAMENOISE_NB_BANDS-1] *= 2;
+  for (i=0;i<RENAMENOISE_NB_BANDS;i++)
   {
     bandE[i] = sum[i];
   }
@@ -124,8 +124,8 @@ void compute_band_energy(float *bandE, const renamenoise_fft_cpx *X) {
 
 void compute_band_corr(float *bandE, const renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P) {
   int i;
-  float sum[NB_BANDS] = {0};
-  for (i=0;i<NB_BANDS-1;i++)
+  float sum[RENAMENOISE_NB_BANDS] = {0};
+  for (i=0;i<RENAMENOISE_NB_BANDS-1;i++)
   {
     int j;
     int band_size;
@@ -140,8 +140,8 @@ void compute_band_corr(float *bandE, const renamenoise_fft_cpx *X, const renamen
     }
   }
   sum[0] *= 2;
-  sum[NB_BANDS-1] *= 2;
-  for (i=0;i<NB_BANDS;i++)
+  sum[RENAMENOISE_NB_BANDS-1] *= 2;
+  for (i=0;i<RENAMENOISE_NB_BANDS;i++)
   {
     bandE[i] = sum[i];
   }
@@ -150,7 +150,7 @@ void compute_band_corr(float *bandE, const renamenoise_fft_cpx *X, const renamen
 void interp_band_gain(float *g, const float *bandE) {
   int i;
   memset(g, 0, RENAMENOISE_FREQ_SIZE);
-  for (i=0;i<NB_BANDS-1;i++)
+  for (i=0;i<RENAMENOISE_NB_BANDS-1;i++)
   {
     int j;
     int band_size;
@@ -171,11 +171,11 @@ static void check_init() {
   common.kfft = renamenoise_fft_alloc_twiddles(2*RENAMENOISE_FRAME_SIZE, NULL, NULL, NULL, 0);
   for (i=0;i<RENAMENOISE_FRAME_SIZE;i++)
     common.half_window[i] = sin(.5*M_PI*sin(.5*M_PI*(i+.5)/RENAMENOISE_FRAME_SIZE) * sin(.5*M_PI*(i+.5)/RENAMENOISE_FRAME_SIZE));
-  for (i=0;i<NB_BANDS;i++) {
+  for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
     int j;
-    for (j=0;j<NB_BANDS;j++) {
-      common.dct_table[i*NB_BANDS + j] = cos((i+.5)*j*M_PI/NB_BANDS);
-      if (j==0) common.dct_table[i*NB_BANDS + j] *= sqrt(.5);
+    for (j=0;j<RENAMENOISE_NB_BANDS;j++) {
+      common.dct_table[i*RENAMENOISE_NB_BANDS + j] = cos((i+.5)*j*M_PI/RENAMENOISE_NB_BANDS);
+      if (j==0) common.dct_table[i*RENAMENOISE_NB_BANDS + j] *= sqrt(.5);
     }
   }
   common.init = 1;
@@ -184,11 +184,11 @@ static void check_init() {
 static void dct(float *out, const float *in) {
   int i;
   check_init();
-  for (i=0;i<NB_BANDS;i++) {
+  for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
     int j;
     float sum = 0;
-    for (j=0;j<NB_BANDS;j++) {
-      sum += in[j] * common.dct_table[j*NB_BANDS + i];
+    for (j=0;j<RENAMENOISE_NB_BANDS;j++) {
+      sum += in[j] * common.dct_table[j*RENAMENOISE_NB_BANDS + i];
     }
     out[i] = sum*sqrt(2./22);
   }
@@ -198,11 +198,11 @@ static void dct(float *out, const float *in) {
 static void idct(float *out, const float *in) {
   int i;
   check_init();
-  for (i=0;i<NB_BANDS;i++) {
+  for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
     int j;
     float sum = 0;
-    for (j=0;j<NB_BANDS;j++) {
-      sum += in[j] * common.dct_table[i*NB_BANDS + j];
+    for (j=0;j<RENAMENOISE_NB_BANDS;j++) {
+      sum += in[j] * common.dct_table[i*RENAMENOISE_NB_BANDS + j];
     }
     out[i] = sum*sqrt(2./22);
   }
@@ -289,7 +289,7 @@ void renamenoise_destroy(ReNameNoiseDenoiseState *st) {
 
 #if TRAINING
 int lowpass = RENAMENOISE_FREQ_SIZE;
-int band_lp = NB_BANDS;
+int band_lp = RENAMENOISE_NB_BANDS;
 #endif
 
 static void frame_analysis(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, float *Ex, const float *in) {
@@ -313,13 +313,13 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   float E = 0;
   float *ceps_0, *ceps_1, *ceps_2;
   float spec_variability = 0;
-  float Ly[NB_BANDS];
+  float Ly[RENAMENOISE_NB_BANDS];
   float p[RENAMENOISE_WINDOW_SIZE];
   float pitch_buf[RENAMENOISE_PITCH_BUF_SIZE>>1];
   int pitch_index;
   float gain;
   float *(pre[1]);
-  float tmp[NB_BANDS];
+  float tmp[RENAMENOISE_NB_BANDS];
   float follow, logMax;
   frame_analysis(st, X, Ex, in);
   RENAMENOISE_MOVE(st->pitch_buf, &st->pitch_buf[RENAMENOISE_FRAME_SIZE], RENAMENOISE_PITCH_BUF_SIZE-RENAMENOISE_FRAME_SIZE);
@@ -340,15 +340,15 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   forward_transform(P, p);
   compute_band_energy(Ep, P);
   compute_band_corr(Exp, X, P);
-  for (i=0;i<NB_BANDS;i++) Exp[i] = Exp[i]/sqrt(.001+Ex[i]*Ep[i]);
+  for (i=0;i<RENAMENOISE_NB_BANDS;i++) Exp[i] = Exp[i]/sqrt(.001+Ex[i]*Ep[i]);
   dct(tmp, Exp);
-  for (i=0;i<NB_DELTA_CEPS;i++) features[NB_BANDS+2*NB_DELTA_CEPS+i] = tmp[i];
-  features[NB_BANDS+2*NB_DELTA_CEPS] -= 1.3;
-  features[NB_BANDS+2*NB_DELTA_CEPS+1] -= 0.9;
-  features[NB_BANDS+3*NB_DELTA_CEPS] = .01*(pitch_index-300);
+  for (i=0;i<NB_DELTA_CEPS;i++) features[RENAMENOISE_NB_BANDS+2*NB_DELTA_CEPS+i] = tmp[i];
+  features[RENAMENOISE_NB_BANDS+2*NB_DELTA_CEPS] -= 1.3;
+  features[RENAMENOISE_NB_BANDS+2*NB_DELTA_CEPS+1] -= 0.9;
+  features[RENAMENOISE_NB_BANDS+3*NB_DELTA_CEPS] = .01*(pitch_index-300);
   logMax = -2;
   follow = -2;
-  for (i=0;i<NB_BANDS;i++) {
+  for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
     Ly[i] = log10(1e-2+Ex[i]);
     Ly[i] = RENAMENOISE_MAX16(logMax-7, RENAMENOISE_MAX16(follow-1.5, Ly[i]));
     logMax = RENAMENOISE_MAX16(logMax, Ly[i]);
@@ -366,12 +366,12 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   ceps_0 = st->cepstral_mem[st->memid];
   ceps_1 = (st->memid < 1) ? st->cepstral_mem[CEPS_MEM+st->memid-1] : st->cepstral_mem[st->memid-1];
   ceps_2 = (st->memid < 2) ? st->cepstral_mem[CEPS_MEM+st->memid-2] : st->cepstral_mem[st->memid-2];
-  for (i=0;i<NB_BANDS;i++) ceps_0[i] = features[i];
+  for (i=0;i<RENAMENOISE_NB_BANDS;i++) ceps_0[i] = features[i];
   st->memid++;
   for (i=0;i<NB_DELTA_CEPS;i++) {
     features[i] = ceps_0[i] + ceps_1[i] + ceps_2[i];
-    features[NB_BANDS+i] = ceps_0[i] - ceps_2[i];
-    features[NB_BANDS+NB_DELTA_CEPS+i] =  ceps_0[i] - 2*ceps_1[i] + ceps_2[i];
+    features[RENAMENOISE_NB_BANDS+i] = ceps_0[i] - ceps_2[i];
+    features[RENAMENOISE_NB_BANDS+NB_DELTA_CEPS+i] =  ceps_0[i] - 2*ceps_1[i] + ceps_2[i];
   }
   /* Spectral variability features. */
   if (st->memid == CEPS_MEM) st->memid = 0;
@@ -383,7 +383,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
     {
       int k;
       float dist=0;
-      for (k=0;k<NB_BANDS;k++)
+      for (k=0;k<RENAMENOISE_NB_BANDS;k++)
       {
         float tmp;
         tmp = st->cepstral_mem[i][k] - st->cepstral_mem[j][k];
@@ -394,7 +394,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
     }
     spec_variability += mindist;
   }
-  features[NB_BANDS+3*NB_DELTA_CEPS+1] = spec_variability/CEPS_MEM-2.1;
+  features[RENAMENOISE_NB_BANDS+3*NB_DELTA_CEPS+1] = spec_variability/CEPS_MEM-2.1;
   return TRAINING && E < 0.1;
 }
 
@@ -422,9 +422,9 @@ static void biquad(float *y, float mem[2], const float *x, const float *b, const
 void pitch_filter(renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P, const float *Ex, const float *Ep,
                   const float *Exp, const float *g) {
   int i;
-  float r[NB_BANDS];
+  float r[RENAMENOISE_NB_BANDS];
   float rf[RENAMENOISE_FREQ_SIZE] = {0};
-  for (i=0;i<NB_BANDS;i++) {
+  for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
 #if 0
     if (Exp[i]>g[i]) r[i] = 1;
     else r[i] = Exp[i]*(1-g[i])/(.001 + g[i]*(1-Exp[i]));
@@ -441,11 +441,11 @@ void pitch_filter(renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P, const fl
     X[i].r += rf[i]*P[i].r;
     X[i].i += rf[i]*P[i].i;
   }
-  float newE[NB_BANDS];
+  float newE[RENAMENOISE_NB_BANDS];
   compute_band_energy(newE, X);
-  float norm[NB_BANDS];
+  float norm[RENAMENOISE_NB_BANDS];
   float normf[RENAMENOISE_FREQ_SIZE]={0};
-  for (i=0;i<NB_BANDS;i++) {
+  for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
     norm[i] = sqrt(Ex[i]/(1e-8+newE[i]));
   }
   interp_band_gain(normf, norm);
@@ -460,10 +460,10 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
   renamenoise_fft_cpx X[RENAMENOISE_FREQ_SIZE];
   renamenoise_fft_cpx P[RENAMENOISE_WINDOW_SIZE];
   float x[RENAMENOISE_FRAME_SIZE];
-  float Ex[NB_BANDS], Ep[NB_BANDS];
-  float Exp[NB_BANDS];
+  float Ex[RENAMENOISE_NB_BANDS], Ep[RENAMENOISE_NB_BANDS];
+  float Exp[RENAMENOISE_NB_BANDS];
   float features[NB_FEATURES];
-  float g[NB_BANDS];
+  float g[RENAMENOISE_NB_BANDS];
   float gf[RENAMENOISE_FREQ_SIZE]={1};
   float vad_prob = 0;
   int silence;
@@ -475,7 +475,7 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
   if (!silence) {
     renamenoise_compute_rnn(&st->rnn, g, &vad_prob, features);
     pitch_filter(X, P, Ex, Ep, Exp, g);
-    for (i=0;i<NB_BANDS;i++) {
+    for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
       float alpha = .6f;
       g[i] = RENAMENOISE_MAX16(g[i], alpha*st->lastg[i]);
       st->lastg[i] = g[i];
@@ -546,11 +546,11 @@ int main(int argc, char **argv) {
   }
   while (1) {
     renamenoise_fft_cpx X[RENAMENOISE_FREQ_SIZE], Y[RENAMENOISE_FREQ_SIZE], N[RENAMENOISE_FREQ_SIZE], P[RENAMENOISE_WINDOW_SIZE];
-    float Ex[NB_BANDS], Ey[NB_BANDS], En[NB_BANDS], Ep[NB_BANDS];
-    float Exp[NB_BANDS];
-    float Ln[NB_BANDS];
+    float Ex[RENAMENOISE_NB_BANDS], Ey[RENAMENOISE_NB_BANDS], En[RENAMENOISE_NB_BANDS], Ep[RENAMENOISE_NB_BANDS];
+    float Exp[RENAMENOISE_NB_BANDS];
+    float Ln[RENAMENOISE_NB_BANDS];
     float features[NB_FEATURES];
-    float g[NB_BANDS];
+    float g[RENAMENOISE_NB_BANDS];
     short tmp[RENAMENOISE_FRAME_SIZE];
     float vad=0;
     float E=0;
@@ -566,7 +566,7 @@ int main(int argc, char **argv) {
       rand_resp(a_noise, b_noise);
       rand_resp(a_sig, b_sig);
       lowpass = RENAMENOISE_FREQ_SIZE * 3000./24000. * pow(50., rand()/(double)RAND_MAX);
-      for (i=0;i<NB_BANDS;i++) {
+      for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
         if (eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT > lowpass) {
           band_lp = i;
           break;
@@ -618,11 +618,11 @@ int main(int argc, char **argv) {
 
     frame_analysis(st, Y, Ey, x);
     frame_analysis(noise_state, N, En, n);
-    for (i=0;i<NB_BANDS;i++) Ln[i] = log10(1e-2+En[i]);
+    for (i=0;i<RENAMENOISE_NB_BANDS;i++) Ln[i] = log10(1e-2+En[i]);
     int silence = compute_frame_features(noisy, X, P, Ex, Ep, Exp, features, xn);
     pitch_filter(X, P, Ex, Ep, Exp, g);
     //printf("%f %d\n", noisy->last_gain, noisy->last_period);
-    for (i=0;i<NB_BANDS;i++) {
+    for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
       g[i] = sqrt((Ey[i]+1e-3)/(Ex[i]+1e-3));
       if (g[i] > 1) g[i] = 1;
       if (silence || i > band_lp) g[i] = -1;
@@ -632,12 +632,12 @@ int main(int argc, char **argv) {
     count++;
 #if 1
     fwrite(features, sizeof(float), NB_FEATURES, stdout);
-    fwrite(g, sizeof(float), NB_BANDS, stdout);
-    fwrite(Ln, sizeof(float), NB_BANDS, stdout);
+    fwrite(g, sizeof(float), RENAMENOISE_NB_BANDS, stdout);
+    fwrite(Ln, sizeof(float), RENAMENOISE_NB_BANDS, stdout);
     fwrite(&vad, sizeof(float), 1, stdout);
 #endif
   }
-  fprintf(stderr, "matrix size: %d x %d\n", count, NB_FEATURES + 2*NB_BANDS + 1);
+  fprintf(stderr, "matrix size: %d x %d\n", count, NB_FEATURES + 2*RENAMENOISE_NB_BANDS + 1);
   fclose(f1);
   fclose(f2);
   return 0;
