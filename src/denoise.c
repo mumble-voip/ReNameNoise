@@ -165,7 +165,7 @@ void renamenoise_interp_band_gain(float *g, const float *bandE) {
 
 ReNameNoiseCommonState renamenoise_common;
 
-static void check_init() {
+static void renamenoise_check_init() {
   int i;
   if (renamenoise_common.init) return;
   renamenoise_common.kfft = renamenoise_fft_alloc_twiddles(2*RENAMENOISE_FRAME_SIZE, NULL, NULL, NULL, 0);
@@ -183,7 +183,7 @@ static void check_init() {
 
 static void dct(float *out, const float *in) {
   int i;
-  check_init();
+  renamenoise_check_init();
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
     int j;
     float sum = 0;
@@ -197,7 +197,7 @@ static void dct(float *out, const float *in) {
 #if 0
 static void idct(float *out, const float *in) {
   int i;
-  check_init();
+  renamenoise_check_init();
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
     int j;
     float sum = 0;
@@ -213,7 +213,7 @@ static void forward_transform(renamenoise_fft_cpx *out, const float *in) {
   int i;
   renamenoise_fft_cpx x[RENAMENOISE_WINDOW_SIZE];
   renamenoise_fft_cpx y[RENAMENOISE_WINDOW_SIZE];
-  check_init();
+  renamenoise_check_init();
   for (i=0;i<RENAMENOISE_WINDOW_SIZE;i++) {
     x[i].r = in[i];
     x[i].i = 0;
@@ -228,7 +228,7 @@ static void inverse_transform(float *out, const renamenoise_fft_cpx *in) {
   int i;
   renamenoise_fft_cpx x[RENAMENOISE_WINDOW_SIZE];
   renamenoise_fft_cpx y[RENAMENOISE_WINDOW_SIZE];
-  check_init();
+  renamenoise_check_init();
   for (i=0;i<RENAMENOISE_FREQ_SIZE;i++) {
     x[i] = in[i];
   }
@@ -246,7 +246,7 @@ static void inverse_transform(float *out, const renamenoise_fft_cpx *in) {
 
 static void apply_window(float *x) {
   int i;
-  check_init();
+  renamenoise_check_init();
   for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) {
     x[i] *= renamenoise_common.half_window[i];
     x[RENAMENOISE_WINDOW_SIZE - 1 - i] *= renamenoise_common.half_window[i];
