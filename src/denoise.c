@@ -56,9 +56,9 @@
 #define RENAMENOISE_NB_BANDS 22
 
 #define RENAMENOISE_CEPS_MEM 8
-#define NB_DELTA_CEPS 6
+#define RENAMENOISE_NB_DELTA_CEPS 6
 
-#define NB_FEATURES (RENAMENOISE_NB_BANDS+3*NB_DELTA_CEPS+2)
+#define NB_FEATURES (RENAMENOISE_NB_BANDS+3*RENAMENOISE_NB_DELTA_CEPS+2)
 
 
 #ifndef TRAINING
@@ -342,10 +342,10 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   compute_band_corr(Exp, X, P);
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) Exp[i] = Exp[i]/sqrt(.001+Ex[i]*Ep[i]);
   dct(tmp, Exp);
-  for (i=0;i<NB_DELTA_CEPS;i++) features[RENAMENOISE_NB_BANDS+2*NB_DELTA_CEPS+i] = tmp[i];
-  features[RENAMENOISE_NB_BANDS+2*NB_DELTA_CEPS] -= 1.3;
-  features[RENAMENOISE_NB_BANDS+2*NB_DELTA_CEPS+1] -= 0.9;
-  features[RENAMENOISE_NB_BANDS+3*NB_DELTA_CEPS] = .01*(pitch_index-300);
+  for (i=0;i<RENAMENOISE_NB_DELTA_CEPS;i++) features[RENAMENOISE_NB_BANDS+2*RENAMENOISE_NB_DELTA_CEPS+i] = tmp[i];
+  features[RENAMENOISE_NB_BANDS+2*RENAMENOISE_NB_DELTA_CEPS] -= 1.3;
+  features[RENAMENOISE_NB_BANDS+2*RENAMENOISE_NB_DELTA_CEPS+1] -= 0.9;
+  features[RENAMENOISE_NB_BANDS+3*RENAMENOISE_NB_DELTA_CEPS] = .01*(pitch_index-300);
   logMax = -2;
   follow = -2;
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
@@ -368,10 +368,10 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   ceps_2 = (st->memid < 2) ? st->cepstral_mem[RENAMENOISE_CEPS_MEM+st->memid-2] : st->cepstral_mem[st->memid-2];
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) ceps_0[i] = features[i];
   st->memid++;
-  for (i=0;i<NB_DELTA_CEPS;i++) {
+  for (i=0;i<RENAMENOISE_NB_DELTA_CEPS;i++) {
     features[i] = ceps_0[i] + ceps_1[i] + ceps_2[i];
     features[RENAMENOISE_NB_BANDS+i] = ceps_0[i] - ceps_2[i];
-    features[RENAMENOISE_NB_BANDS+NB_DELTA_CEPS+i] =  ceps_0[i] - 2*ceps_1[i] + ceps_2[i];
+    features[RENAMENOISE_NB_BANDS+RENAMENOISE_NB_DELTA_CEPS+i] =  ceps_0[i] - 2*ceps_1[i] + ceps_2[i];
   }
   /* Spectral variability features. */
   if (st->memid == RENAMENOISE_CEPS_MEM) st->memid = 0;
@@ -394,7 +394,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
     }
     spec_variability += mindist;
   }
-  features[RENAMENOISE_NB_BANDS+3*NB_DELTA_CEPS+1] = spec_variability/RENAMENOISE_CEPS_MEM-2.1;
+  features[RENAMENOISE_NB_BANDS+3*RENAMENOISE_NB_DELTA_CEPS+1] = spec_variability/RENAMENOISE_CEPS_MEM-2.1;
   return TRAINING && E < 0.1;
 }
 
