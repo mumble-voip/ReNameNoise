@@ -181,7 +181,7 @@ static void renamenoise_check_init() {
   renamenoise_common.init = 1;
 }
 
-static void dct(float *out, const float *in) {
+static void renamenoise_dct(float *out, const float *in) {
   int i;
   renamenoise_check_init();
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
@@ -341,7 +341,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   renamenoise_compute_band_energy(Ep, P);
   renamenoise_compute_band_corr(Exp, X, P);
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) Exp[i] = Exp[i]/sqrt(.001+Ex[i]*Ep[i]);
-  dct(tmp, Exp);
+  renamenoise_dct(tmp, Exp);
   for (i=0;i<RENAMENOISE_NB_DELTA_CEPS;i++) features[RENAMENOISE_NB_BANDS+2*RENAMENOISE_NB_DELTA_CEPS+i] = tmp[i];
   features[RENAMENOISE_NB_BANDS+2*RENAMENOISE_NB_DELTA_CEPS] -= 1.3;
   features[RENAMENOISE_NB_BANDS+2*RENAMENOISE_NB_DELTA_CEPS+1] -= 0.9;
@@ -360,7 +360,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
     RENAMENOISE_CLEAR(features, RENAMENOISE_NB_FEATURES);
     return 1;
   }
-  dct(features, Ly);
+  renamenoise_dct(features, Ly);
   features[0] -= 12;
   features[1] -= 4;
   ceps_0 = st->cepstral_mem[st->memid];
