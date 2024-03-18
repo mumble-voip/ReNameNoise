@@ -147,7 +147,7 @@ void renamenoise_compute_band_corr(float *bandE, const renamenoise_fft_cpx *X, c
   }
 }
 
-void interp_band_gain(float *g, const float *bandE) {
+void renamenoise_interp_band_gain(float *g, const float *bandE) {
   int i;
   memset(g, 0, RENAMENOISE_FREQ_SIZE);
   for (i=0;i<RENAMENOISE_NB_BANDS-1;i++)
@@ -436,7 +436,7 @@ void pitch_filter(renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P, const fl
 #endif
     r[i] *= sqrt(Ex[i]/(1e-8+Ep[i]));
   }
-  interp_band_gain(rf, r);
+  renamenoise_interp_band_gain(rf, r);
   for (i=0;i<RENAMENOISE_FREQ_SIZE;i++) {
     X[i].r += rf[i]*P[i].r;
     X[i].i += rf[i]*P[i].i;
@@ -448,7 +448,7 @@ void pitch_filter(renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P, const fl
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
     norm[i] = sqrt(Ex[i]/(1e-8+newE[i]));
   }
-  interp_band_gain(normf, norm);
+  renamenoise_interp_band_gain(normf, norm);
   for (i=0;i<RENAMENOISE_FREQ_SIZE;i++) {
     X[i].r *= normf[i];
     X[i].i *= normf[i];
@@ -480,7 +480,7 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
       g[i] = RENAMENOISE_MAX16(g[i], alpha*st->lastg[i]);
       st->lastg[i] = g[i];
     }
-    interp_band_gain(gf, g);
+    renamenoise_interp_band_gain(gf, g);
 #if 1
     for (i=0;i<RENAMENOISE_FREQ_SIZE;i++) {
       X[i].r *= gf[i];
