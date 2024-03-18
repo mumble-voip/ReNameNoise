@@ -51,7 +51,7 @@
 #define RENAMENOISE_PITCH_FRAME_SIZE 960
 #define RENAMENOISE_PITCH_BUF_SIZE (RENAMENOISE_PITCH_MAX_PERIOD+RENAMENOISE_PITCH_FRAME_SIZE)
 
-#define SQUARE(x) ((x)*(x))
+#define RENAMENOISE_SQUARE(x) ((x)*(x))
 
 #define NB_BANDS 22
 
@@ -108,8 +108,8 @@ void compute_band_energy(float *bandE, const renamenoise_fft_cpx *X) {
     for (j=0;j<band_size;j++) {
       float tmp;
       float frac = (float)j/band_size;
-      tmp = SQUARE(X[(eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT) + j].r);
-      tmp += SQUARE(X[(eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT) + j].i);
+      tmp = RENAMENOISE_SQUARE(X[(eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT) + j].r);
+      tmp += RENAMENOISE_SQUARE(X[(eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT) + j].i);
       sum[i] += (1-frac)*tmp;
       sum[i+1] += frac*tmp;
     }
@@ -431,7 +431,7 @@ void pitch_filter(renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P, const fl
     r[i] = RENAMENOISE_MIN16(1, RENAMENOISE_MAX16(0, r[i]));
 #else
     if (Exp[i]>g[i]) r[i] = 1;
-    else r[i] = SQUARE(Exp[i])*(1-SQUARE(g[i]))/(.001 + SQUARE(g[i])*(1-SQUARE(Exp[i])));
+    else r[i] = RENAMENOISE_SQUARE(Exp[i])*(1-RENAMENOISE_SQUARE(g[i]))/(.001 + RENAMENOISE_SQUARE(g[i])*(1-RENAMENOISE_SQUARE(Exp[i])));
     r[i] = sqrt(RENAMENOISE_MIN16(1, RENAMENOISE_MAX16(0, r[i])));
 #endif
     r[i] *= sqrt(Ex[i]/(1e-8+Ep[i]));
