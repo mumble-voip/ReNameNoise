@@ -163,22 +163,22 @@ void renamenoise_interp_band_gain(float *g, const float *bandE) {
 }
 
 
-ReNameNoiseCommonState common;
+ReNameNoiseCommonState renamenoise_common;
 
 static void check_init() {
   int i;
-  if (common.init) return;
-  common.kfft = renamenoise_fft_alloc_twiddles(2*RENAMENOISE_FRAME_SIZE, NULL, NULL, NULL, 0);
+  if (renamenoise_common.init) return;
+  renamenoise_common.kfft = renamenoise_fft_alloc_twiddles(2*RENAMENOISE_FRAME_SIZE, NULL, NULL, NULL, 0);
   for (i=0;i<RENAMENOISE_FRAME_SIZE;i++)
-    common.half_window[i] = sin(.5*M_PI*sin(.5*M_PI*(i+.5)/RENAMENOISE_FRAME_SIZE) * sin(.5*M_PI*(i+.5)/RENAMENOISE_FRAME_SIZE));
+    renamenoise_common.half_window[i] = sin(.5*M_PI*sin(.5*M_PI*(i+.5)/RENAMENOISE_FRAME_SIZE) * sin(.5*M_PI*(i+.5)/RENAMENOISE_FRAME_SIZE));
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
     int j;
     for (j=0;j<RENAMENOISE_NB_BANDS;j++) {
-      common.dct_table[i*RENAMENOISE_NB_BANDS + j] = cos((i+.5)*j*M_PI/RENAMENOISE_NB_BANDS);
-      if (j==0) common.dct_table[i*RENAMENOISE_NB_BANDS + j] *= sqrt(.5);
+      renamenoise_common.dct_table[i*RENAMENOISE_NB_BANDS + j] = cos((i+.5)*j*M_PI/RENAMENOISE_NB_BANDS);
+      if (j==0) renamenoise_common.dct_table[i*RENAMENOISE_NB_BANDS + j] *= sqrt(.5);
     }
   }
-  common.init = 1;
+  renamenoise_common.init = 1;
 }
 
 static void dct(float *out, const float *in) {
@@ -188,7 +188,7 @@ static void dct(float *out, const float *in) {
     int j;
     float sum = 0;
     for (j=0;j<RENAMENOISE_NB_BANDS;j++) {
-      sum += in[j] * common.dct_table[j*RENAMENOISE_NB_BANDS + i];
+      sum += in[j] * renamenoise_common.dct_table[j*RENAMENOISE_NB_BANDS + i];
     }
     out[i] = sum*sqrt(2./22);
   }
@@ -202,7 +202,7 @@ static void idct(float *out, const float *in) {
     int j;
     float sum = 0;
     for (j=0;j<RENAMENOISE_NB_BANDS;j++) {
-      sum += in[j] * common.dct_table[i*RENAMENOISE_NB_BANDS + j];
+      sum += in[j] * renamenoise_common.dct_table[i*RENAMENOISE_NB_BANDS + j];
     }
     out[i] = sum*sqrt(2./22);
   }
@@ -218,7 +218,7 @@ static void forward_transform(renamenoise_fft_cpx *out, const float *in) {
     x[i].r = in[i];
     x[i].i = 0;
   }
-  renamenoise_fft(common.kfft, x, y, 0);
+  renamenoise_fft(renamenoise_common.kfft, x, y, 0);
   for (i=0;i<RENAMENOISE_FREQ_SIZE;i++) {
     out[i] = y[i];
   }
@@ -236,7 +236,7 @@ static void inverse_transform(float *out, const renamenoise_fft_cpx *in) {
     x[i].r = x[RENAMENOISE_WINDOW_SIZE - i].r;
     x[i].i = -x[RENAMENOISE_WINDOW_SIZE - i].i;
   }
-  renamenoise_fft(common.kfft, x, y, 0);
+  renamenoise_fft(renamenoise_common.kfft, x, y, 0);
   /* output in reverse order for IFFT. */
   out[0] = RENAMENOISE_WINDOW_SIZE*y[0].r;
   for (i=1;i<RENAMENOISE_WINDOW_SIZE;i++) {
@@ -248,8 +248,8 @@ static void apply_window(float *x) {
   int i;
   check_init();
   for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) {
-    x[i] *= common.half_window[i];
-    x[RENAMENOISE_WINDOW_SIZE - 1 - i] *= common.half_window[i];
+    x[i] *= renamenoise_common.half_window[i];
+    x[RENAMENOISE_WINDOW_SIZE - 1 - i] *= renamenoise_common.half_window[i];
   }
 }
 
