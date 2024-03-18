@@ -42,9 +42,9 @@
 #include "rnn_data.h"
 
 #define RENAMENOISE_FRAME_SIZE_SHIFT 2
-#define FRAME_SIZE (120<<RENAMENOISE_FRAME_SIZE_SHIFT)
-#define WINDOW_SIZE (2*FRAME_SIZE)
-#define FREQ_SIZE (FRAME_SIZE + 1)
+#define RENAMENOISE_FRAME_SIZE (120<<RENAMENOISE_FRAME_SIZE_SHIFT)
+#define WINDOW_SIZE (2*RENAMENOISE_FRAME_SIZE)
+#define FREQ_SIZE (RENAMENOISE_FRAME_SIZE + 1)
 
 #define PITCH_MIN_PERIOD 60
 #define PITCH_MAX_PERIOD 768
@@ -79,15 +79,15 @@ static const renamenoise_int16 eband5ms[] = {
 typedef struct {
   int init;
   renamenoise_fft_state *kfft;
-  float half_window[FRAME_SIZE];
+  float half_window[RENAMENOISE_FRAME_SIZE];
   float dct_table[NB_BANDS*NB_BANDS];
 } CommonState;
 
 struct ReNameNoiseDenoiseState {
-  float analysis_mem[FRAME_SIZE];
+  float analysis_mem[RENAMENOISE_FRAME_SIZE];
   float cepstral_mem[CEPS_MEM][NB_BANDS];
   int memid;
-  float synthesis_mem[FRAME_SIZE];
+  float synthesis_mem[RENAMENOISE_FRAME_SIZE];
   float pitch_buf[PITCH_BUF_SIZE];
   float pitch_enh_buf[PITCH_BUF_SIZE];
   float last_gain;
@@ -168,9 +168,9 @@ CommonState common;
 static void check_init() {
   int i;
   if (common.init) return;
-  common.kfft = renamenoise_fft_alloc_twiddles(2*FRAME_SIZE, NULL, NULL, NULL, 0);
-  for (i=0;i<FRAME_SIZE;i++)
-    common.half_window[i] = sin(.5*M_PI*sin(.5*M_PI*(i+.5)/FRAME_SIZE) * sin(.5*M_PI*(i+.5)/FRAME_SIZE));
+  common.kfft = renamenoise_fft_alloc_twiddles(2*RENAMENOISE_FRAME_SIZE, NULL, NULL, NULL, 0);
+  for (i=0;i<RENAMENOISE_FRAME_SIZE;i++)
+    common.half_window[i] = sin(.5*M_PI*sin(.5*M_PI*(i+.5)/RENAMENOISE_FRAME_SIZE) * sin(.5*M_PI*(i+.5)/RENAMENOISE_FRAME_SIZE));
   for (i=0;i<NB_BANDS;i++) {
     int j;
     for (j=0;j<NB_BANDS;j++) {
@@ -247,7 +247,7 @@ static void inverse_transform(float *out, const renamenoise_fft_cpx *in) {
 static void apply_window(float *x) {
   int i;
   check_init();
-  for (i=0;i<FRAME_SIZE;i++) {
+  for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) {
     x[i] *= common.half_window[i];
     x[WINDOW_SIZE - 1 - i] *= common.half_window[i];
   }
@@ -258,7 +258,7 @@ int renamenoise_get_size() {
 }
 
 int renamenoise_get_frame_size() {
-  return FRAME_SIZE;
+  return RENAMENOISE_FRAME_SIZE;
 }
 
 int renamenoise_init(ReNameNoiseDenoiseState *st, ReNameNoiseModel *model) {
@@ -295,9 +295,9 @@ int band_lp = NB_BANDS;
 static void frame_analysis(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, float *Ex, const float *in) {
   int i;
   float x[WINDOW_SIZE];
-  RENAMENOISE_COPY(x, st->analysis_mem, FRAME_SIZE);
-  for (i=0;i<FRAME_SIZE;i++) x[FRAME_SIZE + i] = in[i];
-  RENAMENOISE_COPY(st->analysis_mem, in, FRAME_SIZE);
+  RENAMENOISE_COPY(x, st->analysis_mem, RENAMENOISE_FRAME_SIZE);
+  for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) x[RENAMENOISE_FRAME_SIZE + i] = in[i];
+  RENAMENOISE_COPY(st->analysis_mem, in, RENAMENOISE_FRAME_SIZE);
   apply_window(x);
   forward_transform(X, x);
 #if TRAINING
@@ -322,8 +322,8 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   float tmp[NB_BANDS];
   float follow, logMax;
   frame_analysis(st, X, Ex, in);
-  RENAMENOISE_MOVE(st->pitch_buf, &st->pitch_buf[FRAME_SIZE], PITCH_BUF_SIZE-FRAME_SIZE);
-  RENAMENOISE_COPY(&st->pitch_buf[PITCH_BUF_SIZE-FRAME_SIZE], in, FRAME_SIZE);
+  RENAMENOISE_MOVE(st->pitch_buf, &st->pitch_buf[RENAMENOISE_FRAME_SIZE], PITCH_BUF_SIZE-RENAMENOISE_FRAME_SIZE);
+  RENAMENOISE_COPY(&st->pitch_buf[PITCH_BUF_SIZE-RENAMENOISE_FRAME_SIZE], in, RENAMENOISE_FRAME_SIZE);
   pre[0] = &st->pitch_buf[0];
   renamenoise_pitch_downsample(pre, pitch_buf, PITCH_BUF_SIZE, 1);
   renamenoise_pitch_search(pitch_buf+(PITCH_MAX_PERIOD>>1), pitch_buf, PITCH_FRAME_SIZE,
@@ -403,8 +403,8 @@ static void frame_synthesis(ReNameNoiseDenoiseState *st, float *out, const renam
   int i;
   inverse_transform(x, y);
   apply_window(x);
-  for (i=0;i<FRAME_SIZE;i++) out[i] = x[i] + st->synthesis_mem[i];
-  RENAMENOISE_COPY(st->synthesis_mem, &x[FRAME_SIZE], FRAME_SIZE);
+  for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) out[i] = x[i] + st->synthesis_mem[i];
+  RENAMENOISE_COPY(st->synthesis_mem, &x[RENAMENOISE_FRAME_SIZE], RENAMENOISE_FRAME_SIZE);
 }
 
 static void biquad(float *y, float mem[2], const float *x, const float *b, const float *a, int N) {
@@ -459,7 +459,7 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
   int i;
   renamenoise_fft_cpx X[FREQ_SIZE];
   renamenoise_fft_cpx P[WINDOW_SIZE];
-  float x[FRAME_SIZE];
+  float x[RENAMENOISE_FRAME_SIZE];
   float Ex[NB_BANDS], Ep[NB_BANDS];
   float Exp[NB_BANDS];
   float features[NB_FEATURES];
@@ -469,7 +469,7 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
   int silence;
   static const float a_hp[2] = {-1.99599, 0.99600};
   static const float b_hp[2] = {-2, 1};
-  biquad(x, st->mem_hp_x, in, b_hp, a_hp, FRAME_SIZE);
+  biquad(x, st->mem_hp_x, in, b_hp, a_hp, RENAMENOISE_FRAME_SIZE);
   silence = compute_frame_features(st, X, P, Ex, Ep, Exp, features, x);
 
   if (!silence) {
@@ -519,9 +519,9 @@ int main(int argc, char **argv) {
   float mem_hp_n[2]={0};
   float mem_resp_x[2]={0};
   float mem_resp_n[2]={0};
-  float x[FRAME_SIZE];
-  float n[FRAME_SIZE];
-  float xn[FRAME_SIZE];
+  float x[RENAMENOISE_FRAME_SIZE];
+  float n[RENAMENOISE_FRAME_SIZE];
+  float xn[RENAMENOISE_FRAME_SIZE];
   int vad_cnt=0;
   int gain_change_count=0;
   float speech_gain = 1, noise_gain = 1;
@@ -541,8 +541,8 @@ int main(int argc, char **argv) {
   f2 = fopen(argv[2], "r");
   maxCount = atoi(argv[3]);
   for(i=0;i<150;i++) {
-    short tmp[FRAME_SIZE];
-    fread(tmp, sizeof(short), FRAME_SIZE, f2);
+    short tmp[RENAMENOISE_FRAME_SIZE];
+    fread(tmp, sizeof(short), RENAMENOISE_FRAME_SIZE, f2);
   }
   while (1) {
     renamenoise_fft_cpx X[FREQ_SIZE], Y[FREQ_SIZE], N[FREQ_SIZE], P[WINDOW_SIZE];
@@ -551,7 +551,7 @@ int main(int argc, char **argv) {
     float Ln[NB_BANDS];
     float features[NB_FEATURES];
     float g[NB_BANDS];
-    short tmp[FRAME_SIZE];
+    short tmp[RENAMENOISE_FRAME_SIZE];
     float vad=0;
     float E=0;
     if (count==maxCount) break;
@@ -574,32 +574,32 @@ int main(int argc, char **argv) {
       }
     }
     if (speech_gain != 0) {
-      fread(tmp, sizeof(short), FRAME_SIZE, f1);
+      fread(tmp, sizeof(short), RENAMENOISE_FRAME_SIZE, f1);
       if (feof(f1)) {
         rewind(f1);
-        fread(tmp, sizeof(short), FRAME_SIZE, f1);
+        fread(tmp, sizeof(short), RENAMENOISE_FRAME_SIZE, f1);
       }
-      for (i=0;i<FRAME_SIZE;i++) x[i] = speech_gain*tmp[i];
-      for (i=0;i<FRAME_SIZE;i++) E += tmp[i]*(float)tmp[i];
+      for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) x[i] = speech_gain*tmp[i];
+      for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) E += tmp[i]*(float)tmp[i];
     } else {
-      for (i=0;i<FRAME_SIZE;i++) x[i] = 0;
+      for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) x[i] = 0;
       E = 0;
     }
     if (noise_gain!=0) {
-      fread(tmp, sizeof(short), FRAME_SIZE, f2);
+      fread(tmp, sizeof(short), RENAMENOISE_FRAME_SIZE, f2);
       if (feof(f2)) {
         rewind(f2);
-        fread(tmp, sizeof(short), FRAME_SIZE, f2);
+        fread(tmp, sizeof(short), RENAMENOISE_FRAME_SIZE, f2);
       }
-      for (i=0;i<FRAME_SIZE;i++) n[i] = noise_gain*tmp[i];
+      for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) n[i] = noise_gain*tmp[i];
     } else {
-      for (i=0;i<FRAME_SIZE;i++) n[i] = 0;
+      for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) n[i] = 0;
     }
-    biquad(x, mem_hp_x, x, b_hp, a_hp, FRAME_SIZE);
-    biquad(x, mem_resp_x, x, b_sig, a_sig, FRAME_SIZE);
-    biquad(n, mem_hp_n, n, b_hp, a_hp, FRAME_SIZE);
-    biquad(n, mem_resp_n, n, b_noise, a_noise, FRAME_SIZE);
-    for (i=0;i<FRAME_SIZE;i++) xn[i] = x[i] + n[i];
+    biquad(x, mem_hp_x, x, b_hp, a_hp, RENAMENOISE_FRAME_SIZE);
+    biquad(x, mem_resp_x, x, b_sig, a_sig, RENAMENOISE_FRAME_SIZE);
+    biquad(n, mem_hp_n, n, b_hp, a_hp, RENAMENOISE_FRAME_SIZE);
+    biquad(n, mem_resp_n, n, b_noise, a_noise, RENAMENOISE_FRAME_SIZE);
+    for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) xn[i] = x[i] + n[i];
     if (E > 1e9f) {
       vad_cnt=0;
     } else if (E > 1e8f) {
