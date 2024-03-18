@@ -81,7 +81,7 @@ typedef struct {
   renamenoise_fft_state *kfft;
   float half_window[RENAMENOISE_FRAME_SIZE];
   float dct_table[RENAMENOISE_NB_BANDS*RENAMENOISE_NB_BANDS];
-} CommonState;
+} ReNameNoiseCommonState;
 
 struct ReNameNoiseDenoiseState {
   float analysis_mem[RENAMENOISE_FRAME_SIZE];
@@ -163,7 +163,7 @@ void interp_band_gain(float *g, const float *bandE) {
 }
 
 
-CommonState common;
+ReNameNoiseCommonState common;
 
 static void check_init() {
   int i;
