@@ -55,7 +55,7 @@
 
 #define RENAMENOISE_NB_BANDS 22
 
-#define CEPS_MEM 8
+#define RENAMENOISE_CEPS_MEM 8
 #define NB_DELTA_CEPS 6
 
 #define NB_FEATURES (RENAMENOISE_NB_BANDS+3*NB_DELTA_CEPS+2)
@@ -85,7 +85,7 @@ typedef struct {
 
 struct ReNameNoiseDenoiseState {
   float analysis_mem[RENAMENOISE_FRAME_SIZE];
-  float cepstral_mem[CEPS_MEM][RENAMENOISE_NB_BANDS];
+  float cepstral_mem[RENAMENOISE_CEPS_MEM][RENAMENOISE_NB_BANDS];
   int memid;
   float synthesis_mem[RENAMENOISE_FRAME_SIZE];
   float pitch_buf[RENAMENOISE_PITCH_BUF_SIZE];
@@ -364,8 +364,8 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   features[0] -= 12;
   features[1] -= 4;
   ceps_0 = st->cepstral_mem[st->memid];
-  ceps_1 = (st->memid < 1) ? st->cepstral_mem[CEPS_MEM+st->memid-1] : st->cepstral_mem[st->memid-1];
-  ceps_2 = (st->memid < 2) ? st->cepstral_mem[CEPS_MEM+st->memid-2] : st->cepstral_mem[st->memid-2];
+  ceps_1 = (st->memid < 1) ? st->cepstral_mem[RENAMENOISE_CEPS_MEM+st->memid-1] : st->cepstral_mem[st->memid-1];
+  ceps_2 = (st->memid < 2) ? st->cepstral_mem[RENAMENOISE_CEPS_MEM+st->memid-2] : st->cepstral_mem[st->memid-2];
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) ceps_0[i] = features[i];
   st->memid++;
   for (i=0;i<NB_DELTA_CEPS;i++) {
@@ -374,12 +374,12 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
     features[RENAMENOISE_NB_BANDS+NB_DELTA_CEPS+i] =  ceps_0[i] - 2*ceps_1[i] + ceps_2[i];
   }
   /* Spectral variability features. */
-  if (st->memid == CEPS_MEM) st->memid = 0;
-  for (i=0;i<CEPS_MEM;i++)
+  if (st->memid == RENAMENOISE_CEPS_MEM) st->memid = 0;
+  for (i=0;i<RENAMENOISE_CEPS_MEM;i++)
   {
     int j;
     float mindist = 1e15f;
-    for (j=0;j<CEPS_MEM;j++)
+    for (j=0;j<RENAMENOISE_CEPS_MEM;j++)
     {
       int k;
       float dist=0;
@@ -394,7 +394,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
     }
     spec_variability += mindist;
   }
-  features[RENAMENOISE_NB_BANDS+3*NB_DELTA_CEPS+1] = spec_variability/CEPS_MEM-2.1;
+  features[RENAMENOISE_NB_BANDS+3*NB_DELTA_CEPS+1] = spec_variability/RENAMENOISE_CEPS_MEM-2.1;
   return TRAINING && E < 0.1;
 }
 
