@@ -41,8 +41,8 @@
 #include "rnn.h"
 #include "rnn_data.h"
 
-#define FRAME_SIZE_SHIFT 2
-#define FRAME_SIZE (120<<FRAME_SIZE_SHIFT)
+#define RENAMENOISE_FRAME_SIZE_SHIFT 2
+#define FRAME_SIZE (120<<RENAMENOISE_FRAME_SIZE_SHIFT)
 #define WINDOW_SIZE (2*FRAME_SIZE)
 #define FREQ_SIZE (FRAME_SIZE + 1)
 
@@ -104,12 +104,12 @@ void compute_band_energy(float *bandE, const renamenoise_fft_cpx *X) {
   {
     int j;
     int band_size;
-    band_size = (eband5ms[i+1]-eband5ms[i])<<FRAME_SIZE_SHIFT;
+    band_size = (eband5ms[i+1]-eband5ms[i])<<RENAMENOISE_FRAME_SIZE_SHIFT;
     for (j=0;j<band_size;j++) {
       float tmp;
       float frac = (float)j/band_size;
-      tmp = SQUARE(X[(eband5ms[i]<<FRAME_SIZE_SHIFT) + j].r);
-      tmp += SQUARE(X[(eband5ms[i]<<FRAME_SIZE_SHIFT) + j].i);
+      tmp = SQUARE(X[(eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT) + j].r);
+      tmp += SQUARE(X[(eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT) + j].i);
       sum[i] += (1-frac)*tmp;
       sum[i+1] += frac*tmp;
     }
@@ -129,12 +129,12 @@ void compute_band_corr(float *bandE, const renamenoise_fft_cpx *X, const renamen
   {
     int j;
     int band_size;
-    band_size = (eband5ms[i+1]-eband5ms[i])<<FRAME_SIZE_SHIFT;
+    band_size = (eband5ms[i+1]-eband5ms[i])<<RENAMENOISE_FRAME_SIZE_SHIFT;
     for (j=0;j<band_size;j++) {
       float tmp;
       float frac = (float)j/band_size;
-      tmp = X[(eband5ms[i]<<FRAME_SIZE_SHIFT) + j].r * P[(eband5ms[i]<<FRAME_SIZE_SHIFT) + j].r;
-      tmp += X[(eband5ms[i]<<FRAME_SIZE_SHIFT) + j].i * P[(eband5ms[i]<<FRAME_SIZE_SHIFT) + j].i;
+      tmp = X[(eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT) + j].r * P[(eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT) + j].r;
+      tmp += X[(eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT) + j].i * P[(eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT) + j].i;
       sum[i] += (1-frac)*tmp;
       sum[i+1] += frac*tmp;
     }
@@ -154,10 +154,10 @@ void interp_band_gain(float *g, const float *bandE) {
   {
     int j;
     int band_size;
-    band_size = (eband5ms[i+1]-eband5ms[i])<<FRAME_SIZE_SHIFT;
+    band_size = (eband5ms[i+1]-eband5ms[i])<<RENAMENOISE_FRAME_SIZE_SHIFT;
     for (j=0;j<band_size;j++) {
       float frac = (float)j/band_size;
-      g[(eband5ms[i]<<FRAME_SIZE_SHIFT) + j] = (1-frac)*bandE[i] + frac*bandE[i+1];
+      g[(eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT) + j] = (1-frac)*bandE[i] + frac*bandE[i+1];
     }
   }
 }
@@ -567,7 +567,7 @@ int main(int argc, char **argv) {
       rand_resp(a_sig, b_sig);
       lowpass = FREQ_SIZE * 3000./24000. * pow(50., rand()/(double)RAND_MAX);
       for (i=0;i<NB_BANDS;i++) {
-        if (eband5ms[i]<<FRAME_SIZE_SHIFT > lowpass) {
+        if (eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT > lowpass) {
           band_lp = i;
           break;
         }
