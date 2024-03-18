@@ -499,7 +499,7 @@ static float renamenoise_uni_rand() {
   return rand()/(double)RAND_MAX-.5;
 }
 
-static void rand_resp(float *a, float *b) {
+static void renamenoise_rand_resp(float *a, float *b) {
   a[0] = .75*renamenoise_uni_rand();
   a[1] = .75*renamenoise_uni_rand();
   b[0] = .75*renamenoise_uni_rand();
@@ -563,8 +563,8 @@ int main(int argc, char **argv) {
       noise_gain *= speech_gain;
       if (rand()%10==0) speech_gain = 0;
       gain_change_count = 0;
-      rand_resp(a_noise, b_noise);
-      rand_resp(a_sig, b_sig);
+      renamenoise_rand_resp(a_noise, b_noise);
+      renamenoise_rand_resp(a_sig, b_sig);
       lowpass = RENAMENOISE_FREQ_SIZE * 3000./24000. * pow(50., rand()/(double)RAND_MAX);
       for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
         if (renamenoise_eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT > lowpass) {
