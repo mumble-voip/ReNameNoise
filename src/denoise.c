@@ -44,7 +44,7 @@
 #define RENAMENOISE_FRAME_SIZE_SHIFT 2
 #define RENAMENOISE_FRAME_SIZE (120<<RENAMENOISE_FRAME_SIZE_SHIFT)
 #define RENAMENOISE_WINDOW_SIZE (2*RENAMENOISE_FRAME_SIZE)
-#define FREQ_SIZE (RENAMENOISE_FRAME_SIZE + 1)
+#define RENAMENOISE_FREQ_SIZE (RENAMENOISE_FRAME_SIZE + 1)
 
 #define PITCH_MIN_PERIOD 60
 #define PITCH_MAX_PERIOD 768
@@ -149,7 +149,7 @@ void compute_band_corr(float *bandE, const renamenoise_fft_cpx *X, const renamen
 
 void interp_band_gain(float *g, const float *bandE) {
   int i;
-  memset(g, 0, FREQ_SIZE);
+  memset(g, 0, RENAMENOISE_FREQ_SIZE);
   for (i=0;i<NB_BANDS-1;i++)
   {
     int j;
@@ -219,7 +219,7 @@ static void forward_transform(renamenoise_fft_cpx *out, const float *in) {
     x[i].i = 0;
   }
   renamenoise_fft(common.kfft, x, y, 0);
-  for (i=0;i<FREQ_SIZE;i++) {
+  for (i=0;i<RENAMENOISE_FREQ_SIZE;i++) {
     out[i] = y[i];
   }
 }
@@ -229,7 +229,7 @@ static void inverse_transform(float *out, const renamenoise_fft_cpx *in) {
   renamenoise_fft_cpx x[RENAMENOISE_WINDOW_SIZE];
   renamenoise_fft_cpx y[RENAMENOISE_WINDOW_SIZE];
   check_init();
-  for (i=0;i<FREQ_SIZE;i++) {
+  for (i=0;i<RENAMENOISE_FREQ_SIZE;i++) {
     x[i] = in[i];
   }
   for (;i<RENAMENOISE_WINDOW_SIZE;i++) {
@@ -288,7 +288,7 @@ void renamenoise_destroy(ReNameNoiseDenoiseState *st) {
 }
 
 #if TRAINING
-int lowpass = FREQ_SIZE;
+int lowpass = RENAMENOISE_FREQ_SIZE;
 int band_lp = NB_BANDS;
 #endif
 
@@ -301,7 +301,7 @@ static void frame_analysis(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, 
   apply_window(x);
   forward_transform(X, x);
 #if TRAINING
-  for (i=lowpass;i<FREQ_SIZE;i++)
+  for (i=lowpass;i<RENAMENOISE_FREQ_SIZE;i++)
     X[i].r = X[i].i = 0;
 #endif
   compute_band_energy(Ex, X);
@@ -423,7 +423,7 @@ void pitch_filter(renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P, const fl
                   const float *Exp, const float *g) {
   int i;
   float r[NB_BANDS];
-  float rf[FREQ_SIZE] = {0};
+  float rf[RENAMENOISE_FREQ_SIZE] = {0};
   for (i=0;i<NB_BANDS;i++) {
 #if 0
     if (Exp[i]>g[i]) r[i] = 1;
@@ -437,19 +437,19 @@ void pitch_filter(renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P, const fl
     r[i] *= sqrt(Ex[i]/(1e-8+Ep[i]));
   }
   interp_band_gain(rf, r);
-  for (i=0;i<FREQ_SIZE;i++) {
+  for (i=0;i<RENAMENOISE_FREQ_SIZE;i++) {
     X[i].r += rf[i]*P[i].r;
     X[i].i += rf[i]*P[i].i;
   }
   float newE[NB_BANDS];
   compute_band_energy(newE, X);
   float norm[NB_BANDS];
-  float normf[FREQ_SIZE]={0};
+  float normf[RENAMENOISE_FREQ_SIZE]={0};
   for (i=0;i<NB_BANDS;i++) {
     norm[i] = sqrt(Ex[i]/(1e-8+newE[i]));
   }
   interp_band_gain(normf, norm);
-  for (i=0;i<FREQ_SIZE;i++) {
+  for (i=0;i<RENAMENOISE_FREQ_SIZE;i++) {
     X[i].r *= normf[i];
     X[i].i *= normf[i];
   }
@@ -457,14 +457,14 @@ void pitch_filter(renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P, const fl
 
 float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const float *in) {
   int i;
-  renamenoise_fft_cpx X[FREQ_SIZE];
+  renamenoise_fft_cpx X[RENAMENOISE_FREQ_SIZE];
   renamenoise_fft_cpx P[RENAMENOISE_WINDOW_SIZE];
   float x[RENAMENOISE_FRAME_SIZE];
   float Ex[NB_BANDS], Ep[NB_BANDS];
   float Exp[NB_BANDS];
   float features[NB_FEATURES];
   float g[NB_BANDS];
-  float gf[FREQ_SIZE]={1};
+  float gf[RENAMENOISE_FREQ_SIZE]={1};
   float vad_prob = 0;
   int silence;
   static const float a_hp[2] = {-1.99599, 0.99600};
@@ -482,7 +482,7 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
     }
     interp_band_gain(gf, g);
 #if 1
-    for (i=0;i<FREQ_SIZE;i++) {
+    for (i=0;i<RENAMENOISE_FREQ_SIZE;i++) {
       X[i].r *= gf[i];
       X[i].i *= gf[i];
     }
@@ -545,7 +545,7 @@ int main(int argc, char **argv) {
     fread(tmp, sizeof(short), RENAMENOISE_FRAME_SIZE, f2);
   }
   while (1) {
-    renamenoise_fft_cpx X[FREQ_SIZE], Y[FREQ_SIZE], N[FREQ_SIZE], P[RENAMENOISE_WINDOW_SIZE];
+    renamenoise_fft_cpx X[RENAMENOISE_FREQ_SIZE], Y[RENAMENOISE_FREQ_SIZE], N[RENAMENOISE_FREQ_SIZE], P[RENAMENOISE_WINDOW_SIZE];
     float Ex[NB_BANDS], Ey[NB_BANDS], En[NB_BANDS], Ep[NB_BANDS];
     float Exp[NB_BANDS];
     float Ln[NB_BANDS];
@@ -565,7 +565,7 @@ int main(int argc, char **argv) {
       gain_change_count = 0;
       rand_resp(a_noise, b_noise);
       rand_resp(a_sig, b_sig);
-      lowpass = FREQ_SIZE * 3000./24000. * pow(50., rand()/(double)RAND_MAX);
+      lowpass = RENAMENOISE_FREQ_SIZE * 3000./24000. * pow(50., rand()/(double)RAND_MAX);
       for (i=0;i<NB_BANDS;i++) {
         if (eband5ms[i]<<RENAMENOISE_FRAME_SIZE_SHIFT > lowpass) {
           band_lp = i;
