@@ -209,7 +209,7 @@ static void renamenoise_idct(float *out, const float *in) {
 }
 #endif
 
-static void forward_transform(renamenoise_fft_cpx *out, const float *in) {
+static void renamenoise_forward_transform(renamenoise_fft_cpx *out, const float *in) {
   int i;
   renamenoise_fft_cpx x[RENAMENOISE_WINDOW_SIZE];
   renamenoise_fft_cpx y[RENAMENOISE_WINDOW_SIZE];
@@ -299,7 +299,7 @@ static void frame_analysis(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, 
   for (i=0;i<RENAMENOISE_FRAME_SIZE;i++) x[RENAMENOISE_FRAME_SIZE + i] = in[i];
   RENAMENOISE_COPY(st->analysis_mem, in, RENAMENOISE_FRAME_SIZE);
   apply_window(x);
-  forward_transform(X, x);
+  renamenoise_forward_transform(X, x);
 #if RENAMENOISE_TRAINING
   for (i=lowpass;i<RENAMENOISE_FREQ_SIZE;i++)
     X[i].r = X[i].i = 0;
@@ -337,7 +337,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   for (i=0;i<RENAMENOISE_WINDOW_SIZE;i++)
     p[i] = st->pitch_buf[RENAMENOISE_PITCH_BUF_SIZE-RENAMENOISE_WINDOW_SIZE-pitch_index+i];
   apply_window(p);
-  forward_transform(P, p);
+  renamenoise_forward_transform(P, p);
   renamenoise_compute_band_energy(Ep, P);
   renamenoise_compute_band_corr(Exp, X, P);
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) Exp[i] = Exp[i]/sqrt(.001+Ex[i]*Ep[i]);
