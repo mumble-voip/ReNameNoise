@@ -61,8 +61,8 @@
 #define RENAMENOISE_NB_FEATURES (RENAMENOISE_NB_BANDS+3*RENAMENOISE_NB_DELTA_CEPS+2)
 
 
-#ifndef TRAINING
-#define TRAINING 0
+#ifndef RENAMENOISE_TRAINING
+#define RENAMENOISE_TRAINING 0
 #endif
 
 
@@ -287,7 +287,7 @@ void renamenoise_destroy(ReNameNoiseDenoiseState *st) {
   free(st);
 }
 
-#if TRAINING
+#if RENAMENOISE_TRAINING
 int lowpass = RENAMENOISE_FREQ_SIZE;
 int band_lp = RENAMENOISE_NB_BANDS;
 #endif
@@ -300,7 +300,7 @@ static void frame_analysis(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, 
   RENAMENOISE_COPY(st->analysis_mem, in, RENAMENOISE_FRAME_SIZE);
   apply_window(x);
   forward_transform(X, x);
-#if TRAINING
+#if RENAMENOISE_TRAINING
   for (i=lowpass;i<RENAMENOISE_FREQ_SIZE;i++)
     X[i].r = X[i].i = 0;
 #endif
@@ -355,7 +355,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
     follow = RENAMENOISE_MAX16(follow-1.5, Ly[i]);
     E += Ex[i];
   }
-  if (!TRAINING && E < 0.04) {
+  if (!RENAMENOISE_TRAINING && E < 0.04) {
     /* If there's no audio, avoid messing up the state. */
     RENAMENOISE_CLEAR(features, RENAMENOISE_NB_FEATURES);
     return 1;
@@ -395,7 +395,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
     spec_variability += mindist;
   }
   features[RENAMENOISE_NB_BANDS+3*RENAMENOISE_NB_DELTA_CEPS+1] = spec_variability/RENAMENOISE_CEPS_MEM-2.1;
-  return TRAINING && E < 0.1;
+  return RENAMENOISE_TRAINING && E < 0.1;
 }
 
 static void frame_synthesis(ReNameNoiseDenoiseState *st, float *out, const renamenoise_fft_cpx *y) {
@@ -493,7 +493,7 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
   return vad_prob;
 }
 
-#if TRAINING
+#if RENAMENOISE_TRAINING
 
 static float uni_rand() {
   return rand()/(double)RAND_MAX-.5;
