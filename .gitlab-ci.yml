@@ -46,3 +46,19 @@ test_build:
     - "SYMBOL_REGEX='^_?renamenoise.*$'"
     - "while IFS= read -r line; do if [[ \"$line\" =~ $SYMBOL_REGEX ]]; then echo \"passed '$line'\"; else echo \"failed '$line'\"; FAILED=\"$FAILED,$line\"; fi; done <<< \"$EXPORTED_SYMBOLS\""
     - "if [[ -n \"$FAILED\" ]]; then echo \"$FAILED\"; exit 1; fi;"
+
+test_build_no_vla:
+  image: ubuntu:latest
+  stage: build
+  before_script:
+    - apt-get -y update
+    - apt-get -y install build-essential autoconf libtool
+  script:
+    - echo "Build renamenoise"
+    - export CFLAGS="-DRENAMENOISE_NO_VLA=1 -Werror=vla"
+    - ./autogen.sh
+    - ./configure
+    - make
+    - echo "Apply noise suppression to test sample"
+    - ./examples/renamenoise_demo ./sample/babble_15dB.pcm ./sample/renamenoise_babble_15dB.pcm
+    - sha1sum -c --strict ./sample/CHECKSUMS
