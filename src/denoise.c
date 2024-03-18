@@ -47,9 +47,9 @@
 #define RENAMENOISE_FREQ_SIZE (RENAMENOISE_FRAME_SIZE + 1)
 
 #define RENAMENOISE_PITCH_MIN_PERIOD 60
-#define PITCH_MAX_PERIOD 768
+#define RENAMENOISE_PITCH_MAX_PERIOD 768
 #define PITCH_FRAME_SIZE 960
-#define PITCH_BUF_SIZE (PITCH_MAX_PERIOD+PITCH_FRAME_SIZE)
+#define PITCH_BUF_SIZE (RENAMENOISE_PITCH_MAX_PERIOD+PITCH_FRAME_SIZE)
 
 #define SQUARE(x) ((x)*(x))
 
@@ -326,11 +326,11 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   RENAMENOISE_COPY(&st->pitch_buf[PITCH_BUF_SIZE-RENAMENOISE_FRAME_SIZE], in, RENAMENOISE_FRAME_SIZE);
   pre[0] = &st->pitch_buf[0];
   renamenoise_pitch_downsample(pre, pitch_buf, PITCH_BUF_SIZE, 1);
-  renamenoise_pitch_search(pitch_buf+(PITCH_MAX_PERIOD>>1), pitch_buf, PITCH_FRAME_SIZE,
-               PITCH_MAX_PERIOD-3*RENAMENOISE_PITCH_MIN_PERIOD, &pitch_index);
-  pitch_index = PITCH_MAX_PERIOD-pitch_index;
+  renamenoise_pitch_search(pitch_buf+(RENAMENOISE_PITCH_MAX_PERIOD>>1), pitch_buf, PITCH_FRAME_SIZE,
+               RENAMENOISE_PITCH_MAX_PERIOD-3*RENAMENOISE_PITCH_MIN_PERIOD, &pitch_index);
+  pitch_index = RENAMENOISE_PITCH_MAX_PERIOD-pitch_index;
 
-  gain = renamenoise_remove_doubling(pitch_buf, PITCH_MAX_PERIOD, RENAMENOISE_PITCH_MIN_PERIOD,
+  gain = renamenoise_remove_doubling(pitch_buf, RENAMENOISE_PITCH_MAX_PERIOD, RENAMENOISE_PITCH_MIN_PERIOD,
           PITCH_FRAME_SIZE, &pitch_index, st->last_period, st->last_gain);
   st->last_period = pitch_index;
   st->last_gain = gain;
