@@ -49,7 +49,7 @@
 #define RENAMENOISE_PITCH_MIN_PERIOD 60
 #define RENAMENOISE_PITCH_MAX_PERIOD 768
 #define RENAMENOISE_PITCH_FRAME_SIZE 960
-#define PITCH_BUF_SIZE (RENAMENOISE_PITCH_MAX_PERIOD+RENAMENOISE_PITCH_FRAME_SIZE)
+#define RENAMENOISE_PITCH_BUF_SIZE (RENAMENOISE_PITCH_MAX_PERIOD+RENAMENOISE_PITCH_FRAME_SIZE)
 
 #define SQUARE(x) ((x)*(x))
 
@@ -88,8 +88,8 @@ struct ReNameNoiseDenoiseState {
   float cepstral_mem[CEPS_MEM][NB_BANDS];
   int memid;
   float synthesis_mem[RENAMENOISE_FRAME_SIZE];
-  float pitch_buf[PITCH_BUF_SIZE];
-  float pitch_enh_buf[PITCH_BUF_SIZE];
+  float pitch_buf[RENAMENOISE_PITCH_BUF_SIZE];
+  float pitch_enh_buf[RENAMENOISE_PITCH_BUF_SIZE];
   float last_gain;
   int last_period;
   float mem_hp_x[2];
@@ -315,17 +315,17 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   float spec_variability = 0;
   float Ly[NB_BANDS];
   float p[RENAMENOISE_WINDOW_SIZE];
-  float pitch_buf[PITCH_BUF_SIZE>>1];
+  float pitch_buf[RENAMENOISE_PITCH_BUF_SIZE>>1];
   int pitch_index;
   float gain;
   float *(pre[1]);
   float tmp[NB_BANDS];
   float follow, logMax;
   frame_analysis(st, X, Ex, in);
-  RENAMENOISE_MOVE(st->pitch_buf, &st->pitch_buf[RENAMENOISE_FRAME_SIZE], PITCH_BUF_SIZE-RENAMENOISE_FRAME_SIZE);
-  RENAMENOISE_COPY(&st->pitch_buf[PITCH_BUF_SIZE-RENAMENOISE_FRAME_SIZE], in, RENAMENOISE_FRAME_SIZE);
+  RENAMENOISE_MOVE(st->pitch_buf, &st->pitch_buf[RENAMENOISE_FRAME_SIZE], RENAMENOISE_PITCH_BUF_SIZE-RENAMENOISE_FRAME_SIZE);
+  RENAMENOISE_COPY(&st->pitch_buf[RENAMENOISE_PITCH_BUF_SIZE-RENAMENOISE_FRAME_SIZE], in, RENAMENOISE_FRAME_SIZE);
   pre[0] = &st->pitch_buf[0];
-  renamenoise_pitch_downsample(pre, pitch_buf, PITCH_BUF_SIZE, 1);
+  renamenoise_pitch_downsample(pre, pitch_buf, RENAMENOISE_PITCH_BUF_SIZE, 1);
   renamenoise_pitch_search(pitch_buf+(RENAMENOISE_PITCH_MAX_PERIOD>>1), pitch_buf, RENAMENOISE_PITCH_FRAME_SIZE,
                RENAMENOISE_PITCH_MAX_PERIOD-3*RENAMENOISE_PITCH_MIN_PERIOD, &pitch_index);
   pitch_index = RENAMENOISE_PITCH_MAX_PERIOD-pitch_index;
@@ -335,7 +335,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   st->last_period = pitch_index;
   st->last_gain = gain;
   for (i=0;i<RENAMENOISE_WINDOW_SIZE;i++)
-    p[i] = st->pitch_buf[PITCH_BUF_SIZE-RENAMENOISE_WINDOW_SIZE-pitch_index+i];
+    p[i] = st->pitch_buf[RENAMENOISE_PITCH_BUF_SIZE-RENAMENOISE_WINDOW_SIZE-pitch_index+i];
   apply_window(p);
   forward_transform(P, p);
   compute_band_energy(Ep, P);
