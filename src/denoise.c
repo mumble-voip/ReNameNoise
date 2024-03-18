@@ -292,7 +292,7 @@ int lowpass = RENAMENOISE_FREQ_SIZE;
 int band_lp = RENAMENOISE_NB_BANDS;
 #endif
 
-static void frame_analysis(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, float *Ex, const float *in) {
+static void renamenoise_frame_analysis(ReNameNoiseDenoiseState *st, renamenoise_fft_cpx *X, float *Ex, const float *in) {
   int i;
   float x[RENAMENOISE_WINDOW_SIZE];
   RENAMENOISE_COPY(x, st->analysis_mem, RENAMENOISE_FRAME_SIZE);
@@ -321,7 +321,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   float *(pre[1]);
   float tmp[RENAMENOISE_NB_BANDS];
   float follow, logMax;
-  frame_analysis(st, X, Ex, in);
+  renamenoise_frame_analysis(st, X, Ex, in);
   RENAMENOISE_MOVE(st->pitch_buf, &st->pitch_buf[RENAMENOISE_FRAME_SIZE], RENAMENOISE_PITCH_BUF_SIZE-RENAMENOISE_FRAME_SIZE);
   RENAMENOISE_COPY(&st->pitch_buf[RENAMENOISE_PITCH_BUF_SIZE-RENAMENOISE_FRAME_SIZE], in, RENAMENOISE_FRAME_SIZE);
   pre[0] = &st->pitch_buf[0];
@@ -616,8 +616,8 @@ int main(int argc, char **argv) {
     else if (vad_cnt > 0) vad = 0.5f;
     else vad = 1.f;
 
-    frame_analysis(st, Y, Ey, x);
-    frame_analysis(noise_state, N, En, n);
+    renamenoise_frame_analysis(st, Y, Ey, x);
+    renamenoise_frame_analysis(noise_state, N, En, n);
     for (i=0;i<RENAMENOISE_NB_BANDS;i++) Ln[i] = log10(1e-2+En[i]);
     int silence = compute_frame_features(noisy, X, P, Ex, Ep, Exp, features, xn);
     pitch_filter(X, P, Ex, Ep, Exp, g);
