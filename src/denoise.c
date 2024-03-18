@@ -122,7 +122,7 @@ void renamenoise_compute_band_energy(float *bandE, const renamenoise_fft_cpx *X)
   }
 }
 
-void compute_band_corr(float *bandE, const renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P) {
+void renamenoise_compute_band_corr(float *bandE, const renamenoise_fft_cpx *X, const renamenoise_fft_cpx *P) {
   int i;
   float sum[RENAMENOISE_NB_BANDS] = {0};
   for (i=0;i<RENAMENOISE_NB_BANDS-1;i++)
@@ -339,7 +339,7 @@ static int compute_frame_features(ReNameNoiseDenoiseState *st, renamenoise_fft_c
   apply_window(p);
   forward_transform(P, p);
   renamenoise_compute_band_energy(Ep, P);
-  compute_band_corr(Exp, X, P);
+  renamenoise_compute_band_corr(Exp, X, P);
   for (i=0;i<RENAMENOISE_NB_BANDS;i++) Exp[i] = Exp[i]/sqrt(.001+Ex[i]*Ep[i]);
   dct(tmp, Exp);
   for (i=0;i<RENAMENOISE_NB_DELTA_CEPS;i++) features[RENAMENOISE_NB_BANDS+2*RENAMENOISE_NB_DELTA_CEPS+i] = tmp[i];
