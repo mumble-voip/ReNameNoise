@@ -146,4 +146,4 @@ static RENAMENOISE_INLINE renamenoise_val32 renamenoise_inner_prod(const renamen
 void renamenoise_pitch_xcorr(const renamenoise_val16 *_x, const renamenoise_val16 *_y,
       renamenoise_val32 *xcorr, int len, int max_pitch);
 
-#endif
+#endif /* PITCH_H */

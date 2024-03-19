@@ -1,5 +1,3 @@
-
-
 #ifndef COMMON_H
 #define COMMON_H
 
@@ -42,6 +40,4 @@ static RENAMENOISE_INLINE void renamenoise_free (void *ptr)
 #define RENAMENOISE_CLEAR(dst, n) (memset((dst), 0, (n)*sizeof(*(dst))))
 #endif
 
-
-
-#endif
+#endif /* COMMON_H */

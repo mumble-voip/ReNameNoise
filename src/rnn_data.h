@@ -30,5 +30,4 @@ struct ReNameNoiseRNNState {
   float *denoise_gru_state;
 };
 
-
-#endif
+#endif /* RNN_DATA_H */

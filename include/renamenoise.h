@@ -26,7 +26,7 @@
 */
 
 #ifndef RENAMENOISE_H
-#define RENAMENOISE_H 1
+#define RENAMENOISE_H
 
 #include <stdio.h>
 
@@ -111,4 +111,4 @@ RENAMENOISE_EXPORT void renamenoise_model_free(ReNameNoiseModel *model);
 }
 #endif
 
-#endif
+#endif /* RENAMENOISE_H */
