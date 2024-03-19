@@ -1,5 +1,9 @@
-/* Copyright (c) 2018 Gregor Richards */
 /*
+   Copyright (c) 2024, The Mumble Developers
+   Copyright (c) 2018, Gregor Richards
+
+   All rights reserved.
+
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions
    are met:
