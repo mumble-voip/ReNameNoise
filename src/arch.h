@@ -48,6 +48,10 @@
 
 #define RENAMENOISE_SIG_SCALE 32768.f
 
+#ifndef M_PI
+  #define M_PI (3.14159265358979323846)
+#endif
+
 #define renamenoise_fatal(str) _renamenoise_fatal(str, __FILE__, __LINE__);
 #ifdef ENABLE_ASSERTIONS
 #include <stdio.h>
