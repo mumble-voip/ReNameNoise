@@ -31,13 +31,18 @@
 #ifndef RENAMENOISE_FFT_GUTS_H
 #define RENAMENOISE_FFT_GUTS_H
 
-#define RENAMENOISE_MIN(a,b) ((a)<(b) ? (a):(b))
-#define RENAMENOISE_MAX(a,b) ((a)>(b) ? (a):(b))
+#define RENAMENOISE_MIN(a, b) ((a) < (b) ? (a) : (b))
+#define RENAMENOISE_MAX(a, b) ((a) > (b) ? (a) : (b))
 
-/* renamenoise_fft.h
-   defines renamenoise_fft_scalar as either short or a float type
-   and defines
-   typedef struct { renamenoise_fft_scalar r; renamenoise_fft_scalar i; }renamenoise_fft_cpx; */
+/**
+  renamenoise_fft.h
+  Defines renamenoise_fft_scalar as either short or a float type
+  and defines
+  typedef struct {
+	renamenoise_fft_scalar r;
+	renamenoise_fft_scalar i;
+  } renamenoise_fft_cpx;
+**/
 #include "renamenoise_fft.h"
 
 /*
@@ -48,69 +53,84 @@
    C_SUB( res, a,b)     : res = a - b
    C_SUBFROM( res , a)  : res -= a
    C_ADDTO( res , a)    : res += a
- * */
+ */
 
-#   define RENAMENOISE_S_MUL(a,b) ( (a)*(b) )
-#define RENAMENOISE_C_MUL(m,a,b) \
-    do{ (m).r = (a).r*(b).r - (a).i*(b).i;\
-        (m).i = (a).r*(b).i + (a).i*(b).r; }while(0)
-#define RENAMENOISE_C_MULC(m,a,b) \
-    do{ (m).r = (a).r*(b).r + (a).i*(b).i;\
-        (m).i = (a).i*(b).r - (a).r*(b).i; }while(0)
+#define RENAMENOISE_S_MUL(a, b) ((a) * (b))
 
-#define RENAMENOISE_C_MUL4(m,a,b) RENAMENOISE_C_MUL(m,a,b)
+#define RENAMENOISE_C_MUL(m, a, b)             \
+	do {                                       \
+		(m).r = (a).r * (b).r - (a).i * (b).i; \
+		(m).i = (a).r * (b).i + (a).i * (b).r; \
+	} while (0)
 
-#   define RENAMENOISE_C_FIXDIV(c,div) /* NOOP */
-#   define RENAMENOISE_C_MULBYSCALAR( c, s ) \
-    do{ (c).r *= (s);\
-        (c).i *= (s); }while(0)
+#define RENAMENOISE_C_MULC(m, a, b)            \
+	do {                                       \
+		(m).r = (a).r * (b).r + (a).i * (b).i; \
+		(m).i = (a).i * (b).r - (a).r * (b).i; \
+	} while (0)
+
+#define RENAMENOISE_C_MUL4(m, a, b) RENAMENOISE_C_MUL(m, a, b)
+
+#define RENAMENOISE_C_FIXDIV(c, div) /* NOOP */
+
+#define RENAMENOISE_C_MULBYSCALAR(c, s) \
+	do {                                \
+		(c).r *= (s);                   \
+		(c).i *= (s);                   \
+	} while (0)
 
 #ifndef RENAMENOISE_CHECK_OVERFLOW_OP
-#  define RENAMENOISE_CHECK_OVERFLOW_OP(a,op,b) /* noop */
+#	define RENAMENOISE_CHECK_OVERFLOW_OP(a, op, b) /* NOOP */
 #endif
 
 #ifndef RENAMENOISE_C_ADD
-#define  RENAMENOISE_C_ADD( res, a,b)\
-    do { \
-            RENAMENOISE_CHECK_OVERFLOW_OP((a).r,+,(b).r)\
-            RENAMENOISE_CHECK_OVERFLOW_OP((a).i,+,(b).i)\
-            (res).r=(a).r+(b).r;  (res).i=(a).i+(b).i; \
-    }while(0)
-#define  RENAMENOISE_C_SUB( res, a,b)\
-    do { \
-            RENAMENOISE_CHECK_OVERFLOW_OP((a).r,-,(b).r)\
-            RENAMENOISE_CHECK_OVERFLOW_OP((a).i,-,(b).i)\
-            (res).r=(a).r-(b).r;  (res).i=(a).i-(b).i; \
-    }while(0)
-#define RENAMENOISE_C_ADDTO( res , a)\
-    do { \
-            RENAMENOISE_CHECK_OVERFLOW_OP((res).r,+,(a).r)\
-            RENAMENOISE_CHECK_OVERFLOW_OP((res).i,+,(a).i)\
-            (res).r += (a).r;  (res).i += (a).i;\
-    }while(0)
+#	define RENAMENOISE_C_ADD(res, a, b)                   \
+		do {                                               \
+			RENAMENOISE_CHECK_OVERFLOW_OP((a).r, +, (b).r) \
+			RENAMENOISE_CHECK_OVERFLOW_OP((a).i, +, (b).i) \
+			(res).r = (a).r + (b).r;                       \
+			(res).i = (a).i + (b).i;                       \
+		} while (0)
 
-#define RENAMENOISE_C_SUBFROM( res , a)\
-    do {\
-            RENAMENOISE_CHECK_OVERFLOW_OP((res).r,-,(a).r)\
-            RENAMENOISE_CHECK_OVERFLOW_OP((res).i,-,(a).i)\
-            (res).r -= (a).r;  (res).i -= (a).i; \
-    }while(0)
-#endif /* RENAMENOISE_C_ADD defined */
+#	define RENAMENOISE_C_SUB(res, a, b)                   \
+		do {                                               \
+			RENAMENOISE_CHECK_OVERFLOW_OP((a).r, -, (b).r) \
+			RENAMENOISE_CHECK_OVERFLOW_OP((a).i, -, (b).i) \
+			(res).r = (a).r - (b).r;                       \
+			(res).i = (a).i - (b).i;                       \
+		} while (0)
+
+#	define RENAMENOISE_C_ADDTO(res, a)                      \
+		do {                                                 \
+			RENAMENOISE_CHECK_OVERFLOW_OP((res).r, +, (a).r) \
+			RENAMENOISE_CHECK_OVERFLOW_OP((res).i, +, (a).i) \
+			(res).r += (a).r;                                \
+			(res).i += (a).i;                                \
+		} while (0)
+
+#	define RENAMENOISE_C_SUBFROM(res, a)                    \
+		do {                                                 \
+			RENAMENOISE_CHECK_OVERFLOW_OP((res).r, -, (a).r) \
+			RENAMENOISE_CHECK_OVERFLOW_OP((res).i, -, (a).i) \
+			(res).r -= (a).r;                                \
+			(res).i -= (a).i;                                \
+		} while (0)
+#endif /* !RENAMENOISE_C_ADD defined */
 
 #ifdef USE_SIMD
-#  define RENAMENOISE_FFT_COS(phase) _mm_set1_ps( cos(phase) )
-#  define RENAMENOISE_FFT_SIN(phase) _mm_set1_ps( sin(phase) )
-#  define RENAMENOISE_HALF_OF(x) ((x)*_mm_set1_ps(.5f))
+#	define RENAMENOISE_FFT_COS(phase) _mm_set1_ps(cos(phase))
+#	define RENAMENOISE_FFT_SIN(phase) _mm_set1_ps(sin(phase))
+#	define RENAMENOISE_HALF_OF(x) ((x) *_mm_set1_ps(.5f))
 #else
-#  define RENAMENOISE_FFT_COS(phase) (renamenoise_fft_scalar) cos(phase)
-#  define RENAMENOISE_FFT_SIN(phase) (renamenoise_fft_scalar) sin(phase)
-#  define RENAMENOISE_HALF_OF(x) ((x)*.5f)
+#	define RENAMENOISE_FFT_COS(phase) (renamenoise_fft_scalar) cos(phase)
+#	define RENAMENOISE_FFT_SIN(phase) (renamenoise_fft_scalar) sin(phase)
+#	define RENAMENOISE_HALF_OF(x) ((x) *.5f)
 #endif
 
-#define  renamenoise_kf_cexp(x,phase) \
-        do{ \
-                (x)->r = RENAMENOISE_FFT_COS(phase);\
-                (x)->i = RENAMENOISE_FFT_SIN(phase);\
-        }while(0)
+#define renamenoise_kf_cexp(x, phase)        \
+	do {                                     \
+		(x)->r = RENAMENOISE_FFT_COS(phase); \
+		(x)->i = RENAMENOISE_FFT_SIN(phase); \
+	} while (0)
 
 #endif /* RENAMENOISE_FFT_GUTS_H */

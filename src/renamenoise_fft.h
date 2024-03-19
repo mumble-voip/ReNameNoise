@@ -34,10 +34,9 @@
 #ifndef RENAMENOISE_FFT_H
 #define RENAMENOISE_FFT_H
 
-#include <stdlib.h>
-#include <math.h>
 #include "arch.h"
 
+#include <math.h>
 #include <stdlib.h>
 #define renamenoise_alloc2(x) malloc(x)
 #define renamenoise_free2(x) free(x)
@@ -47,64 +46,65 @@ extern "C" {
 #endif
 
 #ifdef USE_SIMD
-# include <xmmintrin.h>
-# define renamenoise_fft_scalar __m128
-#define RENAMENOISE_FFT_MALLOC(nbytes) memalign(16,nbytes)
+#	include <xmmintrin.h>
+#	define renamenoise_fft_scalar __m128
+#	define RENAMENOISE_FFT_MALLOC(nbytes) memalign(16, nbytes)
 #else
-#define RENAMENOISE_FFT_MALLOC renamenoise_alloc2
+#	define RENAMENOISE_FFT_MALLOC renamenoise_alloc2
 #endif
 
 #ifndef renamenoise_fft_scalar
-/*  default is float */
-#  define renamenoise_fft_scalar float
-#  define renamenoise_twiddle_scalar float
+//  default is float
+#	define renamenoise_fft_scalar float
+#	define renamenoise_twiddle_scalar float
 #endif
 
 typedef struct {
-    renamenoise_fft_scalar r;
-    renamenoise_fft_scalar i;
-}renamenoise_fft_cpx;
+	renamenoise_fft_scalar r;
+	renamenoise_fft_scalar i;
+} renamenoise_fft_cpx;
 
 typedef struct {
-   renamenoise_twiddle_scalar r;
-   renamenoise_twiddle_scalar i;
-}renamenoise_twiddle_cpx;
+	renamenoise_twiddle_scalar r;
+	renamenoise_twiddle_scalar i;
+} renamenoise_twiddle_cpx;
 
 #define RENAMENOISE_MAXFACTORS 8
-/* e.g. an fft of length 128 has 4 factors
- as far as renamenoisefft is concerned
- 4*4*4*2
- */
+// e.g. an fft of length 128 has 4 factors
+// as far as renamenoisefft is concerned
+// 4*4*4*2
 
-typedef struct renamenoise_arch_fft_state{
-   int is_supported;
-   void *priv;
+typedef struct renamenoise_arch_fft_state {
+	int is_supported;
+	void *priv;
 } renamenoise_arch_fft_state;
 
-typedef struct renamenoise_fft_state{
-    int nfft;
-    renamenoise_val16 scale;
-    int shift;
-    renamenoise_int16 factors[2*RENAMENOISE_MAXFACTORS];
-    const renamenoise_int16 *bitrev;
-    const renamenoise_twiddle_cpx *twiddles;
-    renamenoise_arch_fft_state *arch_fft;
+typedef struct renamenoise_fft_state {
+	int nfft;
+	renamenoise_val16 scale;
+	int shift;
+	renamenoise_int16 factors[2 * RENAMENOISE_MAXFACTORS];
+	const renamenoise_int16 *bitrev;
+	const renamenoise_twiddle_cpx *twiddles;
+	renamenoise_arch_fft_state *arch_fft;
 } renamenoise_fft_state;
 
-/*typedef struct renamenoise_fft_state* renamenoise_fft_cfg;*/
+// typedef struct renamenoise_fft_state* renamenoise_fft_cfg;
 
 /**
  *  renamenoise_fft_alloc
  *
  *  Initialize a FFT (or IFFT) algorithm's cfg/state buffer.
  *
- *  typical usage:      renamenoise_fft_cfg mycfg=renamenoise_fft_alloc(1024,0,NULL,NULL);
+ *  typical usage:      renamenoise_fft_cfg
+ * mycfg=renamenoise_fft_alloc(1024,0,NULL,NULL);
  *
  *  The return value from fft_alloc is a cfg buffer used internally
  *  by the fft routine or NULL.
  *
- *  If lenmem is NULL, then renamenoise_fft_alloc will allocate a cfg buffer using malloc.
- *  The returned value should be free()d when done to avoid memory leaks.
+ *  If lenmem is NULL, then renamenoise_fft_alloc will allocate a cfg buffer
+ * using malloc. The returned value should be free()d when done to avoid memory
+ * leaks.
  *
  *  The state can be placed in a user supplied buffer 'mem':
  *  If lenmem is not NULL and mem is not NULL and *lenmem is large enough,
@@ -114,11 +114,11 @@ typedef struct renamenoise_fft_state{
  *  If lenmem is not NULL and ( mem is NULL or *lenmem is not large enough),
  *      then the function returns NULL and places the minimum cfg
  *      buffer size in *lenmem.
- * */
+ */
 
-renamenoise_fft_state *renamenoise_fft_alloc_twiddles(int nfft,void * mem,size_t * lenmem, const renamenoise_fft_state *base, int arch);
+renamenoise_fft_state *renamenoise_fft_alloc_twiddles(int nfft, void *mem, size_t *lenmem, const renamenoise_fft_state *base, int arch);
 
-renamenoise_fft_state *renamenoise_fft_alloc(int nfft,void * mem,size_t * lenmem, int arch);
+renamenoise_fft_state *renamenoise_fft_alloc(int nfft, void *mem, size_t *lenmem, int arch);
 
 /**
  * renamenoise_fft(cfg,in_out_buf)
@@ -128,33 +128,28 @@ renamenoise_fft_state *renamenoise_fft_alloc(int nfft,void * mem,size_t * lenmem
  * fin should be  f[0] , f[1] , ... ,f[nfft-1]
  * fout will be   F[0] , F[1] , ... ,F[nfft-1]
  * Note that each element is complex and can be accessed like
-    f[k].r and f[k].i
- * */
-void renamenoise_fft_c(const renamenoise_fft_state *cfg,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout);
-void renamenoise_ifft_c(const renamenoise_fft_state *cfg,const renamenoise_fft_cpx *fin,renamenoise_fft_cpx *fout);
+ * f[k].r and f[k].i
+ */
+void renamenoise_fft_c(const renamenoise_fft_state *cfg, const renamenoise_fft_cpx *fin, renamenoise_fft_cpx *fout);
+void renamenoise_ifft_c(const renamenoise_fft_state *cfg, const renamenoise_fft_cpx *fin, renamenoise_fft_cpx *fout);
 
-void renamenoise_fft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *fout);
-void renamenoise_ifft_impl(const renamenoise_fft_state *st,renamenoise_fft_cpx *fout);
+void renamenoise_fft_impl(const renamenoise_fft_state *st, renamenoise_fft_cpx *fout);
+void renamenoise_ifft_impl(const renamenoise_fft_state *st, renamenoise_fft_cpx *fout);
 
 void renamenoise_fft_free(const renamenoise_fft_state *cfg, int arch);
-
 
 void renamenoise_fft_free_arch_c(renamenoise_fft_state *st);
 int renamenoise_fft_alloc_arch_c(renamenoise_fft_state *st);
 
 #if !defined(OVERRIDE_RENAMENOISE_FFT)
 
-#define renamenoise_fft_alloc_arch(_st, arch) \
-         ((void)(arch), renamenoise_fft_alloc_arch_c(_st))
+#	define renamenoise_fft_alloc_arch(_st, arch) ((void) (arch), renamenoise_fft_alloc_arch_c(_st))
 
-#define renamenoise_fft_free_arch(_st, arch) \
-         ((void)(arch), renamenoise_fft_free_arch_c(_st))
+#	define renamenoise_fft_free_arch(_st, arch) ((void) (arch), renamenoise_fft_free_arch_c(_st))
 
-#define renamenoise_fft(_cfg, _fin, _fout, arch) \
-         ((void)(arch), renamenoise_fft_c(_cfg, _fin, _fout))
+#	define renamenoise_fft(_cfg, _fin, _fout, arch) ((void) (arch), renamenoise_fft_c(_cfg, _fin, _fout))
 
-#define renamenoise_ifft(_cfg, _fin, _fout, arch) \
-         ((void)(arch), renamenoise_ifft_c(_cfg, _fin, _fout))
+#	define renamenoise_ifft(_cfg, _fin, _fout, arch) ((void) (arch), renamenoise_ifft_c(_cfg, _fin, _fout))
 
 #endif /* end if !defined(OVERRIDE_RENAMENOISE_FFT) */
 

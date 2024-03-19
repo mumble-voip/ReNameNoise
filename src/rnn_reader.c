@@ -29,144 +29,151 @@
 */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#	include "config.h"
 #endif
+
+#include "renamenoise.h"
+#include "rnn.h"
+#include "rnn_data.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 
-#include "rnn.h"
-#include "rnn_data.h"
-#include "renamenoise.h"
+// Although these values are the same as in rnn.h, we make them separate to
+// avoid accidentally burning internal values into a file format
+#define F_RENAMENOISE_ACTIVATION_TANH 0
+#define F_RENAMENOISE_ACTIVATION_SIGMOID 1
+#define F_RENAMENOISE_ACTIVATION_RELU 2
 
-/* Although these values are the same as in rnn.h, we make them separate to
- * avoid accidentally burning internal values into a file format */
-#define F_RENAMENOISE_ACTIVATION_TANH       0
-#define F_RENAMENOISE_ACTIVATION_SIGMOID    1
-#define F_RENAMENOISE_ACTIVATION_RELU       2
+ReNameNoiseModel *renamenoise_model_from_file(FILE *f) {
+	int i, in;
 
-ReNameNoiseModel *renamenoise_model_from_file(FILE *f)
-{
-    int i, in;
+	if (fscanf(f, "renamenoise-nu model file version %d\n", &in) != 1 || in != 1) {
+		return NULL;
+	}
 
-    if (fscanf(f, "renamenoise-nu model file version %d\n", &in) != 1 || in != 1)
-        return NULL;
-
-    ReNameNoiseModel *ret = calloc(1, sizeof(ReNameNoiseModel));
-    if (!ret)
-        return NULL;
+	ReNameNoiseModel *ret = calloc(1, sizeof(ReNameNoiseModel));
+	if (!ret) {
+		return NULL;
+	}
 
 #define RENAMENOISE_ALLOC_LAYER(type, name) \
-    type *name; \
-    name = calloc(1, sizeof(type)); \
-    if (!name) { \
-        renamenoise_model_free(ret); \
-        return NULL; \
-    } \
-    ret->name = name
+	type *name;                             \
+	name = calloc(1, sizeof(type));         \
+	if (!name) {                            \
+		renamenoise_model_free(ret);        \
+		return NULL;                        \
+	}                                       \
+	ret->name = name
 
-    RENAMENOISE_ALLOC_LAYER(ReNameNoiseDenseLayer, input_dense);
-    RENAMENOISE_ALLOC_LAYER(ReNameNoiseGRULayer, vad_gru);
-    RENAMENOISE_ALLOC_LAYER(ReNameNoiseGRULayer, noise_gru);
-    RENAMENOISE_ALLOC_LAYER(ReNameNoiseGRULayer, denoise_gru);
-    RENAMENOISE_ALLOC_LAYER(ReNameNoiseDenseLayer, denoise_output);
-    RENAMENOISE_ALLOC_LAYER(ReNameNoiseDenseLayer, vad_output);
+	RENAMENOISE_ALLOC_LAYER(ReNameNoiseDenseLayer, input_dense);
+	RENAMENOISE_ALLOC_LAYER(ReNameNoiseGRULayer, vad_gru);
+	RENAMENOISE_ALLOC_LAYER(ReNameNoiseGRULayer, noise_gru);
+	RENAMENOISE_ALLOC_LAYER(ReNameNoiseGRULayer, denoise_gru);
+	RENAMENOISE_ALLOC_LAYER(ReNameNoiseDenseLayer, denoise_output);
+	RENAMENOISE_ALLOC_LAYER(ReNameNoiseDenseLayer, vad_output);
 
-#define RENAMENOISE_INPUT_VAL(name) do { \
-    if (fscanf(f, "%d", &in) != 1 || in < 0 || in > 128) { \
-        renamenoise_model_free(ret); \
-        return NULL; \
-    } \
-    name = in; \
-    } while (0)
+#define RENAMENOISE_INPUT_VAL(name)                            \
+	do {                                                       \
+		if (fscanf(f, "%d", &in) != 1 || in < 0 || in > 128) { \
+			renamenoise_model_free(ret);                       \
+			return NULL;                                       \
+		}                                                      \
+		name = in;                                             \
+	} while (0)
 
-#define RENAMENOISE_INPUT_ACTIVATION(name) do { \
-    int activation; \
-    RENAMENOISE_INPUT_VAL(activation); \
-    switch (activation) { \
-        case F_RENAMENOISE_ACTIVATION_SIGMOID: \
-            name = RENAMENOISE_ACTIVATION_SIGMOID; \
-            break; \
-        case F_RENAMENOISE_ACTIVATION_RELU: \
-            name = RENAMENOISE_ACTIVATION_RELU; \
-            break; \
-        default: \
-            name = RENAMENOISE_ACTIVATION_TANH; \
-    } \
-    } while (0)
+#define RENAMENOISE_INPUT_ACTIVATION(name)                                                       \
+	do {                                                                                         \
+		int activation;                                                                          \
+		RENAMENOISE_INPUT_VAL(activation);                                                       \
+		switch (activation) {                                                                    \
+			case F_RENAMENOISE_ACTIVATION_SIGMOID: name = RENAMENOISE_ACTIVATION_SIGMOID; break; \
+			case F_RENAMENOISE_ACTIVATION_RELU: name = RENAMENOISE_ACTIVATION_RELU; break;       \
+			default: name = RENAMENOISE_ACTIVATION_TANH;                                         \
+		}                                                                                        \
+	} while (0)
 
-#define RENAMENOISE_INPUT_ARRAY(name, len) do { \
-    renamenoise_rnn_weight *values = malloc((len) * sizeof(renamenoise_rnn_weight)); \
-    if (!values) { \
-        renamenoise_model_free(ret); \
-        return NULL; \
-    } \
-    name = values; \
-    for (i = 0; i < (len); i++) { \
-        if (fscanf(f, "%d", &in) != 1) { \
-            renamenoise_model_free(ret); \
-            return NULL; \
-        } \
-        values[i] = in; \
-    } \
-    } while (0)
+#define RENAMENOISE_INPUT_ARRAY(name, len)                                               \
+	do {                                                                                 \
+		renamenoise_rnn_weight *values = malloc((len) * sizeof(renamenoise_rnn_weight)); \
+		if (!values) {                                                                   \
+			renamenoise_model_free(ret);                                                 \
+			return NULL;                                                                 \
+		}                                                                                \
+		name = values;                                                                   \
+		for (i = 0; i < (len); i++) {                                                    \
+			if (fscanf(f, "%d", &in) != 1) {                                             \
+				renamenoise_model_free(ret);                                             \
+				return NULL;                                                             \
+			}                                                                            \
+			values[i] = in;                                                              \
+		}                                                                                \
+	} while (0)
 
-#define RENAMENOISE_INPUT_DENSE(name) do { \
-    RENAMENOISE_INPUT_VAL(name->nb_inputs); \
-    RENAMENOISE_INPUT_VAL(name->nb_neurons); \
-    ret->name ## _size = name->nb_neurons; \
-    RENAMENOISE_INPUT_ACTIVATION(name->activation); \
-    RENAMENOISE_INPUT_ARRAY(name->input_weights, name->nb_inputs * name->nb_neurons); \
-    RENAMENOISE_INPUT_ARRAY(name->bias, name->nb_neurons); \
-    } while (0)
+#define RENAMENOISE_INPUT_DENSE(name)                                                     \
+	do {                                                                                  \
+		RENAMENOISE_INPUT_VAL(name->nb_inputs);                                           \
+		RENAMENOISE_INPUT_VAL(name->nb_neurons);                                          \
+		ret->name##_size = name->nb_neurons;                                              \
+		RENAMENOISE_INPUT_ACTIVATION(name->activation);                                   \
+		RENAMENOISE_INPUT_ARRAY(name->input_weights, name->nb_inputs * name->nb_neurons); \
+		RENAMENOISE_INPUT_ARRAY(name->bias, name->nb_neurons);                            \
+	} while (0)
 
-#define RENAMENOISE_INPUT_GRU(name) do { \
-    RENAMENOISE_INPUT_VAL(name->nb_inputs); \
-    RENAMENOISE_INPUT_VAL(name->nb_neurons); \
-    ret->name ## _size = name->nb_neurons; \
-    RENAMENOISE_INPUT_ACTIVATION(name->activation); \
-    RENAMENOISE_INPUT_ARRAY(name->input_weights, name->nb_inputs * name->nb_neurons * 3); \
-    RENAMENOISE_INPUT_ARRAY(name->recurrent_weights, name->nb_neurons * name->nb_neurons * 3); \
-    RENAMENOISE_INPUT_ARRAY(name->bias, name->nb_neurons * 3); \
-    } while (0)
+#define RENAMENOISE_INPUT_GRU(name)                                                                \
+	do {                                                                                           \
+		RENAMENOISE_INPUT_VAL(name->nb_inputs);                                                    \
+		RENAMENOISE_INPUT_VAL(name->nb_neurons);                                                   \
+		ret->name##_size = name->nb_neurons;                                                       \
+		RENAMENOISE_INPUT_ACTIVATION(name->activation);                                            \
+		RENAMENOISE_INPUT_ARRAY(name->input_weights, name->nb_inputs * name->nb_neurons * 3);      \
+		RENAMENOISE_INPUT_ARRAY(name->recurrent_weights, name->nb_neurons * name->nb_neurons * 3); \
+		RENAMENOISE_INPUT_ARRAY(name->bias, name->nb_neurons * 3);                                 \
+	} while (0)
 
-    RENAMENOISE_INPUT_DENSE(input_dense);
-    RENAMENOISE_INPUT_GRU(vad_gru);
-    RENAMENOISE_INPUT_GRU(noise_gru);
-    RENAMENOISE_INPUT_GRU(denoise_gru);
-    RENAMENOISE_INPUT_DENSE(denoise_output);
-    RENAMENOISE_INPUT_DENSE(vad_output);
+	RENAMENOISE_INPUT_DENSE(input_dense);
+	RENAMENOISE_INPUT_GRU(vad_gru);
+	RENAMENOISE_INPUT_GRU(noise_gru);
+	RENAMENOISE_INPUT_GRU(denoise_gru);
+	RENAMENOISE_INPUT_DENSE(denoise_output);
+	RENAMENOISE_INPUT_DENSE(vad_output);
 
-    return ret;
+	return ret;
 }
 
-void renamenoise_model_free(ReNameNoiseModel *model)
-{
-#define RENAMENOISE_FREE_MAYBE(ptr) do { if (ptr) free(ptr); } while (0)
-#define RENAMENOISE_FREE_DENSE(name) do { \
-    if (model->name) { \
-        free((void *) model->name->input_weights); \
-        free((void *) model->name->bias); \
-        free((void *) model->name); \
-    } \
-    } while (0)
-#define RENAMENOISE_FREE_GRU(name) do { \
-    if (model->name) { \
-        free((void *) model->name->input_weights); \
-        free((void *) model->name->recurrent_weights); \
-        free((void *) model->name->bias); \
-        free((void *) model->name); \
-    } \
-    } while (0)
+void renamenoise_model_free(ReNameNoiseModel *model) {
+#define RENAMENOISE_FREE_MAYBE(ptr) \
+	do {                            \
+		if (ptr)                    \
+			free(ptr);              \
+	} while (0)
+#define RENAMENOISE_FREE_DENSE(name)                   \
+	do {                                               \
+		if (model->name) {                             \
+			free((void *) model->name->input_weights); \
+			free((void *) model->name->bias);          \
+			free((void *) model->name);                \
+		}                                              \
+	} while (0)
+#define RENAMENOISE_FREE_GRU(name)                         \
+	do {                                                   \
+		if (model->name) {                                 \
+			free((void *) model->name->input_weights);     \
+			free((void *) model->name->recurrent_weights); \
+			free((void *) model->name->bias);              \
+			free((void *) model->name);                    \
+		}                                                  \
+	} while (0)
 
-    if (!model)
-        return;
-    RENAMENOISE_FREE_DENSE(input_dense);
-    RENAMENOISE_FREE_GRU(vad_gru);
-    RENAMENOISE_FREE_GRU(noise_gru);
-    RENAMENOISE_FREE_GRU(denoise_gru);
-    RENAMENOISE_FREE_DENSE(denoise_output);
-    RENAMENOISE_FREE_DENSE(vad_output);
-    free(model);
+	if (!model) {
+		return;
+	}
+	RENAMENOISE_FREE_DENSE(input_dense);
+	RENAMENOISE_FREE_GRU(vad_gru);
+	RENAMENOISE_FREE_GRU(noise_gru);
+	RENAMENOISE_FREE_GRU(denoise_gru);
+	RENAMENOISE_FREE_DENSE(denoise_output);
+	RENAMENOISE_FREE_DENSE(vad_output);
+	free(model);
 }

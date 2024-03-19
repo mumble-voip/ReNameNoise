@@ -34,30 +34,30 @@
 #include "rnn.h"
 
 struct ReNameNoiseModel {
-  int input_dense_size;
-  const ReNameNoiseDenseLayer *input_dense;
+	int input_dense_size;
+	const ReNameNoiseDenseLayer *input_dense;
 
-  int vad_gru_size;
-  const ReNameNoiseGRULayer *vad_gru;
+	int vad_gru_size;
+	const ReNameNoiseGRULayer *vad_gru;
 
-  int noise_gru_size;
-  const ReNameNoiseGRULayer *noise_gru;
+	int noise_gru_size;
+	const ReNameNoiseGRULayer *noise_gru;
 
-  int denoise_gru_size;
-  const ReNameNoiseGRULayer *denoise_gru;
+	int denoise_gru_size;
+	const ReNameNoiseGRULayer *denoise_gru;
 
-  int denoise_output_size;
-  const ReNameNoiseDenseLayer *denoise_output;
+	int denoise_output_size;
+	const ReNameNoiseDenseLayer *denoise_output;
 
-  int vad_output_size;
-  const ReNameNoiseDenseLayer *vad_output;
+	int vad_output_size;
+	const ReNameNoiseDenseLayer *vad_output;
 };
 
 struct ReNameNoiseRNNState {
-  const ReNameNoiseModel *model;
-  float *vad_gru_state;
-  float *noise_gru_state;
-  float *denoise_gru_state;
+	const ReNameNoiseModel *model;
+	float *vad_gru_state;
+	float *noise_gru_state;
+	float *denoise_gru_state;
 };
 
 #endif /* RNN_DATA_H */

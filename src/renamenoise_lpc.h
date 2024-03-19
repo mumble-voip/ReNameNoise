@@ -38,21 +38,10 @@
 
 void _renamenoise_lpc(renamenoise_val16 *_lpc, const renamenoise_val32 *ac, int p);
 
-void renamenoise_fir(
-         const renamenoise_val16 *x,
-         const renamenoise_val16 *num,
-         renamenoise_val16 *y,
-         int N,
-         int ord);
+void renamenoise_fir(const renamenoise_val16 *x, const renamenoise_val16 *num, renamenoise_val16 *y, int N, int ord);
 
-void renamenoise_iir(const renamenoise_val32 *x,
-         const renamenoise_val16 *den,
-         renamenoise_val32 *y,
-         int N,
-         int ord,
-         renamenoise_val16 *mem);
+void renamenoise_iir(const renamenoise_val32 *x, const renamenoise_val16 *den, renamenoise_val32 *y, int N, int ord, renamenoise_val16 *mem);
 
-int _renamenoise_autocorr(const renamenoise_val16 *x, renamenoise_val32 *ac,
-         const renamenoise_val16 *window, int overlap, int lag, int n);
+int _renamenoise_autocorr(const renamenoise_val16 *x, renamenoise_val32 *ac, const renamenoise_val16 *window, int overlap, int lag, int n);
 
 #endif /* RENAMENOISE_LPC_H */

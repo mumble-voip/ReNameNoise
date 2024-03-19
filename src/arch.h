@@ -38,61 +38,86 @@
 #ifndef ARCH_H
 #define ARCH_H
 
-#include "renamenoise_types.h"
 #include "common.h"
+#include "renamenoise_types.h"
 
-# if !defined(__GNUC_PREREQ)
-#  if defined(__GNUC__)&&defined(__GNUC_MINOR__)
-#   define __GNUC_PREREQ(_maj,_min) \
- ((__GNUC__<<16)+__GNUC_MINOR__>=((_maj)<<16)+(_min))
-#  else
-#   define __GNUC_PREREQ(_maj,_min) 0
-#  endif
-# endif
+#if !defined(__GNUC_PREREQ)
+#	if defined(__GNUC__) && defined(__GNUC_MINOR__)
+#		define __GNUC_PREREQ(_maj, _min) ((__GNUC__ << 16) + __GNUC_MINOR__ >= ((_maj) << 16) + (_min))
+#	else
+#		define __GNUC_PREREQ(_maj, _min) 0
+#	endif
+#endif
 
 #define RENAMENOISE_SIG_SCALE 32768.f
 
 #ifndef M_PI
-  #define M_PI (3.14159265358979323846)
+#	define M_PI (3.14159265358979323846)
 #endif
 
 #define renamenoise_fatal(str) _renamenoise_fatal(str, __FILE__, __LINE__);
+
 #ifdef ENABLE_ASSERTIONS
-#include <stdio.h>
-#include <stdlib.h>
-#ifdef __GNUC__
+
+#	include <stdio.h>
+#	include <stdlib.h>
+
+#	ifdef __GNUC__
 __attribute__((noreturn))
-#endif
-static RENAMENOISE_INLINE void _renamenoise_fatal(const char *str, const char *file, int line)
-{
-   fprintf (stderr, "Fatal (internal) error in %s, line %d: %s\n", file, line, str);
-   abort();
+#	endif
+
+static RENAMENOISE_INLINE void
+_renamenoise_fatal(const char *str, const char *file, int line) {
+	fprintf(stderr, "Fatal (internal) error in %s, line %d: %s\n", file, line, str);
+	abort();
 }
-#define renamenoise_assert(cond) {if (!(cond)) {renamenoise_fatal("assertion failed: " #cond);}}
-#define renamenoise_assert2(cond, message) {if (!(cond)) {renamenoise_fatal("assertion failed: " #cond "\n" message);}}
+
+#	define renamenoise_assert(cond)                           \
+		{                                                      \
+			if (!(cond)) {                                     \
+				renamenoise_fatal("assertion failed: " #cond); \
+			}                                                  \
+		}
+
+#	define renamenoise_assert2(cond, message)                              \
+		{                                                                   \
+			if (!(cond)) {                                                  \
+				renamenoise_fatal("assertion failed: " #cond "\n" message); \
+			}                                                               \
+		}
+
 #else
-#define renamenoise_assert(cond)
-#define renamenoise_assert2(cond, message)
-#endif
 
-#define RENAMENOISE_IMUL32(a,b) ((a)*(b))
+#	define renamenoise_assert(cond)
 
-#define RENAMENOISE_MIN16(a,b) ((a) < (b) ? (a) : (b))   /**< Minimum 16-bit value.   */
-#define RENAMENOISE_MAX16(a,b) ((a) > (b) ? (a) : (b))   /**< Maximum 16-bit value.   */
-#define RENAMENOISE_MIN32(a,b) ((a) < (b) ? (a) : (b))   /**< Minimum 32-bit value.   */
-#define RENAMENOISE_MAX32(a,b) ((a) > (b) ? (a) : (b))   /**< Maximum 32-bit value.   */
-#define RENAMENOISE_IMIN(a,b) ((a) < (b) ? (a) : (b))   /**< Minimum int value.   */
-#define RENAMENOISE_IMAX(a,b) ((a) > (b) ? (a) : (b))   /**< Maximum int value.   */
-#define RENAMENOISE_UADD32(a,b) ((a)+(b))
-#define RENAMENOISE_USUB32(a,b) ((a)-(b))
+#	define renamenoise_assert2(cond, message)
 
-/* Set this if renamenoise_int64 is a native type of the CPU. */
-/* Assume that all LP64 architectures have fast 64-bit types; also x86_64
-   (which can be ILP32 for x32) and Win64 (which is LLP64). */
+#endif /* !ENABLE_ASSERTIONS defined */
+
+#define RENAMENOISE_IMUL32(a, b) ((a) * (b))
+
+#define RENAMENOISE_MIN16(a, b) ((a) < (b) ? (a) : (b)) // Minimum 16-bit value.
+
+#define RENAMENOISE_MAX16(a, b) ((a) > (b) ? (a) : (b)) // Maximum 16-bit value.
+
+#define RENAMENOISE_MIN32(a, b) ((a) < (b) ? (a) : (b)) // Minimum 32-bit value.
+
+#define RENAMENOISE_MAX32(a, b) ((a) > (b) ? (a) : (b)) // Maximum 32-bit value.
+
+#define RENAMENOISE_IMIN(a, b) ((a) < (b) ? (a) : (b))  // Minimum int value.
+
+#define RENAMENOISE_IMAX(a, b) ((a) > (b) ? (a) : (b))  // Maximum int value.
+
+#define RENAMENOISE_UADD32(a, b) ((a) + (b))
+#define RENAMENOISE_USUB32(a, b) ((a) - (b))
+
+// Set this if renamenoise_int64 is a native type of the CPU.
+// Assume that all LP64 architectures have fast 64-bit types;
+// also x86_64 (which can be ILP32 for x32) and Win64 (which is LLP64).
 #if defined(__x86_64__) || defined(__LP64__) || defined(_WIN64)
-#define RENAMENOISE_FAST_INT64 1
+#	define RENAMENOISE_FAST_INT64 1
 #else
-#define RENAMENOISE_FAST_INT64 0
+#	define RENAMENOISE_FAST_INT64 0
 #endif
 
 #define PRINT_MIPS(file)
@@ -106,19 +131,21 @@ typedef float renamenoise_norm;
 typedef float renamenoise_ener;
 
 #ifdef RENAMENOISE_FLOAT_APPROX
-/* This code should reliably detect NaN/inf even when -ffast-math is used.
-   Assumes IEEE 754 format. */
-static RENAMENOISE_INLINE int renamenoise_isnan(float x)
-{
-   union {float f; renamenoise_uint32 i;} in;
-   in.f = x;
-   return ((in.i>>23)&0xFF)==0xFF && (in.i&0x007FFFFF)!=0;
+// This code should reliably detect NaN/inf even when -ffast-math is used.
+// Assumes IEEE 754 format.
+static RENAMENOISE_INLINE int renamenoise_isnan(float x) {
+	union {
+		float f;
+		renamenoise_uint32 i;
+	} in;
+	in.f = x;
+	return ((in.i >> 23) & 0xFF) == 0xFF && (in.i & 0x007FFFFF) != 0;
 }
 #else
-#ifdef __FAST_MATH__
-#error Cannot build renamenoise with -ffast-math unless RENAMENOISE_FLOAT_APPROX is defined. This could result in crashes on extreme (e.g. NaN) input
-#endif
-#define renamenoise_isnan(x) ((x)!=(x))
+#	ifdef __FAST_MATH__
+#		error Cannot build renamenoise with -ffast-math unless RENAMENOISE_FLOAT_APPROX is defined. This could result in crashes on extreme (e.g. NaN) input
+#	endif
+#	define renamenoise_isnan(x) ((x) != (x))
 #endif
 
 #define RENAMENOISE_Q15ONE 1.0f
@@ -128,106 +155,103 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x)
 #define RENAMENOISE_EPSILON 1e-15f
 #define RENAMENOISE_VERY_SMALL 1e-30f
 #define RENAMENOISE_VERY_LARGE16 1e15f
-#define RENAMENOISE_Q15_ONE ((renamenoise_val16)1.f)
+#define RENAMENOISE_Q15_ONE ((renamenoise_val16) 1.f)
 
-/* This appears to be the same speed as C99's fabsf() but it's more portable. */
-#define RENAMENOISE_ABS16(x) ((float)fabs(x))
-#define RENAMENOISE_ABS32(x) ((float)fabs(x))
+// This appears to be the same speed as C99's fabsf() but it's more portable.
+#define RENAMENOISE_ABS16(x) ((float) fabs(x))
+#define RENAMENOISE_ABS32(x) ((float) fabs(x))
 
-#define RENAMENOISE_QCONST16(x,bits) (x)
-#define RENAMENOISE_QCONST32(x,bits) (x)
+#define RENAMENOISE_QCONST16(x, bits) (x)
+#define RENAMENOISE_QCONST32(x, bits) (x)
 
 #define RENAMENOISE_NEG16(x) (-(x))
 #define RENAMENOISE_NEG32(x) (-(x))
 #define RENAMENOISE_NEG32_ovflw(x) (-(x))
 #define RENAMENOISE_EXTRACT16(x) (x)
 #define RENAMENOISE_EXTEND32(x) (x)
-#define RENAMENOISE_SHR16(a,shift) (a)
-#define RENAMENOISE_SHL16(a,shift) (a)
-#define RENAMENOISE_SHR32(a,shift) (a)
-#define RENAMENOISE_SHL32(a,shift) (a)
-#define RENAMENOISE_PSHR32(a,shift) (a)
-#define RENAMENOISE_VSHR32(a,shift) (a)
+#define RENAMENOISE_SHR16(a, shift) (a)
+#define RENAMENOISE_SHL16(a, shift) (a)
+#define RENAMENOISE_SHR32(a, shift) (a)
+#define RENAMENOISE_SHL32(a, shift) (a)
+#define RENAMENOISE_PSHR32(a, shift) (a)
+#define RENAMENOISE_VSHR32(a, shift) (a)
 
-#define RENAMENOISE_PSHR(a,shift)   (a)
-#define RENAMENOISE_SHR(a,shift)    (a)
-#define RENAMENOISE_SHL(a,shift)    (a)
-#define RENAMENOISE_SATURATE(x,a)   (x)
-#define RENAMENOISE_SATURATE16(x)   (x)
+#define RENAMENOISE_PSHR(a, shift) (a)
+#define RENAMENOISE_SHR(a, shift) (a)
+#define RENAMENOISE_SHL(a, shift) (a)
+#define RENAMENOISE_SATURATE(x, a) (x)
+#define RENAMENOISE_SATURATE16(x) (x)
 
-#define RENAMENOISE_ROUND16(a,shift)  (a)
-#define RENAMENOISE_SROUND16(a,shift) (a)
-#define RENAMENOISE_HALF16(x)       (.5f*(x))
-#define RENAMENOISE_HALF32(x)       (.5f*(x))
+#define RENAMENOISE_ROUND16(a, shift) (a)
+#define RENAMENOISE_SROUND16(a, shift) (a)
+#define RENAMENOISE_HALF16(x) (.5f * (x))
+#define RENAMENOISE_HALF32(x) (.5f * (x))
 
-#define RENAMENOISE_ADD16(a,b) ((a)+(b))
-#define RENAMENOISE_SUB16(a,b) ((a)-(b))
-#define RENAMENOISE_ADD32(a,b) ((a)+(b))
-#define RENAMENOISE_SUB32(a,b) ((a)-(b))
-#define RENAMENOISE_ADD32_ovflw(a,b) ((a)+(b))
-#define RENAMENOISE_SUB32_ovflw(a,b) ((a)-(b))
-#define RENAMENOISE_MULT16_16_16(a,b)     ((a)*(b))
-#define RENAMENOISE_MULT16_16(a,b)     ((renamenoise_val32)(a)*(renamenoise_val32)(b))
-#define RENAMENOISE_MAC16_16(c,a,b)     ((c)+(renamenoise_val32)(a)*(renamenoise_val32)(b))
+#define RENAMENOISE_ADD16(a, b) ((a) + (b))
+#define RENAMENOISE_SUB16(a, b) ((a) - (b))
+#define RENAMENOISE_ADD32(a, b) ((a) + (b))
+#define RENAMENOISE_SUB32(a, b) ((a) - (b))
+#define RENAMENOISE_ADD32_ovflw(a, b) ((a) + (b))
+#define RENAMENOISE_SUB32_ovflw(a, b) ((a) - (b))
+#define RENAMENOISE_MULT16_16_16(a, b) ((a) * (b))
 
-#define RENAMENOISE_MULT16_32_Q15(a,b)     ((a)*(b))
-#define RENAMENOISE_MULT16_32_Q16(a,b)     ((a)*(b))
+#define RENAMENOISE_MULT16_16(a, b) ((renamenoise_val32) (a) * (renamenoise_val32) (b))
 
-#define RENAMENOISE_MULT32_32_Q31(a,b)     ((a)*(b))
+#define RENAMENOISE_MAC16_16(c, a, b) ((c) + (renamenoise_val32) (a) * (renamenoise_val32) (b))
 
-#define RENAMENOISE_MAC16_32_Q15(c,a,b)     ((c)+(a)*(b))
-#define RENAMENOISE_MAC16_32_Q16(c,a,b)     ((c)+(a)*(b))
+#define RENAMENOISE_MULT16_32_Q15(a, b) ((a) * (b))
+#define RENAMENOISE_MULT16_32_Q16(a, b) ((a) * (b))
 
-#define RENAMENOISE_MULT16_16_Q11_32(a,b)     ((a)*(b))
-#define RENAMENOISE_MULT16_16_Q11(a,b)     ((a)*(b))
-#define RENAMENOISE_MULT16_16_Q13(a,b)     ((a)*(b))
-#define RENAMENOISE_MULT16_16_Q14(a,b)     ((a)*(b))
-#define RENAMENOISE_MULT16_16_Q15(a,b)     ((a)*(b))
-#define RENAMENOISE_MULT16_16_P15(a,b)     ((a)*(b))
-#define RENAMENOISE_MULT16_16_P13(a,b)     ((a)*(b))
-#define RENAMENOISE_MULT16_16_P14(a,b)     ((a)*(b))
-#define RENAMENOISE_MULT16_32_P16(a,b)     ((a)*(b))
+#define RENAMENOISE_MULT32_32_Q31(a, b) ((a) * (b))
 
-#define RENAMENOISE_DIV32_16(a,b)     (((renamenoise_val32)(a))/(renamenoise_val16)(b))
-#define RENAMENOISE_DIV32(a,b)     (((renamenoise_val32)(a))/(renamenoise_val32)(b))
+#define RENAMENOISE_MAC16_32_Q15(c, a, b) ((c) + (a) * (b))
+#define RENAMENOISE_MAC16_32_Q16(c, a, b) ((c) + (a) * (b))
 
-#define RENAMENOISE_SCALEIN(a)      ((a)*RENAMENOISE_SIG_SCALE)
-#define RENAMENOISE_SCALEOUT(a)     ((a)*(1/RENAMENOISE_SIG_SCALE))
+#define RENAMENOISE_MULT16_16_Q11_32(a, b) ((a) * (b))
+#define RENAMENOISE_MULT16_16_Q11(a, b) ((a) * (b))
+#define RENAMENOISE_MULT16_16_Q13(a, b) ((a) * (b))
+#define RENAMENOISE_MULT16_16_Q14(a, b) ((a) * (b))
+#define RENAMENOISE_MULT16_16_Q15(a, b) ((a) * (b))
+#define RENAMENOISE_MULT16_16_P15(a, b) ((a) * (b))
+#define RENAMENOISE_MULT16_16_P13(a, b) ((a) * (b))
+#define RENAMENOISE_MULT16_16_P14(a, b) ((a) * (b))
+#define RENAMENOISE_MULT16_32_P16(a, b) ((a) * (b))
+
+#define RENAMENOISE_DIV32_16(a, b) (((renamenoise_val32) (a)) / (renamenoise_val16) (b))
+
+#define RENAMENOISE_DIV32(a, b) (((renamenoise_val32) (a)) / (renamenoise_val32) (b))
+
+#define RENAMENOISE_SCALEIN(a) ((a) *RENAMENOISE_SIG_SCALE)
+#define RENAMENOISE_SCALEOUT(a) ((a) * (1 / RENAMENOISE_SIG_SCALE))
 
 #define RENAMENOISE_SIG2WORD16(x) (x)
 
 #ifndef RENAMENOISE_GLOBAL_STACK_SIZE
-#define RENAMENOISE_GLOBAL_STACK_SIZE 120000
+#	define RENAMENOISE_GLOBAL_STACK_SIZE 120000
 #endif
 
 #if __STDC_VERSION__ < 199901L || (__STDC_VERSION__ > 201000L && __STDC_NO_VLA__ == 1)
-   #define RENAMENOISE_NO_VLA
+#	define RENAMENOISE_NO_VLA
 #endif
 
 #ifdef RENAMENOISE_NO_VLA
-    #include <malloc.h>
-    #define renamenoise_stackalloc(type, id, len) type *id = alloca((len) * sizeof(type))
+#	include <malloc.h>
+#	define renamenoise_stackalloc(type, id, len) type *id = alloca((len) * sizeof(type))
 #else
-    #define renamenoise_stackalloc(type, id, len) type id[len]
+#	define renamenoise_stackalloc(type, id, len) type id[len]
 #endif
 
-/*
- * Portable macros for denoting unreachable code.
- * In such a scenario, perform an early exit ('panic').
- */
+// Portable macros for denoting unreachable code.
+// In such a scenario, perform an early exit ('panic')
 
 #if _MSC_VER // MSVC
-   #define renamenoise_unreachable() __assume(0)
+#	define renamenoise_unreachable() __assume(0)
 #elif __GNUC__ || __clang__ || __MINGW32__
-   #define renamenoise_unreachable() __builtin_unreachable()
-/*
- * Borland case is unknown.
- * More investigation needed.
- */
-//--#elif __BORLANDC__
-//--#define renamenoise_unreachable() __builtin_unreachable()
+#	define renamenoise_unreachable() __builtin_unreachable()
+// #elif __BORLANDC__
+//   #define renamenoise_unreachable() __builtin_unreachable() // unknown. needs investigation
 #else
-   #define renamenoise_unreachable()
+#	define renamenoise_unreachable()
 #endif
 
 #endif /* ARCH_H */

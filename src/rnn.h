@@ -32,34 +32,33 @@
 #define RNN_H_
 
 #include "renamenoise.h"
-
 #include "renamenoise_types.h"
 
-#define RENAMENOISE_WEIGHTS_SCALE (1.f/256)
+#define RENAMENOISE_WEIGHTS_SCALE (1.f / 256)
 
 #define RENAMENOISE_MAX_NEURONS 128
 
-#define RENAMENOISE_ACTIVATION_TANH    0
+#define RENAMENOISE_ACTIVATION_TANH 0
 #define RENAMENOISE_ACTIVATION_SIGMOID 1
-#define RENAMENOISE_ACTIVATION_RELU    2
+#define RENAMENOISE_ACTIVATION_RELU 2
 
 typedef signed char renamenoise_rnn_weight;
 
 typedef struct {
-  const renamenoise_rnn_weight *bias;
-  const renamenoise_rnn_weight *input_weights;
-  int nb_inputs;
-  int nb_neurons;
-  int activation;
+	const renamenoise_rnn_weight *bias;
+	const renamenoise_rnn_weight *input_weights;
+	int nb_inputs;
+	int nb_neurons;
+	int activation;
 } ReNameNoiseDenseLayer;
 
 typedef struct {
-  const renamenoise_rnn_weight *bias;
-  const renamenoise_rnn_weight *input_weights;
-  const renamenoise_rnn_weight *recurrent_weights;
-  int nb_inputs;
-  int nb_neurons;
-  int activation;
+	const renamenoise_rnn_weight *bias;
+	const renamenoise_rnn_weight *input_weights;
+	const renamenoise_rnn_weight *recurrent_weights;
+	int nb_inputs;
+	int nb_neurons;
+	int activation;
 } ReNameNoiseGRULayer;
 
 typedef struct ReNameNoiseRNNState ReNameNoiseRNNState;

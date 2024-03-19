@@ -39,17 +39,17 @@ extern "C" {
 #endif
 
 #ifndef RENAMENOISE_EXPORT
-# if defined(WIN32)
-#  if defined(RENAMENOISE_BUILD) && defined(DLL_EXPORT)
-#   define RENAMENOISE_EXPORT __declspec(dllexport)
-#  else
-#   define RENAMENOISE_EXPORT
-#  endif
-# elif defined(__GNUC__) && defined(RENAMENOISE_BUILD)
-#  define RENAMENOISE_EXPORT __attribute__ ((visibility ("default")))
-# else
-#  define RENAMENOISE_EXPORT
-# endif
+#	if defined(WIN32)
+#		if defined(RENAMENOISE_BUILD) && defined(DLL_EXPORT)
+#			define RENAMENOISE_EXPORT __declspec(dllexport)
+#		else
+#			define RENAMENOISE_EXPORT
+#		endif
+#	elif defined(__GNUC__) && defined(RENAMENOISE_BUILD)
+#		define RENAMENOISE_EXPORT __attribute__((visibility("default")))
+#	else
+#		define RENAMENOISE_EXPORT
+#	endif
 #endif
 
 typedef struct ReNameNoiseDenoiseState ReNameNoiseDenoiseState;
