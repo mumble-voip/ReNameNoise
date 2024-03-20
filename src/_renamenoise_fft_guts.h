@@ -73,41 +73,29 @@
 		(c).i *= (s);                   \
 	} while (0)
 
-#ifndef RENAMENOISE_CHECK_OVERFLOW_OP
-#	define RENAMENOISE_CHECK_OVERFLOW_OP(a, op, b) /* NOOP */
-#endif
-
 #ifndef RENAMENOISE_C_ADD
-#	define RENAMENOISE_C_ADD(res, a, b)                   \
-		do {                                               \
-			RENAMENOISE_CHECK_OVERFLOW_OP((a).r, +, (b).r) \
-			RENAMENOISE_CHECK_OVERFLOW_OP((a).i, +, (b).i) \
-			(res).r = (a).r + (b).r;                       \
-			(res).i = (a).i + (b).i;                       \
+#	define RENAMENOISE_C_ADD(res, a, b) \
+		do {                             \
+			(res).r = (a).r + (b).r;     \
+			(res).i = (a).i + (b).i;     \
 		} while (0)
 
-#	define RENAMENOISE_C_SUB(res, a, b)                   \
-		do {                                               \
-			RENAMENOISE_CHECK_OVERFLOW_OP((a).r, -, (b).r) \
-			RENAMENOISE_CHECK_OVERFLOW_OP((a).i, -, (b).i) \
-			(res).r = (a).r - (b).r;                       \
-			(res).i = (a).i - (b).i;                       \
+#	define RENAMENOISE_C_SUB(res, a, b) \
+		do {                             \
+			(res).r = (a).r - (b).r;     \
+			(res).i = (a).i - (b).i;     \
 		} while (0)
 
-#	define RENAMENOISE_C_ADDTO(res, a)                      \
-		do {                                                 \
-			RENAMENOISE_CHECK_OVERFLOW_OP((res).r, +, (a).r) \
-			RENAMENOISE_CHECK_OVERFLOW_OP((res).i, +, (a).i) \
-			(res).r += (a).r;                                \
-			(res).i += (a).i;                                \
+#	define RENAMENOISE_C_ADDTO(res, a) \
+		do {                            \
+			(res).r += (a).r;           \
+			(res).i += (a).i;           \
 		} while (0)
 
-#	define RENAMENOISE_C_SUBFROM(res, a)                    \
-		do {                                                 \
-			RENAMENOISE_CHECK_OVERFLOW_OP((res).r, -, (a).r) \
-			RENAMENOISE_CHECK_OVERFLOW_OP((res).i, -, (a).i) \
-			(res).r -= (a).r;                                \
-			(res).i -= (a).i;                                \
+#	define RENAMENOISE_C_SUBFROM(res, a) \
+		do {                              \
+			(res).r -= (a).r;             \
+			(res).i -= (a).i;             \
 		} while (0)
 #endif /* !RENAMENOISE_C_ADD defined */
 

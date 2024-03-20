@@ -129,16 +129,8 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x) {
 #define RENAMENOISE_VERY_SMALL 1e-30f
 #define RENAMENOISE_VERY_LARGE16 1e15f
 
-#define RENAMENOISE_QCONST16(x, bits) (x)
-
 #define RENAMENOISE_NEG32_ovflw(x) (-(x))
-#define RENAMENOISE_EXTRACT16(x) (x)
-#define RENAMENOISE_EXTEND32(x) (x)
-#define RENAMENOISE_SHR32(a, shift) (a)
-#define RENAMENOISE_SHL32(a, shift) (a)
-#define RENAMENOISE_VSHR32(a, shift) (a)
 
-#define RENAMENOISE_ROUND16(a, shift) (a)
 #define RENAMENOISE_HALF16(x) (.5f * (x))
 #define RENAMENOISE_HALF32(x) (.5f * (x))
 

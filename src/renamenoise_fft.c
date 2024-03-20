@@ -62,7 +62,7 @@ static void renamenoise_kf_bfly2(renamenoise_fft_cpx *Fout, int m, int N) {
 		}
 	} else {
 		renamenoise_val16 tw;
-		tw = RENAMENOISE_QCONST16(0.7071067812f, 15);
+		tw = 0.7071067812f;
 		// We know that m==4 here because the radix-2 is just after a radix-4
 		renamenoise_assert(m == 4);
 		for (i = 0; i < N; i++) {
@@ -465,8 +465,8 @@ void renamenoise_fft_c(const renamenoise_fft_state *st, const renamenoise_fft_cp
 	// Bit-reverse the input
 	for (i = 0; i < st->nfft; i++) {
 		renamenoise_fft_cpx x = fin[i];
-		fout[st->bitrev[i]].r = RENAMENOISE_SHR32(RENAMENOISE_MULT16_32_Q16(scale, x.r), scale_shift);
-		fout[st->bitrev[i]].i = RENAMENOISE_SHR32(RENAMENOISE_MULT16_32_Q16(scale, x.i), scale_shift);
+		fout[st->bitrev[i]].r = RENAMENOISE_MULT16_32_Q16(scale, x.r);
+		fout[st->bitrev[i]].i = RENAMENOISE_MULT16_32_Q16(scale, x.i);
 	}
 	renamenoise_fft_impl(st, fout);
 }

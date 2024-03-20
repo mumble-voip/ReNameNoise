@@ -54,10 +54,10 @@ void _renamenoise_lpc(renamenoise_val16 *_lpc,     // out: [0...p-1] LPC coeffic
 			for (j = 0; j < i; j++) {
 				rr += RENAMENOISE_MULT32_32_Q31(lpc[j], ac[i - j]);
 			}
-			rr += RENAMENOISE_SHR32(ac[i + 1], 3);
-			r = -RENAMENOISE_SHL32(rr, 3) / error;
+			rr += ac[i + 1];
+			r = -rr / error;
 			//  Update LPC coefficients and total error
-			lpc[i] = RENAMENOISE_SHR32(r, 3);
+			lpc[i] = r;
 			for (j = 0; j < ((i + 1) >> 1); j++) {
 				renamenoise_val32 tmp1, tmp2;
 				tmp1 = lpc[j];
