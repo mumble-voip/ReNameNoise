@@ -38,8 +38,6 @@
 #ifndef PITCH_H
 #define PITCH_H
 
-// #include "modes.h"
-// #include "cpu_support.h"
 #include "arch.h"
 
 void renamenoise_pitch_downsample(renamenoise_sig *x[], renamenoise_val16 *x_lp, int len, int C);

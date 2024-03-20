@@ -36,20 +36,6 @@
 
 #define RENAMENOISE_INLINE inline
 
-/** ReNameNoise wrapper for malloc(). To do your own dynamic allocation, all you need to do is replace this function and renamenoise_free */
-#ifndef OVERRIDE_RENAMENOISE_ALLOC
-static RENAMENOISE_INLINE void *renamenoise_alloc(size_t size) {
-	return malloc(size);
-}
-#endif
-
-/** ReNameNoise wrapper for free(). To do your own dynamic allocation, all you need to do is replace this function and renamenoise_alloc */
-#ifndef OVERRIDE_RENAMENOISE_FREE
-static RENAMENOISE_INLINE void renamenoise_free(void *ptr) {
-	free(ptr);
-}
-#endif
-
 /** Copy n elements from src to dst. The 0* term provides compile-time type checking  */
 #ifndef OVERRIDE_RENAMENOISE_COPY
 #	define RENAMENOISE_COPY(dst, src, n) (memcpy((dst), (src), (n) * sizeof(*(dst)) + 0 * ((dst) - (src))))

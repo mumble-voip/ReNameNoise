@@ -198,21 +198,6 @@ static void renamenoise_dct(float *out, const float *in) {
 	}
 }
 
-#if 0
-static void renamenoise_idct(float *out, const float *in) {
-  int i;
-  renamenoise_check_init();
-  for (i=0;i<RENAMENOISE_NB_BANDS;i++) {
-    int j;
-    float sum = 0;
-    for (j=0;j<RENAMENOISE_NB_BANDS;j++) {
-      sum += in[j] * renamenoise_common.dct_table[i*RENAMENOISE_NB_BANDS + j];
-    }
-    out[i] = sum*sqrt(2./22);
-  }
-}
-#endif
-
 static void renamenoise_forward_transform(renamenoise_fft_cpx *out, const float *in) {
 	int i;
 	renamenoise_fft_cpx x[RENAMENOISE_WINDOW_SIZE];
@@ -442,18 +427,12 @@ void renamenoise_pitch_filter(renamenoise_fft_cpx *X, const renamenoise_fft_cpx 
 	float r[RENAMENOISE_NB_BANDS];
 	float rf[RENAMENOISE_FREQ_SIZE] = {0};
 	for (i = 0; i < RENAMENOISE_NB_BANDS; i++) {
-#if 0
-    if (Exp[i]>g[i]) r[i] = 1;
-    else r[i] = Exp[i]*(1-g[i])/(.001 + g[i]*(1-Exp[i]));
-    r[i] = RENAMENOISE_MIN16(1, RENAMENOISE_MAX16(0, r[i]));
-#else
 		if (Exp[i] > g[i]) {
 			r[i] = 1;
 		} else {
 			r[i] = RENAMENOISE_SQUARE(Exp[i]) * (1 - RENAMENOISE_SQUARE(g[i])) / (.001 + RENAMENOISE_SQUARE(g[i]) * (1 - RENAMENOISE_SQUARE(Exp[i])));
 		}
 		r[i] = sqrt(RENAMENOISE_MIN16(1, RENAMENOISE_MAX16(0, r[i])));
-#endif
 		r[i] *= sqrt(Ex[i] / (1e-8 + Ep[i]));
 	}
 	renamenoise_interp_band_gain(rf, r);
@@ -501,12 +480,10 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
 			st->lastg[i] = g[i];
 		}
 		renamenoise_interp_band_gain(gf, g);
-#if 1
 		for (i = 0; i < RENAMENOISE_FREQ_SIZE; i++) {
 			X[i].r *= gf[i];
 			X[i].i *= gf[i];
 		}
-#endif
 	}
 
 	renamenoise_frame_synthesis(st, out, X);
@@ -688,12 +665,10 @@ int main(int argc, char **argv) {
 			}
 		}
 		count++;
-#	if 1
 		fwrite(features, sizeof(float), RENAMENOISE_NB_FEATURES, stdout);
 		fwrite(g, sizeof(float), RENAMENOISE_NB_BANDS, stdout);
 		fwrite(Ln, sizeof(float), RENAMENOISE_NB_BANDS, stdout);
 		fwrite(&vad, sizeof(float), 1, stdout);
-#	endif
 	}
 	fprintf(stderr, "matrix size: %d x %d\n", count, RENAMENOISE_NB_FEATURES + 2 * RENAMENOISE_NB_BANDS + 1);
 	fclose(f1);

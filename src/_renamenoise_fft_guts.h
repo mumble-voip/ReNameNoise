@@ -31,9 +31,6 @@
 #ifndef RENAMENOISE_FFT_GUTS_H
 #define RENAMENOISE_FFT_GUTS_H
 
-#define RENAMENOISE_MIN(a, b) ((a) < (b) ? (a) : (b))
-#define RENAMENOISE_MAX(a, b) ((a) > (b) ? (a) : (b))
-
 /**
   renamenoise_fft.h
   Defines renamenoise_fft_scalar as either short or a float type
@@ -49,7 +46,6 @@
   Explanation of macros dealing with complex math:
 
    C_MUL(m,a,b)         : m = a*b
-   C_FIXDIV( c , div )  : if a fixed point impl., c /= div. noop otherwise
    C_SUB( res, a,b)     : res = a - b
    C_SUBFROM( res , a)  : res -= a
    C_ADDTO( res , a)    : res += a
@@ -70,8 +66,6 @@
 	} while (0)
 
 #define RENAMENOISE_C_MUL4(m, a, b) RENAMENOISE_C_MUL(m, a, b)
-
-#define RENAMENOISE_C_FIXDIV(c, div) /* NOOP */
 
 #define RENAMENOISE_C_MULBYSCALAR(c, s) \
 	do {                                \
@@ -117,15 +111,9 @@
 		} while (0)
 #endif /* !RENAMENOISE_C_ADD defined */
 
-#ifdef USE_SIMD
-#	define RENAMENOISE_FFT_COS(phase) _mm_set1_ps(cos(phase))
-#	define RENAMENOISE_FFT_SIN(phase) _mm_set1_ps(sin(phase))
-#	define RENAMENOISE_HALF_OF(x) ((x) *_mm_set1_ps(.5f))
-#else
-#	define RENAMENOISE_FFT_COS(phase) (renamenoise_fft_scalar) cos(phase)
-#	define RENAMENOISE_FFT_SIN(phase) (renamenoise_fft_scalar) sin(phase)
-#	define RENAMENOISE_HALF_OF(x) ((x) *.5f)
-#endif
+#define RENAMENOISE_FFT_COS(phase) (renamenoise_fft_scalar) cos(phase)
+#define RENAMENOISE_FFT_SIN(phase) (renamenoise_fft_scalar) sin(phase)
+#define RENAMENOISE_HALF_OF(x) ((x) *.5f)
 
 #define renamenoise_kf_cexp(x, phase)        \
 	do {                                     \

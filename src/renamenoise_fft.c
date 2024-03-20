@@ -42,7 +42,6 @@
 #endif
 
 #include "_renamenoise_fft_guts.h"
-#define RENAMENOISE_CUSTOM_MODES
 
 // The guts header contains all the multiplication and addition macros that are
 // defined for complex numbers. It also declares the kf_ internal functions.
@@ -51,7 +50,6 @@ static void renamenoise_kf_bfly2(renamenoise_fft_cpx *Fout, int m, int N) {
 	renamenoise_fft_cpx *Fout2;
 	int i;
 	(void) m;
-#ifdef RENAMENOISE_CUSTOM_MODES
 	if (m == 1) {
 		renamenoise_assert(m == 1);
 		for (i = 0; i < N; i++) {
@@ -62,9 +60,7 @@ static void renamenoise_kf_bfly2(renamenoise_fft_cpx *Fout, int m, int N) {
 			RENAMENOISE_C_ADDTO(*Fout, t);
 			Fout += 2;
 		}
-	} else
-#endif
-	{
+	} else {
 		renamenoise_val16 tw;
 		tw = RENAMENOISE_QCONST16(0.7071067812f, 15);
 		// We know that m==4 here because the radix-2 is just after a radix-4
@@ -152,8 +148,6 @@ static void renamenoise_kf_bfly4(renamenoise_fft_cpx *Fout, const size_t fstride
 	}
 }
 
-#ifndef RENAMENOISE_RADIX_TWO_ONLY
-
 static void renamenoise_kf_bfly3(renamenoise_fft_cpx *Fout, const size_t fstride, const renamenoise_fft_state *st, int m, int N, int mm) {
 	int i;
 	size_t k;
@@ -196,7 +190,6 @@ static void renamenoise_kf_bfly3(renamenoise_fft_cpx *Fout, const size_t fstride
 	}
 }
 
-#	ifndef OVERRIDE_RENAMENOISE_kf_bfly5
 static void renamenoise_kf_bfly5(renamenoise_fft_cpx *Fout, const size_t fstride, const renamenoise_fft_state *st, int m, int N, int mm) {
 	renamenoise_fft_cpx *Fout0, *Fout1, *Fout2, *Fout3, *Fout4;
 	int i, u;
@@ -264,18 +257,12 @@ static void renamenoise_kf_bfly5(renamenoise_fft_cpx *Fout, const size_t fstride
 		}
 	}
 }
-#	endif /* OVERRIDE_RENAMENOISE_kf_bfly5 */
-
-#endif
-
-#ifdef RENAMENOISE_CUSTOM_MODES
 
 static void renamenoise_compute_bitrev_table(int Fout, renamenoise_int16 *f, const size_t fstride, int in_stride, renamenoise_int16 *factors,
 											 const renamenoise_fft_state *st) {
 	const int p = *factors++; // the radix
 	const int m = *factors++; // stage's fft length/p
 
-	// printf ("fft %d %d %d %d %d %d\n", p*m, m, p, s2, fstride*in_stride, N);
 	if (m == 1) {
 		int j;
 		for (j = 0; j < p; j++) {
@@ -315,12 +302,7 @@ static int renamenoise_kf_factor(int n, renamenoise_int16 *facbuf) {
 			}
 		}
 		n /= p;
-#	ifdef RENAMENOISE_RADIX_TWO_ONLY
-		if (p != 2 && p != 4)
-#	else
-		if (p > 5)
-#	endif
-		{
+		if (p > 5) {
 			return 0;
 		}
 		facbuf[2 * stages] = p;
@@ -350,8 +332,7 @@ static int renamenoise_kf_factor(int n, renamenoise_int16 *facbuf) {
 static void renamenoise_compute_twiddles(renamenoise_twiddle_cpx *twiddles, int nfft) {
 	int i;
 	for (i = 0; i < nfft; ++i) {
-		const double pi = 3.14159265358979323846264338327;
-		double phase = (-2 * pi / nfft) * i;
+		double phase = (-2 * M_PI / nfft) * i;
 		renamenoise_kf_cexp(twiddles + i, phase);
 	}
 }
@@ -439,8 +420,6 @@ void renamenoise_fft_free(const renamenoise_fft_state *cfg, int arch) {
 	}
 }
 
-#endif /* RENAMENOISE_CUSTOM_MODES */
-
 void renamenoise_fft_impl(const renamenoise_fft_state *st, renamenoise_fft_cpx *fout) {
 	int m2, m;
 	int p;
@@ -470,10 +449,8 @@ void renamenoise_fft_impl(const renamenoise_fft_state *st, renamenoise_fft_cpx *
 		switch (st->factors[2 * i]) {
 			case 2: renamenoise_kf_bfly2(fout, m, fstride[i]); break;
 			case 4: renamenoise_kf_bfly4(fout, fstride[i] << shift, st, m, fstride[i], m2); break;
-#ifndef RENAMENOISE_RADIX_TWO_ONLY
 			case 3: renamenoise_kf_bfly3(fout, fstride[i] << shift, st, m, fstride[i], m2); break;
 			case 5: renamenoise_kf_bfly5(fout, fstride[i] << shift, st, m, fstride[i], m2); break;
-#endif
 		}
 		m = m2;
 	}
@@ -492,20 +469,4 @@ void renamenoise_fft_c(const renamenoise_fft_state *st, const renamenoise_fft_cp
 		fout[st->bitrev[i]].i = RENAMENOISE_SHR32(RENAMENOISE_MULT16_32_Q16(scale, x.i), scale_shift);
 	}
 	renamenoise_fft_impl(st, fout);
-}
-
-void renamenoise_ifft_c(const renamenoise_fft_state *st, const renamenoise_fft_cpx *fin, renamenoise_fft_cpx *fout) {
-	int i;
-	renamenoise_assert2(fin != fout, "In-place FFT not supported");
-	// Bit-reverse the input
-	for (i = 0; i < st->nfft; i++) {
-		fout[st->bitrev[i]] = fin[i];
-	}
-	for (i = 0; i < st->nfft; i++) {
-		fout[i].i = -fout[i].i;
-	}
-	renamenoise_fft_impl(st, fout);
-	for (i = 0; i < st->nfft; i++) {
-		fout[i].i = -fout[i].i;
-	}
 }

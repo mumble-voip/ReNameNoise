@@ -42,9 +42,6 @@
 #include "pitch.h"
 
 #include "common.h"
-// #include "modes.h"
-// #include "stack_alloc.h"
-// #include "mathops.h"
 #include "math.h"
 #include "renamenoise_lpc.h"
 
@@ -170,17 +167,8 @@ void renamenoise_pitch_downsample(renamenoise_sig *x[], renamenoise_val16 *x_lp,
 }
 
 void renamenoise_pitch_xcorr(const renamenoise_val16 *_x, const renamenoise_val16 *_y, renamenoise_val32 *xcorr, int len, int max_pitch) {
-#if 0 // This is a simple version of the pitch correlation that should work well on DSPs like Blackfin and TI C5x/C6x
-   int i, j;
-   for (i=0;i<max_pitch;i++)
-   {
-      renamenoise_val32 sum = 0;
-      for (j=0;j<len;j++)
-         sum = RENAMENOISE_MAC16_16(sum, _x[j], _y[i+j]);
-      xcorr[i] = sum;
-   }
+	// Unrolled version of the pitch correlation -- runs faster on x86 and ARM
 
-#else // Unrolled version of the pitch correlation -- runs faster on x86 and ARM
 	int i;
 	// The EDSP version requires that max_pitch is at least 1,
 	// and that _x is 32-bit aligned.
@@ -201,7 +189,6 @@ void renamenoise_pitch_xcorr(const renamenoise_val16 *_x, const renamenoise_val1
 		sum = renamenoise_inner_prod(_x, _y + i, len);
 		xcorr[i] = sum;
 	}
-#endif
 }
 
 void renamenoise_pitch_search(const renamenoise_val16 *x_lp, renamenoise_val16 *y, int len, int max_pitch, int *pitch) {

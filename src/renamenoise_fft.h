@@ -45,13 +45,7 @@
 extern "C" {
 #endif
 
-#ifdef USE_SIMD
-#	include <xmmintrin.h>
-#	define renamenoise_fft_scalar __m128
-#	define RENAMENOISE_FFT_MALLOC(nbytes) memalign(16, nbytes)
-#else
-#	define RENAMENOISE_FFT_MALLOC renamenoise_alloc2
-#endif
+#define RENAMENOISE_FFT_MALLOC renamenoise_alloc2
 
 #ifndef renamenoise_fft_scalar
 //  default is float
@@ -131,10 +125,8 @@ renamenoise_fft_state *renamenoise_fft_alloc(int nfft, void *mem, size_t *lenmem
  * f[k].r and f[k].i
  */
 void renamenoise_fft_c(const renamenoise_fft_state *cfg, const renamenoise_fft_cpx *fin, renamenoise_fft_cpx *fout);
-void renamenoise_ifft_c(const renamenoise_fft_state *cfg, const renamenoise_fft_cpx *fin, renamenoise_fft_cpx *fout);
 
 void renamenoise_fft_impl(const renamenoise_fft_state *st, renamenoise_fft_cpx *fout);
-void renamenoise_ifft_impl(const renamenoise_fft_state *st, renamenoise_fft_cpx *fout);
 
 void renamenoise_fft_free(const renamenoise_fft_state *cfg, int arch);
 
@@ -148,8 +140,6 @@ int renamenoise_fft_alloc_arch_c(renamenoise_fft_state *st);
 #	define renamenoise_fft_free_arch(_st, arch) ((void) (arch), renamenoise_fft_free_arch_c(_st))
 
 #	define renamenoise_fft(_cfg, _fin, _fout, arch) ((void) (arch), renamenoise_fft_c(_cfg, _fin, _fout))
-
-#	define renamenoise_ifft(_cfg, _fin, _fout, arch) ((void) (arch), renamenoise_ifft_c(_cfg, _fin, _fout))
 
 #endif /* end if !defined(OVERRIDE_RENAMENOISE_FFT) */
 
