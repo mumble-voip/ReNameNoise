@@ -72,8 +72,8 @@ static void renamenoise_kf_bfly2(renamenoise_fft_cpx *Fout, int m, int N) {
 			RENAMENOISE_C_SUB(Fout2[0], Fout[0], t);
 			RENAMENOISE_C_ADDTO(Fout[0], t);
 
-			t.r = RENAMENOISE_S_MUL(RENAMENOISE_ADD32_ovflw(Fout2[1].r, Fout2[1].i), tw);
-			t.i = RENAMENOISE_S_MUL(RENAMENOISE_SUB32_ovflw(Fout2[1].i, Fout2[1].r), tw);
+			t.r = RENAMENOISE_S_MUL(RENAMENOISE_ADD(Fout2[1].r, Fout2[1].i), tw);
+			t.i = RENAMENOISE_S_MUL(RENAMENOISE_SUB(Fout2[1].i, Fout2[1].r), tw);
 			RENAMENOISE_C_SUB(Fout2[1], Fout[1], t);
 			RENAMENOISE_C_ADDTO(Fout[1], t);
 
@@ -82,8 +82,8 @@ static void renamenoise_kf_bfly2(renamenoise_fft_cpx *Fout, int m, int N) {
 			RENAMENOISE_C_SUB(Fout2[2], Fout[2], t);
 			RENAMENOISE_C_ADDTO(Fout[2], t);
 
-			t.r = RENAMENOISE_S_MUL(RENAMENOISE_SUB32_ovflw(Fout2[3].i, Fout2[3].r), tw);
-			t.i = RENAMENOISE_S_MUL(RENAMENOISE_NEG32_ovflw(RENAMENOISE_ADD32_ovflw(Fout2[3].i, Fout2[3].r)), tw);
+			t.r = RENAMENOISE_S_MUL(RENAMENOISE_SUB(Fout2[3].i, Fout2[3].r), tw);
+			t.i = RENAMENOISE_S_MUL(-RENAMENOISE_ADD(Fout2[3].i, Fout2[3].r), tw);
 			RENAMENOISE_C_SUB(Fout2[3], Fout[3], t);
 			RENAMENOISE_C_ADDTO(Fout[3], t);
 			Fout += 8;
@@ -106,10 +106,10 @@ static void renamenoise_kf_bfly4(renamenoise_fft_cpx *Fout, const size_t fstride
 			RENAMENOISE_C_ADDTO(*Fout, scratch1);
 			RENAMENOISE_C_SUB(scratch1, Fout[1], Fout[3]);
 
-			Fout[1].r = RENAMENOISE_ADD32_ovflw(scratch0.r, scratch1.i);
-			Fout[1].i = RENAMENOISE_SUB32_ovflw(scratch0.i, scratch1.r);
-			Fout[3].r = RENAMENOISE_SUB32_ovflw(scratch0.r, scratch1.i);
-			Fout[3].i = RENAMENOISE_ADD32_ovflw(scratch0.i, scratch1.r);
+			Fout[1].r = RENAMENOISE_ADD(scratch0.r, scratch1.i);
+			Fout[1].i = RENAMENOISE_SUB(scratch0.i, scratch1.r);
+			Fout[3].r = RENAMENOISE_SUB(scratch0.r, scratch1.i);
+			Fout[3].i = RENAMENOISE_ADD(scratch0.i, scratch1.r);
 			Fout += 4;
 		}
 	} else {
@@ -138,10 +138,10 @@ static void renamenoise_kf_bfly4(renamenoise_fft_cpx *Fout, const size_t fstride
 				tw3 += fstride * 3;
 				RENAMENOISE_C_ADDTO(*Fout, scratch[3]);
 
-				Fout[m].r = RENAMENOISE_ADD32_ovflw(scratch[5].r, scratch[4].i);
-				Fout[m].i = RENAMENOISE_SUB32_ovflw(scratch[5].i, scratch[4].r);
-				Fout[m3].r = RENAMENOISE_SUB32_ovflw(scratch[5].r, scratch[4].i);
-				Fout[m3].i = RENAMENOISE_ADD32_ovflw(scratch[5].i, scratch[4].r);
+				Fout[m].r = RENAMENOISE_ADD(scratch[5].r, scratch[4].i);
+				Fout[m].i = RENAMENOISE_SUB(scratch[5].i, scratch[4].r);
+				Fout[m3].r = RENAMENOISE_SUB(scratch[5].r, scratch[4].i);
+				Fout[m3].i = RENAMENOISE_ADD(scratch[5].i, scratch[4].r);
 				++Fout;
 			}
 		}
@@ -172,18 +172,18 @@ static void renamenoise_kf_bfly3(renamenoise_fft_cpx *Fout, const size_t fstride
 			tw1 += fstride;
 			tw2 += fstride * 2;
 
-			Fout[m].r = RENAMENOISE_SUB32_ovflw(Fout->r, RENAMENOISE_HALF_OF(scratch[3].r));
-			Fout[m].i = RENAMENOISE_SUB32_ovflw(Fout->i, RENAMENOISE_HALF_OF(scratch[3].i));
+			Fout[m].r = RENAMENOISE_SUB(Fout->r, RENAMENOISE_HALF(scratch[3].r));
+			Fout[m].i = RENAMENOISE_SUB(Fout->i, RENAMENOISE_HALF(scratch[3].i));
 
 			RENAMENOISE_C_MULBYSCALAR(scratch[0], epi3.i);
 
 			RENAMENOISE_C_ADDTO(*Fout, scratch[3]);
 
-			Fout[m2].r = RENAMENOISE_ADD32_ovflw(Fout[m].r, scratch[0].i);
-			Fout[m2].i = RENAMENOISE_SUB32_ovflw(Fout[m].i, scratch[0].r);
+			Fout[m2].r = RENAMENOISE_ADD(Fout[m].r, scratch[0].i);
+			Fout[m2].i = RENAMENOISE_SUB(Fout[m].i, scratch[0].r);
 
-			Fout[m].r = RENAMENOISE_SUB32_ovflw(Fout[m].r, scratch[0].i);
-			Fout[m].i = RENAMENOISE_ADD32_ovflw(Fout[m].i, scratch[0].r);
+			Fout[m].r = RENAMENOISE_SUB(Fout[m].r, scratch[0].i);
+			Fout[m].i = RENAMENOISE_ADD(Fout[m].i, scratch[0].r);
 
 			++Fout;
 		} while (--k);
@@ -224,27 +224,26 @@ static void renamenoise_kf_bfly5(renamenoise_fft_cpx *Fout, const size_t fstride
 			RENAMENOISE_C_ADD(scratch[8], scratch[2], scratch[3]);
 			RENAMENOISE_C_SUB(scratch[9], scratch[2], scratch[3]);
 
-			Fout0->r = RENAMENOISE_ADD32_ovflw(Fout0->r, RENAMENOISE_ADD32_ovflw(scratch[7].r, scratch[8].r));
-			Fout0->i = RENAMENOISE_ADD32_ovflw(Fout0->i, RENAMENOISE_ADD32_ovflw(scratch[7].i, scratch[8].i));
+			Fout0->r = RENAMENOISE_ADD(Fout0->r, RENAMENOISE_ADD(scratch[7].r, scratch[8].r));
+			Fout0->i = RENAMENOISE_ADD(Fout0->i, RENAMENOISE_ADD(scratch[7].i, scratch[8].i));
 
-			scratch[5].r = RENAMENOISE_ADD32_ovflw(
-				scratch[0].r, RENAMENOISE_ADD32_ovflw(RENAMENOISE_S_MUL(scratch[7].r, ya.r), RENAMENOISE_S_MUL(scratch[8].r, yb.r)));
-			scratch[5].i = RENAMENOISE_ADD32_ovflw(
-				scratch[0].i, RENAMENOISE_ADD32_ovflw(RENAMENOISE_S_MUL(scratch[7].i, ya.r), RENAMENOISE_S_MUL(scratch[8].i, yb.r)));
+			scratch[5].r =
+				RENAMENOISE_ADD(scratch[0].r, RENAMENOISE_ADD(RENAMENOISE_S_MUL(scratch[7].r, ya.r), RENAMENOISE_S_MUL(scratch[8].r, yb.r)));
+			scratch[5].i =
+				RENAMENOISE_ADD(scratch[0].i, RENAMENOISE_ADD(RENAMENOISE_S_MUL(scratch[7].i, ya.r), RENAMENOISE_S_MUL(scratch[8].i, yb.r)));
 
-			scratch[6].r = RENAMENOISE_ADD32_ovflw(RENAMENOISE_S_MUL(scratch[10].i, ya.i), RENAMENOISE_S_MUL(scratch[9].i, yb.i));
-			scratch[6].i =
-				RENAMENOISE_NEG32_ovflw(RENAMENOISE_ADD32_ovflw(RENAMENOISE_S_MUL(scratch[10].r, ya.i), RENAMENOISE_S_MUL(scratch[9].r, yb.i)));
+			scratch[6].r = RENAMENOISE_ADD(RENAMENOISE_S_MUL(scratch[10].i, ya.i), RENAMENOISE_S_MUL(scratch[9].i, yb.i));
+			scratch[6].i = -RENAMENOISE_ADD(RENAMENOISE_S_MUL(scratch[10].r, ya.i), RENAMENOISE_S_MUL(scratch[9].r, yb.i));
 
 			RENAMENOISE_C_SUB(*Fout1, scratch[5], scratch[6]);
 			RENAMENOISE_C_ADD(*Fout4, scratch[5], scratch[6]);
 
-			scratch[11].r = RENAMENOISE_ADD32_ovflw(
-				scratch[0].r, RENAMENOISE_ADD32_ovflw(RENAMENOISE_S_MUL(scratch[7].r, yb.r), RENAMENOISE_S_MUL(scratch[8].r, ya.r)));
-			scratch[11].i = RENAMENOISE_ADD32_ovflw(
-				scratch[0].i, RENAMENOISE_ADD32_ovflw(RENAMENOISE_S_MUL(scratch[7].i, yb.r), RENAMENOISE_S_MUL(scratch[8].i, ya.r)));
-			scratch[12].r = RENAMENOISE_SUB32_ovflw(RENAMENOISE_S_MUL(scratch[9].i, ya.i), RENAMENOISE_S_MUL(scratch[10].i, yb.i));
-			scratch[12].i = RENAMENOISE_SUB32_ovflw(RENAMENOISE_S_MUL(scratch[10].r, yb.i), RENAMENOISE_S_MUL(scratch[9].r, ya.i));
+			scratch[11].r =
+				RENAMENOISE_ADD(scratch[0].r, RENAMENOISE_ADD(RENAMENOISE_S_MUL(scratch[7].r, yb.r), RENAMENOISE_S_MUL(scratch[8].r, ya.r)));
+			scratch[11].i =
+				RENAMENOISE_ADD(scratch[0].i, RENAMENOISE_ADD(RENAMENOISE_S_MUL(scratch[7].i, yb.r), RENAMENOISE_S_MUL(scratch[8].i, ya.r)));
+			scratch[12].r = RENAMENOISE_SUB(RENAMENOISE_S_MUL(scratch[9].i, ya.i), RENAMENOISE_S_MUL(scratch[10].i, yb.i));
+			scratch[12].i = RENAMENOISE_SUB(RENAMENOISE_S_MUL(scratch[10].r, yb.i), RENAMENOISE_S_MUL(scratch[9].r, ya.i));
 
 			RENAMENOISE_C_ADD(*Fout2, scratch[11], scratch[12]);
 			RENAMENOISE_C_SUB(*Fout3, scratch[11], scratch[12]);
@@ -465,8 +464,8 @@ void renamenoise_fft_c(const renamenoise_fft_state *st, const renamenoise_fft_cp
 	// Bit-reverse the input
 	for (i = 0; i < st->nfft; i++) {
 		renamenoise_fft_cpx x = fin[i];
-		fout[st->bitrev[i]].r = RENAMENOISE_MULT16_32_Q16(scale, x.r);
-		fout[st->bitrev[i]].i = RENAMENOISE_MULT16_32_Q16(scale, x.i);
+		fout[st->bitrev[i]].r = RENAMENOISE_MULT(scale, x.r);
+		fout[st->bitrev[i]].i = RENAMENOISE_MULT(scale, x.i);
 	}
 	renamenoise_fft_impl(st, fout);
 }

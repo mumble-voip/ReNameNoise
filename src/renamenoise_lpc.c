@@ -52,7 +52,7 @@ void _renamenoise_lpc(renamenoise_val16 *_lpc,     // out: [0...p-1] LPC coeffic
 			// Sum up this iteration's reflection coefficient
 			renamenoise_val32 rr = 0;
 			for (j = 0; j < i; j++) {
-				rr += RENAMENOISE_MULT32_32_Q31(lpc[j], ac[i - j]);
+				rr += RENAMENOISE_MULT(lpc[j], ac[i - j]);
 			}
 			rr += ac[i + 1];
 			r = -rr / error;
@@ -62,11 +62,11 @@ void _renamenoise_lpc(renamenoise_val16 *_lpc,     // out: [0...p-1] LPC coeffic
 				renamenoise_val32 tmp1, tmp2;
 				tmp1 = lpc[j];
 				tmp2 = lpc[i - 1 - j];
-				lpc[j] = tmp1 + RENAMENOISE_MULT32_32_Q31(r, tmp2);
-				lpc[i - 1 - j] = tmp2 + RENAMENOISE_MULT32_32_Q31(r, tmp1);
+				lpc[j] = tmp1 + RENAMENOISE_MULT(r, tmp2);
+				lpc[i - 1 - j] = tmp2 + RENAMENOISE_MULT(r, tmp1);
 			}
 
-			error = error - RENAMENOISE_MULT32_32_Q31(RENAMENOISE_MULT32_32_Q31(r, r), error);
+			error = error - RENAMENOISE_MULT(RENAMENOISE_MULT(r, r), error);
 			// Bail out once we get 30 dB gain
 			if (error < .001f * ac[0]) {
 				break;
@@ -93,8 +93,8 @@ int _renamenoise_autocorr(const renamenoise_val16 *x, //  in: [0...n-1] samples 
 			xx[i] = x[i];
 		}
 		for (i = 0; i < overlap; i++) {
-			xx[i] = RENAMENOISE_MULT16_16_Q15(x[i], window[i]);
-			xx[n - i - 1] = RENAMENOISE_MULT16_16_Q15(x[n - i - 1], window[i]);
+			xx[i] = RENAMENOISE_MULT(x[i], window[i]);
+			xx[n - i - 1] = RENAMENOISE_MULT(x[n - i - 1], window[i]);
 		}
 		xptr = xx;
 	}
@@ -102,7 +102,7 @@ int _renamenoise_autocorr(const renamenoise_val16 *x, //  in: [0...n-1] samples 
 	renamenoise_pitch_xcorr(xptr, xptr, ac, fastN, lag + 1);
 	for (k = 0; k <= lag; k++) {
 		for (i = k + fastN, d = 0; i < n; i++) {
-			d = RENAMENOISE_MAC16_16(d, xptr[i], xptr[i - k]);
+			d = RENAMENOISE_MAC(d, xptr[i], xptr[i - k]);
 		}
 		ac[k] += d;
 	}

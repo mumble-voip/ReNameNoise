@@ -58,7 +58,7 @@ static void renamenoise_find_best_pitch(renamenoise_val32 *xcorr, renamenoise_va
 	best_pitch[0] = 0;
 	best_pitch[1] = 1;
 	for (j = 0; j < len; j++) {
-		Syy = RENAMENOISE_ADD32(Syy, RENAMENOISE_MULT16_16(y[j], y[j]));
+		Syy = RENAMENOISE_ADD(Syy, RENAMENOISE_MULT(y[j], y[j]));
 	}
 	for (i = 0; i < max_pitch; i++) {
 		if (xcorr[i] > 0) {
@@ -67,9 +67,9 @@ static void renamenoise_find_best_pitch(renamenoise_val32 *xcorr, renamenoise_va
 			xcorr16 = xcorr[i];
 			// Considering the range of xcorr16, this should avoid both underflows and overflows (inf) when squaring xcorr16
 			xcorr16 *= 1e-12f;
-			num = RENAMENOISE_MULT16_16_Q15(xcorr16, xcorr16);
-			if (RENAMENOISE_MULT16_32_Q15(num, best_den[1]) > RENAMENOISE_MULT16_32_Q15(best_num[1], Syy)) {
-				if (RENAMENOISE_MULT16_32_Q15(num, best_den[0]) > RENAMENOISE_MULT16_32_Q15(best_num[0], Syy)) {
+			num = RENAMENOISE_MULT(xcorr16, xcorr16);
+			if (RENAMENOISE_MULT(num, best_den[1]) > RENAMENOISE_MULT(best_num[1], Syy)) {
+				if (RENAMENOISE_MULT(num, best_den[0]) > RENAMENOISE_MULT(best_num[0], Syy)) {
 					best_num[1] = best_num[0];
 					best_den[1] = best_den[0];
 					best_pitch[1] = best_pitch[0];
@@ -83,7 +83,7 @@ static void renamenoise_find_best_pitch(renamenoise_val32 *xcorr, renamenoise_va
 				}
 			}
 		}
-		Syy += RENAMENOISE_MULT16_16(y[i + len], y[i + len]) - RENAMENOISE_MULT16_16(y[i], y[i]);
+		Syy += RENAMENOISE_MULT(y[i + len], y[i + len]) - RENAMENOISE_MULT(y[i], y[i]);
 		Syy = RENAMENOISE_MAX32(1, Syy);
 	}
 }
@@ -104,11 +104,11 @@ static void renamenoise_fir5(const renamenoise_val16 *x, const renamenoise_val16
 	mem4 = mem[4];
 	for (i = 0; i < N; i++) {
 		renamenoise_val32 sum = x[i];
-		sum = RENAMENOISE_MAC16_16(sum, num0, mem0);
-		sum = RENAMENOISE_MAC16_16(sum, num1, mem1);
-		sum = RENAMENOISE_MAC16_16(sum, num2, mem2);
-		sum = RENAMENOISE_MAC16_16(sum, num3, mem3);
-		sum = RENAMENOISE_MAC16_16(sum, num4, mem4);
+		sum = RENAMENOISE_MAC(sum, num0, mem0);
+		sum = RENAMENOISE_MAC(sum, num1, mem1);
+		sum = RENAMENOISE_MAC(sum, num2, mem2);
+		sum = RENAMENOISE_MAC(sum, num3, mem3);
+		sum = RENAMENOISE_MAC(sum, num4, mem4);
 		mem4 = mem3;
 		mem3 = mem2;
 		mem2 = mem1;
@@ -131,14 +131,14 @@ void renamenoise_pitch_downsample(renamenoise_sig *x[], renamenoise_val16 *x_lp,
 	renamenoise_val16 lpc2[5];
 	renamenoise_val16 c1 = .8f;
 	for (i = 1; i < (len >> 1); i++) {
-		x_lp[i] = RENAMENOISE_HALF32(RENAMENOISE_HALF32(x[0][(2 * i - 1)] + x[0][(2 * i + 1)]) + x[0][2 * i]);
+		x_lp[i] = RENAMENOISE_HALF(RENAMENOISE_HALF(x[0][(2 * i - 1)] + x[0][(2 * i + 1)]) + x[0][2 * i]);
 	}
-	x_lp[0] = RENAMENOISE_HALF32(RENAMENOISE_HALF32(x[0][1]) + x[0][0]);
+	x_lp[0] = RENAMENOISE_HALF(RENAMENOISE_HALF(x[0][1]) + x[0][0]);
 	if (C == 2) {
 		for (i = 1; i < (len >> 1); i++) {
-			x_lp[i] += RENAMENOISE_HALF32(RENAMENOISE_HALF32(x[1][(2 * i - 1)] + x[1][(2 * i + 1)]) + x[1][2 * i]);
+			x_lp[i] += RENAMENOISE_HALF(RENAMENOISE_HALF(x[1][(2 * i - 1)] + x[1][(2 * i + 1)]) + x[1][2 * i]);
 		}
-		x_lp[0] += RENAMENOISE_HALF32(RENAMENOISE_HALF32(x[1][1]) + x[1][0]);
+		x_lp[0] += RENAMENOISE_HALF(RENAMENOISE_HALF(x[1][1]) + x[1][0]);
 	}
 
 	_renamenoise_autocorr(x_lp, ac, NULL, 0, 4, len >> 1);
@@ -153,15 +153,15 @@ void renamenoise_pitch_downsample(renamenoise_sig *x[], renamenoise_val16 *x_lp,
 
 	_renamenoise_lpc(lpc, ac, 4);
 	for (i = 0; i < 4; i++) {
-		tmp = RENAMENOISE_MULT16_16_Q15(.9f, tmp);
-		lpc[i] = RENAMENOISE_MULT16_16_Q15(lpc[i], tmp);
+		tmp = RENAMENOISE_MULT(.9f, tmp);
+		lpc[i] = RENAMENOISE_MULT(lpc[i], tmp);
 	}
 	// Add a zero
 	lpc2[0] = lpc[0] + .8f;
-	lpc2[1] = lpc[1] + RENAMENOISE_MULT16_16_Q15(c1, lpc[0]);
-	lpc2[2] = lpc[2] + RENAMENOISE_MULT16_16_Q15(c1, lpc[1]);
-	lpc2[3] = lpc[3] + RENAMENOISE_MULT16_16_Q15(c1, lpc[2]);
-	lpc2[4] = RENAMENOISE_MULT16_16_Q15(c1, lpc[3]);
+	lpc2[1] = lpc[1] + RENAMENOISE_MULT(c1, lpc[0]);
+	lpc2[2] = lpc[2] + RENAMENOISE_MULT(c1, lpc[1]);
+	lpc2[3] = lpc[3] + RENAMENOISE_MULT(c1, lpc[2]);
+	lpc2[4] = RENAMENOISE_MULT(c1, lpc[3]);
 	renamenoise_fir5(x_lp, lpc2, x_lp, len >> 1, mem);
 }
 
@@ -236,9 +236,9 @@ void renamenoise_pitch_search(const renamenoise_val16 *x_lp, renamenoise_val16 *
 		a = xcorr[best_pitch[0] - 1];
 		b = xcorr[best_pitch[0]];
 		c = xcorr[best_pitch[0] + 1];
-		if ((c - a) > RENAMENOISE_MULT16_32_Q15(.7f, b - a)) {
+		if ((c - a) > RENAMENOISE_MULT(.7f, b - a)) {
 			offset = 1;
-		} else if ((a - c) > RENAMENOISE_MULT16_32_Q15(.7f, b - c)) {
+		} else if ((a - c) > RENAMENOISE_MULT(.7f, b - c)) {
 			offset = -1;
 		} else {
 			offset = 0;
@@ -282,7 +282,7 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
 	yy_lookup[0] = xx;
 	yy = xx;
 	for (i = 1; i <= maxperiod; i++) {
-		yy = yy + RENAMENOISE_MULT16_16(x[-i], x[-i]) - RENAMENOISE_MULT16_16(x[N - i], x[N - i]);
+		yy = yy + RENAMENOISE_MULT(x[-i], x[-i]) - RENAMENOISE_MULT(x[N - i], x[N - i]);
 		yy_lookup[i] = RENAMENOISE_MAX32(0, yy);
 	}
 	yy = yy_lookup[T0];
@@ -310,22 +310,22 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
 			T1b = (2 * renamenoise_second_check[k] * T0 + k) / (2 * k);
 		}
 		renamenoise_dual_inner_prod(x, &x[-T1], &x[-T1b], N, &xy, &xy2);
-		xy = RENAMENOISE_HALF32(xy + xy2);
-		yy = RENAMENOISE_HALF32(yy_lookup[T1] + yy_lookup[T1b]);
+		xy = RENAMENOISE_HALF(xy + xy2);
+		yy = RENAMENOISE_HALF(yy_lookup[T1] + yy_lookup[T1b]);
 		g1 = renamenoise_compute_pitch_gain(xy, xx, yy);
 		if (abs(T1 - prev_period) <= 1) {
 			cont = prev_gain;
 		} else if (abs(T1 - prev_period) <= 2 && 5 * k * k < T0) {
-			cont = RENAMENOISE_HALF16(prev_gain);
+			cont = RENAMENOISE_HALF(prev_gain);
 		} else {
 			cont = 0;
 		}
-		thresh = RENAMENOISE_MAX16(.3f, RENAMENOISE_MULT16_16_Q15(.7f, g0) - cont);
+		thresh = RENAMENOISE_MAX16(.3f, RENAMENOISE_MULT(.7f, g0) - cont);
 		// Bias against very high pitch (very short period) to avoid false-positives due to short-term correlation
 		if (T1 < 3 * minperiod) {
-			thresh = RENAMENOISE_MAX16(.4f, RENAMENOISE_MULT16_16_Q15(.85f, g0) - cont);
+			thresh = RENAMENOISE_MAX16(.4f, RENAMENOISE_MULT(.85f, g0) - cont);
 		} else if (T1 < 2 * minperiod) {
-			thresh = RENAMENOISE_MAX16(.5f, RENAMENOISE_MULT16_16_Q15(.9f, g0) - cont);
+			thresh = RENAMENOISE_MAX16(.5f, RENAMENOISE_MULT(.9f, g0) - cont);
 		}
 		if (g1 > thresh) {
 			best_xy = xy;
@@ -344,9 +344,9 @@ renamenoise_val16 renamenoise_remove_doubling(renamenoise_val16 *x, int maxperio
 	for (k = 0; k < 3; k++) {
 		xcorr[k] = renamenoise_inner_prod(x, x - (T + k - 1), N);
 	}
-	if ((xcorr[2] - xcorr[0]) > RENAMENOISE_MULT16_32_Q15(.7f, xcorr[1] - xcorr[0])) {
+	if ((xcorr[2] - xcorr[0]) > RENAMENOISE_MULT(.7f, xcorr[1] - xcorr[0])) {
 		offset = 1;
-	} else if ((xcorr[0] - xcorr[2]) > RENAMENOISE_MULT16_32_Q15(.7f, xcorr[1] - xcorr[2])) {
+	} else if ((xcorr[0] - xcorr[2]) > RENAMENOISE_MULT(.7f, xcorr[1] - xcorr[2])) {
 		offset = -1;
 	} else {
 		offset = 0;

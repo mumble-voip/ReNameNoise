@@ -129,26 +129,14 @@ static RENAMENOISE_INLINE int renamenoise_isnan(float x) {
 #define RENAMENOISE_VERY_SMALL 1e-30f
 #define RENAMENOISE_VERY_LARGE16 1e15f
 
-#define RENAMENOISE_NEG32_ovflw(x) (-(x))
+#define RENAMENOISE_HALF(x) (.5f * (x))
 
-#define RENAMENOISE_HALF16(x) (.5f * (x))
-#define RENAMENOISE_HALF32(x) (.5f * (x))
+#define RENAMENOISE_ADD(a, b) ((a) + (b))
+#define RENAMENOISE_SUB(a, b) ((a) - (b))
 
-#define RENAMENOISE_ADD32(a, b) ((a) + (b))
-#define RENAMENOISE_SUB32(a, b) ((a) - (b))
-#define RENAMENOISE_ADD32_ovflw(a, b) ((a) + (b))
-#define RENAMENOISE_SUB32_ovflw(a, b) ((a) - (b))
+#define RENAMENOISE_MAC(c, a, b) ((c) + (renamenoise_val32) (a) * (renamenoise_val32) (b))
 
-#define RENAMENOISE_MULT16_16(a, b) ((renamenoise_val32) (a) * (renamenoise_val32) (b))
-
-#define RENAMENOISE_MAC16_16(c, a, b) ((c) + (renamenoise_val32) (a) * (renamenoise_val32) (b))
-
-#define RENAMENOISE_MULT16_32_Q15(a, b) ((a) * (b))
-#define RENAMENOISE_MULT16_32_Q16(a, b) ((a) * (b))
-
-#define RENAMENOISE_MULT32_32_Q31(a, b) ((a) * (b))
-
-#define RENAMENOISE_MULT16_16_Q15(a, b) ((a) * (b))
+#define RENAMENOISE_MULT(a, b) ((a) * (b))
 
 #if __STDC_VERSION__ < 199901L || (__STDC_VERSION__ > 201000L && __STDC_NO_VLA__ == 1)
 #	define RENAMENOISE_NO_VLA

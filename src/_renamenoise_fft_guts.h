@@ -101,7 +101,6 @@
 
 #define RENAMENOISE_FFT_COS(phase) (renamenoise_fft_scalar) cos(phase)
 #define RENAMENOISE_FFT_SIN(phase) (renamenoise_fft_scalar) sin(phase)
-#define RENAMENOISE_HALF_OF(x) ((x) *.5f)
 
 #define renamenoise_kf_cexp(x, phase)        \
 	do {                                     \
