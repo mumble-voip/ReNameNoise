@@ -26,27 +26,6 @@ lint_commit_messages:
       when: always
     - when: never
 
-test_build:
-  image: ubuntu:latest
-  stage: build
-  before_script:
-    - apt-get -y update
-    - apt-get -y install build-essential autoconf libtool
-  script:
-    - echo "Build renamenoise"
-    - ./autogen.sh
-    - ./configure
-    - make
-    - echo "Apply noise suppression to test sample"
-    - ./examples/renamenoise_demo ./sample/babble_15dB.pcm ./sample/renamenoise_babble_15dB.pcm
-    - sha1sum -c --strict ./sample/CHECKSUMS
-    - echo "Check exported symbols"
-    - FAILED=""
-    - EXPORTED_SYMBOLS=$(nm ./.libs/librenamenoise.a | awk '/ T / {print $3}' | sort)
-    - "SYMBOL_REGEX='^_?renamenoise.*$'"
-    - "while IFS= read -r line; do if [[ \"$line\" =~ $SYMBOL_REGEX ]]; then echo \"passed '$line'\"; else echo \"failed '$line'\"; FAILED=\"$FAILED,$line\"; fi; done <<< \"$EXPORTED_SYMBOLS\""
-    - "if [[ -n \"$FAILED\" ]]; then echo \"$FAILED\"; exit 1; fi;"
-
 lint_clang_format:
   image: xianpengshen/clang-tools:16
   stage: lint
@@ -70,18 +49,17 @@ test_build:
   stage: build
   before_script:
     - apt-get -y update
-    - apt-get -y install build-essential autoconf libtool
+    - apt-get -y install build-essential cmake
   script:
     - echo "Build renamenoise"
-    - ./autogen.sh
-    - ./configure
+    - cmake .
     - make
     - echo "Apply noise suppression to test sample"
     - ./examples/renamenoise_demo ./sample/babble_15dB.pcm ./sample/renamenoise_babble_15dB.pcm
     - sha1sum -c --strict ./sample/CHECKSUMS
     - echo "Check exported symbols"
     - FAILED=""
-    - EXPORTED_SYMBOLS=$(nm ./.libs/librenamenoise.a | awk '/ T / {print $3}' | sort)
+    - EXPORTED_SYMBOLS=$(nm ./librenamenoise.a | awk '/ T / {print $3}' | sort)
     - "SYMBOL_REGEX='^_?renamenoise.*$'"
     - "while IFS= read -r line; do if [[ \"$line\" =~ $SYMBOL_REGEX ]]; then echo \"passed '$line'\"; else echo \"failed '$line'\"; FAILED=\"$FAILED,$line\"; fi; done <<< \"$EXPORTED_SYMBOLS\""
     - "if [[ -n \"$FAILED\" ]]; then echo \"$FAILED\"; exit 1; fi;"
@@ -91,12 +69,11 @@ test_build_no_vla:
   stage: build
   before_script:
     - apt-get -y update
-    - apt-get -y install build-essential autoconf libtool
+    - apt-get -y install build-essential cmake
   script:
     - echo "Build renamenoise"
     - export CFLAGS="-DRENAMENOISE_NO_VLA=1 -Werror=vla"
-    - ./autogen.sh
-    - ./configure
+    - cmake .
     - make
     - echo "Apply noise suppression to test sample"
     - ./examples/renamenoise_demo ./sample/babble_15dB.pcm ./sample/renamenoise_babble_15dB.pcm

@@ -18,22 +18,33 @@ An interactive demo is available at: https://jmvalin.ca/demo/rnnoise/
 To build the library with the existing, pre-trained network data you will need to install the following packages:
 
 * build-essential
-* autoconf
-* libtool
+* cmake
 
 ## Build
 
-To compile, just type:
+To compile, open a terminal in the repository root directory and type:
 
 ```bash
-./autogen.sh
-./configure
+cmake .
 make
 ```
 
-Optionally:
+To compile the library only, without the demo executable:
 
-``make install``
+```bash
+cmake -DRENAMENOISE_DEMO_EXECUTABLE=OFF .
+make
+```
+
+## Usage
+
+While it is meant to be used as a library, a simple command-line tool is
+provided as an example. It operates on RAW 16-bit (machine endian) mono
+PCM files sampled at 48 kHz. It can be used as:
+
+``./examples/renamenoise_demo <noisy speech> <output denoised>``
+
+The output is also a 16-bit raw PCM file.d
 
 ## Training
 
@@ -54,13 +65,3 @@ cd training ; ./bin2hdf5.py ../src/training.f32 500000 87 training.h5
 
 ./dump_rnn.py weights.hdf5 ../src/rnn_data.c ../src/rnn_data.h
 ```
-
-## Usage
-
-While it is meant to be used as a library, a simple command-line tool is
-provided as an example. It operates on RAW 16-bit (machine endian) mono
-PCM files sampled at 48 kHz. It can be used as:
-
-``./examples/renamenoise_demo <noisy speech> <output denoised>``
-
-The output is also a 16-bit raw PCM file.d
