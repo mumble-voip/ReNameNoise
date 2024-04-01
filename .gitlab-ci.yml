@@ -78,3 +78,16 @@ test_build_no_vla:
     - echo "Apply noise suppression to test sample"
     - ./examples/renamenoise_demo ./sample/babble_15dB.pcm ./sample/renamenoise_babble_15dB.pcm
     - sha1sum -c --strict ./sample/CHECKSUMS
+
+test_benchmark:
+  image: ubuntu:latest
+  stage: build
+  before_script:
+    - apt-get -y update
+    - apt-get -y install build-essential cmake
+  script:
+    - echo "Build renamenoise"
+    - cmake -DRENAMENOISE_DEMO_EXECUTABLE=OFF -DRENAMENOISE_BENCHMARK_EXECUTABLE=ON .
+    - make
+    - echo "Benchmark"
+    - ./examples/renamenoise_benchmark

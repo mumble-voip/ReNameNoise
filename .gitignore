@@ -6,4 +6,5 @@ cmake_install.cmake
 
 # Build artifacts
 examples/renamenoise_demo
+examples/renamenoise_benchmark
 librenamenoise.a

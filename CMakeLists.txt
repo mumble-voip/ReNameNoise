@@ -10,6 +10,10 @@ if(NOT DEFINED RENAMENOISE_DEMO_EXECUTABLE)
     set(RENAMENOISE_DEMO_EXECUTABLE ON)
 endif()
 
+if(NOT DEFINED RENAMENOISE_BENCHMARK_EXECUTABLE)
+    set(RENAMENOISE_BENCHMARK_EXECUTABLE OFF)
+endif()
+
 if (MSVC)
     add_compile_options(/W4)
 
@@ -89,9 +93,36 @@ if(RENAMENOISE_DEMO_EXECUTABLE)
     set_target_properties(renamenoise_demo PROPERTIES RUNTIME_OUTPUT_DIRECTORY "examples")
 endif()
 
+if(RENAMENOISE_BENCHMARK_EXECUTABLE)
+    add_executable(renamenoise_benchmark examples/renamenoise_benchmark.c)
+
+    target_compile_definitions(renamenoise_benchmark PRIVATE "RENAMENOISE_BUILD")
+    target_compile_definitions(renamenoise_benchmark PRIVATE "ENABLE_ASSERTIONS")
+
+    target_include_directories(renamenoise_benchmark
+        PRIVATE SYSTEM
+            ${CMAKE_CURRENT_SOURCE_DIR}
+        PUBLIC SYSTEM
+            "include"
+    )
+
+    target_sources(renamenoise_benchmark PRIVATE
+        "src/rnn_data.c"
+        "src/rnn.c"
+        "src/pitch.c"
+        "src/renamenoise_fft.c"
+        "src/denoise.c"
+        "src/renamenoise_lpc.c"
+    )
+
+    target_link_libraries(renamenoise_benchmark PRIVATE m)
+    set_target_properties(renamenoise_benchmark PROPERTIES RUNTIME_OUTPUT_DIRECTORY "examples")
+endif()
+
 message(STATUS "===")
 message(STATUS "    Building ReNameNoise ${CMAKE_BUILD_TYPE}")
 message(STATUS "    RENAMENOISE_DEMO_EXECUTABLE is ${RENAMENOISE_DEMO_EXECUTABLE}")
+message(STATUS "    RENAMENOISE_BENCHMARK_EXECUTABLE is ${RENAMENOISE_BENCHMARK_EXECUTABLE}")
 get_target_property(RENAMENOISE_CFLAGS renamenoise COMPILE_OPTIONS)
 message(STATUS "    CLFAGS = '${RENAMENOISE_CFLAGS}'")
 message(STATUS "===")
