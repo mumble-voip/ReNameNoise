@@ -41,6 +41,7 @@
 #include "rnn.h"
 #include "rnn_data.h"
 
+#include <limits.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -487,6 +488,18 @@ float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const f
 	}
 
 	renamenoise_frame_synthesis(st, out, X);
+	return vad_prob;
+}
+
+float renamenoise_process_frame_clamped(ReNameNoiseDenoiseState *st, short *out, const float *in) {
+	float denoise_frames[RENAMENOISE_FRAME_SIZE];
+
+	float vad_prob = renamenoise_process_frame(st, denoise_frames, in);
+
+	for (unsigned int i = 0; i < RENAMENOISE_FRAME_SIZE; i++) {
+		out[i] = (short) RENAMENOISE_MIN16(RENAMENOISE_MAX16(denoise_frames[i], SHRT_MIN), SHRT_MAX);
+	}
+
 	return vad_prob;
 }
 

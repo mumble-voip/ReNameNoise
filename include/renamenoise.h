@@ -98,6 +98,13 @@ RENAMENOISE_EXPORT void renamenoise_destroy(ReNameNoiseDenoiseState *st);
 RENAMENOISE_EXPORT float renamenoise_process_frame(ReNameNoiseDenoiseState *st, float *out, const float *in);
 
 /**
+ * Denoise a frame of samples, but clamp the output to fit into a 16 bit signed short
+ *
+ * in and out must be at least renamenoise_get_frame_size() large.
+ */
+RENAMENOISE_EXPORT float renamenoise_process_frame_clamped(ReNameNoiseDenoiseState *st, short *out, const float *in);
+
+/**
  * Load a model from a file
  *
  * It must be deallocated with renamenoise_model_free()
