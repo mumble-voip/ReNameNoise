@@ -1,0 +1,25 @@
+name: Test build
+
+on: [pull_request]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-22.04
+    steps:
+
+    - name: Install build tools
+      run: sudo apt install build-essential cmake
+      shell: bash
+
+    - uses: actions/checkout@v4
+      with:
+          # Assume that there are not >200 new commits that need checking
+          fetch-depth: 200
+          submodules: 'recursive'
+          # Don't create a merge commit
+          ref: ${{ github.event.pull_request.head.sha }}
+
+    - name: Test build
+      run: bash ./.ci/test_build.sh
+      shell: bash
+

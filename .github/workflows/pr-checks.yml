@@ -1,0 +1,34 @@
+name: PR-Checks
+
+on: [pull_request]
+
+jobs:
+  pr-checks:
+    runs-on: ubuntu-22.04
+    steps:
+
+    - uses: actions/checkout@v4
+      with:
+          # Assume that there are not >200 new commits that need checking
+          fetch-depth: 200
+          submodules: 'recursive'
+          # Don't create a merge commit
+          ref: ${{ github.event.pull_request.head.sha }}
+
+    - name: Check commit style
+      run: bash ./.ci/lint_commits.sh "${{ github.base_ref }}"
+      shell: bash
+
+    - name: Check line endings
+      uses: erclu/check-crlf@v1
+      with:
+          exclude: '3rdparty/'
+
+    - name: Auto format code using clang-format 16
+      uses: ./.github/actions/clang-format-docker/
+      with:
+          source_path: "src/*.c src/*.h include/*.h examples/*.c"
+
+    - name: Check code formatting
+      run: git diff --exit-code
+      shell: bash
