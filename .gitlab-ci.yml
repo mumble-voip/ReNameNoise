@@ -15,12 +15,7 @@ lint_commit_messages:
     - apt-get -y update
     - apt-get -y install git
   script:
-    - git fetch
-    - FAILED=""
-    - "SUBJECTS=$(git log --pretty=%s origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME..HEAD)"
-    - "SUBJECTS_REGEX='^(BREAK|FEAT|FIX|FORMAT|DOCS|TEST|MAINT|CI|REFAC|BUILD|TRANSLATION|CHANGE|REVERT): .*$'"
-    - "while IFS= read -r line; do if [[ \"$line\" =~ $SUBJECTS_REGEX ]]; then echo \"passed '$line'\"; else echo \"failed '$line'\"; FAILED=\"$FAILED,$line\"; fi; done <<< \"$SUBJECTS\""
-    - "if [[ -n \"$FAILED\" ]]; then echo \"$FAILED\"; exit 1; fi;"
+    - bash ./.ci/lint_commits.sh "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       when: always
@@ -51,18 +46,7 @@ test_build:
     - apt-get -y update
     - apt-get -y install build-essential cmake
   script:
-    - echo "Build renamenoise"
-    - cmake .
-    - make
-    - echo "Apply noise suppression to test sample"
-    - ./examples/renamenoise_demo ./sample/babble_15dB.pcm ./sample/renamenoise_babble_15dB.pcm
-    - sha1sum -c --strict ./sample/CHECKSUMS
-    - echo "Check exported symbols"
-    - FAILED=""
-    - EXPORTED_SYMBOLS=$(nm ./librenamenoise.a | awk '/ T / {print $3}' | sort)
-    - "SYMBOL_REGEX='^_?renamenoise.*$'"
-    - "while IFS= read -r line; do if [[ \"$line\" =~ $SYMBOL_REGEX ]]; then echo \"passed '$line'\"; else echo \"failed '$line'\"; FAILED=\"$FAILED,$line\"; fi; done <<< \"$EXPORTED_SYMBOLS\""
-    - "if [[ -n \"$FAILED\" ]]; then echo \"$FAILED\"; exit 1; fi;"
+    - bash ./.ci/test_build.sh
 
 test_build_no_vla:
   image: ubuntu:latest
@@ -71,13 +55,7 @@ test_build_no_vla:
     - apt-get -y update
     - apt-get -y install build-essential cmake
   script:
-    - echo "Build renamenoise"
-    - export CFLAGS="-DRENAMENOISE_NO_VLA=1 -Werror=vla"
-    - cmake .
-    - make
-    - echo "Apply noise suppression to test sample"
-    - ./examples/renamenoise_demo ./sample/babble_15dB.pcm ./sample/renamenoise_babble_15dB.pcm
-    - sha1sum -c --strict ./sample/CHECKSUMS
+    - bash ./.ci/test_build_novla.sh
 
 test_benchmark:
   image: ubuntu:latest
@@ -86,8 +64,4 @@ test_benchmark:
     - apt-get -y update
     - apt-get -y install build-essential cmake
   script:
-    - echo "Build renamenoise"
-    - cmake -DRENAMENOISE_DEMO_EXECUTABLE=OFF -DRENAMENOISE_BENCHMARK_EXECUTABLE=ON .
-    - make
-    - echo "Benchmark"
-    - ./examples/renamenoise_benchmark
+    - bash ./.ci/test_benchmark.sh

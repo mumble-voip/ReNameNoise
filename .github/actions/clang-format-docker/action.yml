@@ -1,0 +1,16 @@
+name: 'clang-format docker'
+description: 'Format code using upstream docker image'
+author: 'Mumble Developers'
+
+inputs:
+  source_path:
+    description: 'Path to files'
+    required: true
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - /bin/bash
+    - -c
+    - "clang-format -i ${{ inputs.source_path }}"
